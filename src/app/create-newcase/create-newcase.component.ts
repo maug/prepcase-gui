@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Compset, CompsetsGroup, CreateNewcaseService } from "../create-newcase.service";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { FormBuilder, FormGroup } from "@angular/forms";
 
 import {Observable} from 'rxjs';
 import {startWith, map} from 'rxjs/operators';
@@ -12,19 +12,19 @@ import {startWith, map} from 'rxjs/operators';
 })
 export class CreateNewcaseComponent implements OnInit {
 
-  mainForm: FormGroup = this._formBuilder.group({
-    stateGroup: '',
+  mainForm: FormGroup = this.formBuilder.group({
+    compset: '', // initial value
   });
-  compsetGroups: CompsetsGroup[];
+  readonly compsetGroups: CompsetsGroup[];
 
   compsetsGroupsOptions: Observable<CompsetsGroup[]>;
 
-  constructor(private dataService: CreateNewcaseService, private _formBuilder: FormBuilder) {
+  constructor(private dataService: CreateNewcaseService, private formBuilder: FormBuilder) {
     this.compsetGroups = dataService.data.compsets;
   }
 
   ngOnInit() {
-    this.compsetsGroupsOptions = this.mainForm.get('stateGroup')!.valueChanges
+    this.compsetsGroupsOptions = this.mainForm.get('compset')!.valueChanges
       .pipe(
         startWith(''),
         // why after selection here goes object (although diplayFn changed it to longName)?
@@ -34,14 +34,13 @@ export class CreateNewcaseComponent implements OnInit {
   }
 
   private filterCompsetsGroups(value: string): CompsetsGroup[] {
-    console.log('_filterGroup', value);
     if (value) {
       return this.compsetGroups
         .map(group => ({ type: group.type, items: this.filterCompsets(group.items, value) }))
         .filter(group => group.items.length > 0);
+    } else {
+      return this.compsetGroups;
     }
-
-    return this.compsetGroups;
   }
 
   private filterCompsets(opt: Compset[], value: string): Compset[] {

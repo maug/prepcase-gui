@@ -8,7 +8,7 @@
     <form [formGroup]="mainForm">
 
       <mat-form-field style="width: 100%">
-        <input type="text" matInput placeholder="Select compset" formControlName="stateGroup" required [matAutocomplete]="autoCompsets">
+        <input type="text" matInput placeholder="Select compset" formControlName="compset" required [matAutocomplete]="autoCompsets">
         <mat-autocomplete class="high-autocomplete-panel" #autoCompsets="matAutocomplete">
           <mat-optgroup *ngFor="let group of compsetsGroupsOptions | async" [label]="group.type">
             <mat-option class="small" *ngFor="let compset of group.items" [value]="compset.name">
@@ -17,7 +17,6 @@
           </mat-optgroup>
         </mat-autocomplete>
       </mat-form-field>
-
     </form>
 
     <button mat-stroked-button>Nakurwiaj kejsem!</button>
