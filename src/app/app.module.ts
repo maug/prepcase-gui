@@ -5,6 +5,8 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CreateNewcaseComponent } from './create-newcase/create-newcase.component';
 import { AppMaterialModule } from "./app-material.module";
+import { CreateNewcaseService } from "./create-newcase.service";
+import { ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -15,8 +17,9 @@ import { AppMaterialModule } from "./app-material.module";
     BrowserModule,
     BrowserAnimationsModule,
     AppMaterialModule,
+    ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [CreateNewcaseService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,11 @@
+::ng-deep .mat-autocomplete-panel {
+  max-height: 500px !important;
+}
+.mat-option.small {
+  max-height: 24px;
+}
+
+.compset-short-name {
+  display: inline-block;
+  width: 200px;
+}

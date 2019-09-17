@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatToolbarModule } from "@angular/material/toolbar";
+
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
-import { MatInputModule } from "@angular/material/input";
 import { MatCardModule } from "@angular/material/card";
+import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
+import { MatToolbarModule } from "@angular/material/toolbar";
 
 @NgModule({
   declarations: [],
@@ -12,11 +14,12 @@ import { MatSelectModule } from "@angular/material/select";
     CommonModule
   ],
   exports: [
-    MatToolbarModule,
+    MatAutocompleteModule,
     MatButtonModule,
-    MatInputModule,
     MatCardModule,
+    MatInputModule,
     MatSelectModule,
+    MatToolbarModule,
   ],
 })
 export class AppMaterialModule { }

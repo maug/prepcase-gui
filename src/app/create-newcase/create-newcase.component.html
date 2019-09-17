@@ -4,7 +4,36 @@
     <mat-card-subtitle>Set parameters for CIME script <code>create_newcase</code></mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <p>create-newcase works!</p>
-    <button mat-button>Click me!</button>
+
+    <form [formGroup]="mainForm">
+
+<!--
+      <mat-form-field>
+        <mat-label>Select compset</mat-label>
+        <mat-select [formControl]="compsetControl">
+          <mat-option>&#45;&#45; None &#45;&#45;</mat-option>
+          <mat-optgroup *ngFor="let group of compsetGroups" [label]="group.type">
+            <mat-option *ngFor="let item of group.items" [value]="item.name">
+              {{item.longName}}
+            </mat-option>
+          </mat-optgroup>
+        </mat-select>
+      </mat-form-field>
+-->
+
+      <mat-form-field style="width: 100%">
+        <input type="text" matInput placeholder="Select compset" formControlName="stateGroup" required [matAutocomplete]="autoCompsets">
+        <mat-autocomplete #autoCompsets="matAutocomplete" [displayWith]="displayFn">
+          <mat-optgroup *ngFor="let group of stateGroupOptions | async" [label]="group.type">
+            <mat-option class="small" *ngFor="let compset of group.items" [value]="compset">
+              <div class="mat-small"><div class="compset-short-name">{{compset.name}}</div> {{compset.longName}}</div>
+            </mat-option>
+          </mat-optgroup>
+        </mat-autocomplete>
+      </mat-form-field>
+
+    </form>
+
+    <button mat-stroked-button>Nakurwiaj kejsem!</button>
   </mat-card-content>
 </mat-card>
