@@ -5,10 +5,23 @@
   </mat-card-header>
   <mat-card-content>
 
-    <form [formGroup]="mainForm">
+    <form [formGroup]="mainForm" (ngSubmit)="onSubmit()">
 
       <mat-form-field style="width: 100%">
-        <input type="text" matInput placeholder="Select compset" formControlName="compset" required [matAutocomplete]="autoCompsets">
+        <input matInput
+               type="text"
+               placeholder="Select compset"
+               formControlName="compset"
+               required
+               [matAutocomplete]="autoCompsets"
+        >
+        <mat-error *ngIf="mainForm.get('compset').hasError('compsetInvalid') && !mainForm.get('compset').hasError('required')">
+          Compset name is invalid
+        </mat-error>
+        <mat-error *ngIf="mainForm.get('compset').hasError('required')">
+          Compset is <strong>required</strong>
+        </mat-error>
+
         <mat-autocomplete class="high-autocomplete-panel" #autoCompsets="matAutocomplete">
           <mat-optgroup *ngFor="let group of compsetsGroupsOptions | async" [label]="group.type">
             <mat-option class="small" *ngFor="let compset of group.items" [value]="compset.name">
@@ -17,8 +30,10 @@
           </mat-optgroup>
         </mat-autocomplete>
       </mat-form-field>
+
+      <button mat-flat-button color="primary" type="submit" [disabled]="!mainForm.valid">Create new case</button>
+
     </form>
 
-    <button mat-stroked-button>Nakurwiaj kejsem!</button>
   </mat-card-content>
 </mat-card>

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 
 export interface Compset {
-  name: string,
-  longName: string,
+  name: string;
+  longName: string;
 }
 
 export interface CompsetsGroup {
-  type: string,
-  items: Compset[],
+  type: string;
+  items: Compset[];
 }
 
 @Injectable({
@@ -15,9 +15,9 @@ export interface CompsetsGroup {
 })
 export class CreateNewcaseService {
 
-  data: { compsets: CompsetsGroup[] } = { compsets: [] };
+  data: { compsets: CompsetsGroup[] };
 
-  private unmappedData= JSON.parse(`
+  private unmappedData = JSON.parse(`
 {
   "compsets": [
     {
@@ -381,6 +381,7 @@ export class CreateNewcaseService {
   `);
 
   constructor() {
+    this.data = { compsets: [] };
     this.data.compsets = this.unmappedData.compsets.map(typeObject => {
       return {
         type: Object.keys(typeObject)[0],
@@ -388,7 +389,7 @@ export class CreateNewcaseService {
           name: item[0],
           longName: item[1],
         }))
-      }
+      };
     });
 
   }
