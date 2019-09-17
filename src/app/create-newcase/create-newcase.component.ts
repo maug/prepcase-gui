@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Compset, CompsetsGroup, CreateNewcaseService } from '../create-newcase.service';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material';
 
 import {Observable} from 'rxjs';
 import {startWith, map} from 'rxjs/operators';
+import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 
 @Component({
   selector: 'app-create-newcase',
@@ -16,10 +18,11 @@ export class CreateNewcaseComponent implements OnInit {
   compsetsGroupsOptions: Observable<CompsetsGroup[]>;
 
   mainForm: FormGroup = this.formBuilder.group({
+    case: ['', [Validators.required]],
     compset: ['', [Validators.required, this.compsetValidator()]],
   });
 
-  constructor(private dataService: CreateNewcaseService, private formBuilder: FormBuilder) {
+  constructor(private dataService: CreateNewcaseService, private formBuilder: FormBuilder, private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -34,6 +37,14 @@ export class CreateNewcaseComponent implements OnInit {
 
   onSubmit() {
     console.warn('SUBMIT!', this.mainForm.value);
+  }
+
+  private openDialog(command) {
+    this.dialog.open(HelpDialogComponent, {
+      data: {
+        command
+      }
+    });
   }
 
   private filterCompsetsGroups(value: string): CompsetsGroup[] {

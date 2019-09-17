@@ -4,14 +4,20 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CreateNewcaseComponent } from './create-newcase/create-newcase.component';
-import { AppMaterialModule } from "./app-material.module";
-import { CreateNewcaseService } from "./create-newcase.service";
-import { ReactiveFormsModule } from "@angular/forms";
+import { AppMaterialModule } from './app-material.module';
+import { CreateNewcaseService } from './create-newcase.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HelpDialogComponent } from './help-dialog/help-dialog.component';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CreateNewcaseComponent
+    CreateNewcaseComponent,
+    HelpDialogComponent,
+  ],
+  entryComponents: [
+    HelpDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -19,7 +25,10 @@ import { ReactiveFormsModule } from "@angular/forms";
     AppMaterialModule,
     ReactiveFormsModule,
   ],
-  providers: [CreateNewcaseService],
+  providers: [
+    CreateNewcaseService,
+    // { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
