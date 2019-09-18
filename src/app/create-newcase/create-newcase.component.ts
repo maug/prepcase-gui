@@ -24,6 +24,8 @@ export class CreateNewcaseComponent implements OnInit {
     'multi-driver': [false],
   });
 
+  submittedCommand: string = '';
+
   constructor(private dataService: CreateNewcaseService, private formBuilder: FormBuilder, private dialog: MatDialog) {
   }
 
@@ -39,6 +41,13 @@ export class CreateNewcaseComponent implements OnInit {
 
   onSubmit() {
     console.warn('SUBMIT!', this.mainForm.value);
+    this.submittedCommand = `
+      create_newcase
+        --case=${this.mainForm.get('case').value}
+        --compset=${this.mainForm.get('compset').value}
+        ${this.mainForm.get('ninst').value ? '--ninst=' + this.mainForm.get('ninst').value : ''}
+        ${this.mainForm.get('multi-driver').value ? '--multi-driver' : ''}
+    `;
   }
 
   private openDialog(command) {

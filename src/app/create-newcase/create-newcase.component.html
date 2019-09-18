@@ -79,6 +79,9 @@
 
     <button mat-flat-button color="primary" type="submit" [disabled]="!mainForm.valid">Create new case</button>
 
+    <br><br>
+    <mat-toolbar *ngIf="submittedCommand" color="accent">{{submittedCommand}}</mat-toolbar>
+
   </form>
 
 </div>
