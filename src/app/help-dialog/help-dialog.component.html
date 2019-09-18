@@ -1,9 +1,15 @@
-<h1 mat-dialog-title *ngIf="data.command === 'case'"><pre>--case</pre></h1>
+<h1 mat-dialog-title *ngIf="data.command === 'case'"><code>--case</code></h1>
+<h1 mat-dialog-title *ngIf="data.command === 'ninst'"><code>--ninst</code></h1>
 <div mat-dialog-content>
   <div *ngIf="data.command === 'case'">
     <p>Specify the case name.</p>
     <p>If this is simply a name (not a path), the case directory is created in the current working directory.</p>
     <p>This can also be a relative or absolute path specifying where the case should be created;
        with this usage, the name of the case will be the last component of the path</p>
+  </div>
+  <div *ngIf="data.command === 'ninst'">
+    <p>Specify number of model ensemble instances.</p>
+    <p>The default is multiple components and one driver/coupler.</p>
+    <p>Use <code>--multi-driver</code> to run multiple driver/couplers in the ensemble.</p>
   </div>
 </div>

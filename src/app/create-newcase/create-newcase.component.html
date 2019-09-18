@@ -11,7 +11,6 @@
              type="text"
              placeholder="Case name"
              formControlName="case"
-             required
       >
       <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openDialog('case')">
         <mat-icon>help_outline</mat-icon>
@@ -28,7 +27,6 @@
              type="text"
              placeholder="Select compset"
              formControlName="compset"
-             required
              [matAutocomplete]="autoCompsets"
       >
       <mat-error *ngIf="mainForm.get('compset').hasError('compsetInvalid') && !mainForm.get('compset').hasError('required')">
@@ -45,6 +43,22 @@
           </mat-option>
         </mat-optgroup>
       </mat-autocomplete>
+    </mat-form-field>
+
+    <!-- NINST -->
+
+    <mat-form-field style="width: 100%">
+      <input matInput
+             type="text"
+             placeholder="Number of instances (--ninst)"
+             formControlName="ninst"
+      >
+      <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openDialog('ninst')">
+        <mat-icon>help_outline</mat-icon>
+      </button>
+      <mat-error *ngIf="mainForm.get('ninst').hasError('pattern')">
+        Required positive integer
+      </mat-error>
     </mat-form-field>
 
     <br><br>

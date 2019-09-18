@@ -20,6 +20,7 @@ export class CreateNewcaseComponent implements OnInit {
   mainForm: FormGroup = this.formBuilder.group({
     case: ['', [Validators.required]],
     compset: ['', [Validators.required, this.compsetValidator()]],
+    ninst: ['', [Validators.pattern(/^[1-9]\d*$/)]],
   });
 
   constructor(private dataService: CreateNewcaseService, private formBuilder: FormBuilder, private dialog: MatDialog) {
