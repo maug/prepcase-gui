@@ -21,6 +21,7 @@ export class CreateNewcaseComponent implements OnInit {
     case: ['', [Validators.required]],
     compset: ['', [Validators.required, this.compsetValidator()]],
     ninst: ['', [Validators.pattern(/^[1-9]\d*$/)]],
+    'multi-driver': [false],
   });
 
   constructor(private dataService: CreateNewcaseService, private formBuilder: FormBuilder, private dialog: MatDialog) {

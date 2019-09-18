@@ -11,6 +11,7 @@
              type="text"
              placeholder="Case name"
              formControlName="case"
+             required
       >
       <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openDialog('case')">
         <mat-icon>help_outline</mat-icon>
@@ -28,6 +29,7 @@
              placeholder="Select compset"
              formControlName="compset"
              [matAutocomplete]="autoCompsets"
+             required
       >
       <mat-error *ngIf="mainForm.get('compset').hasError('compsetInvalid') && !mainForm.get('compset').hasError('required')">
         Compset name is invalid
@@ -60,6 +62,18 @@
         Required positive integer
       </mat-error>
     </mat-form-field>
+
+    <!-- MULTI-DRIVER -->
+
+    <mat-checkbox
+      formControlName="multi-driver"
+      [labelPosition]="'after'"
+      >
+      Multi driver?
+    </mat-checkbox>
+    <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openDialog('multi-driver')">
+      <mat-icon>help_outline</mat-icon>
+    </button>
 
     <br><br>
 

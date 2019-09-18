@@ -1,5 +1,6 @@
 <h1 mat-dialog-title *ngIf="data.command === 'case'"><code>--case</code></h1>
 <h1 mat-dialog-title *ngIf="data.command === 'ninst'"><code>--ninst</code></h1>
+<h1 mat-dialog-title *ngIf="data.command === 'multi-driver'"><code>--multi-driver</code></h1>
 <div mat-dialog-content>
   <div *ngIf="data.command === 'case'">
     <p>Specify the case name.</p>
@@ -11,5 +12,9 @@
     <p>Specify number of model ensemble instances.</p>
     <p>The default is multiple components and one driver/coupler.</p>
     <p>Use <code>--multi-driver</code> to run multiple driver/couplers in the ensemble.</p>
+  </div>
+  <div *ngIf="data.command === 'multi-driver'">
+    <p>Specify that <code>--ninst</code> should modify the number of driver/coupler instances.</p>
+    <p>The default is to have one driver/coupler supporting multiple component instances.</p>
   </div>
 </div>
