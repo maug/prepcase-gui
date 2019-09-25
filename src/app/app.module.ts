@@ -9,6 +9,7 @@ import { CreateNewcaseService } from './create-newcase.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HelpDialogComponent } from './help-dialog/help-dialog.component';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material';
     BrowserModule,
     BrowserAnimationsModule,
     AppMaterialModule,
+    HttpClientModule,
     ReactiveFormsModule,
   ],
   providers: [

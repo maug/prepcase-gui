@@ -1,4 +1,9 @@
+import { xml2js } from 'xml-js';
+
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+import { GridData } from './models/GridData';
 
 export interface Compset {
   name: string;
@@ -15,7 +20,7 @@ export interface CompsetsGroup {
 })
 export class CreateNewcaseService {
 
-  data: { compsets: CompsetsGroup[] };
+  data: { compsets: CompsetsGroup[], gridData: GridData };
 
   private unmappedData = JSON.parse(`
 {
@@ -380,8 +385,8 @@ export class CreateNewcaseService {
 }
   `);
 
-  constructor() {
-    this.data = { compsets: [] };
+  constructor(private http: HttpClient) {
+    this.data = { compsets: null, gridData: null };
     this.data.compsets = this.unmappedData.compsets.map(typeObject => {
       return {
         type: Object.keys(typeObject)[0],
@@ -391,6 +396,25 @@ export class CreateNewcaseService {
         }))
       };
     });
+    this.readGridData();
+  }
 
+  private readGridData() {
+    this.http.get('assets/config_grids.xml', {responseType: 'text'})
+      .subscribe(data => {
+        this.parseGridData(data);
+      });
+
+  }
+
+  private parseGridData(defsXML: string): GridData {
+    const parsed: any = xml2js(defsXML, {
+      compact: true,
+      trim: true,
+      ignoreDeclaration: true,
+      ignoreInstruction: true,
+    });
+    console.log('GRIDS', parsed);
+    return parsed.grid_data;
   }
 }

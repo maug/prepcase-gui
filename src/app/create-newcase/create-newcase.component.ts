@@ -50,7 +50,7 @@ export class CreateNewcaseComponent implements OnInit {
     `;
   }
 
-  private openDialog(command) {
+  openDialog(command) {
     this.dialog.open(HelpDialogComponent, {
       data: {
         command
@@ -77,7 +77,7 @@ export class CreateNewcaseComponent implements OnInit {
     );
   }
 
-  compsetValidator(): ValidatorFn {
+  private compsetValidator(): ValidatorFn {
     return (control: AbstractControl): {[key: string]: any} | null => {
       const compsets = this.compsetGroups.flatMap(group => group.items);
       return compsets.find(compset => compset.name === control.value) ? null : { compsetInvalid: true };
