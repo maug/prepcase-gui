@@ -1,7 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Compset, CompsetsGroup, CreateNewcaseService } from '../create-newcase.service';
-import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormGroupDirective, NgForm,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
+import { MatDialog, MatSnackBar } from '@angular/material';
+import {ErrorStateMatcher} from '@angular/material/core';
 
 import {Observable} from 'rxjs';
 import {startWith, map} from 'rxjs/operators';
@@ -19,21 +29,25 @@ export class CreateNewcaseComponent implements OnInit {
   compsetGroups: CompsetsGroup[] = this.dataService.data.compsets;
   compsetsGroupsOptions: Observable<CompsetsGroup[]>;
 
-  grid: ModelGrid[] = this.dataService.data.gridData.grids.model_grid;
+  grids: ModelGrid[] = this.dataService.data.gridData.grids.model_grid;
   gridOptions: Observable<ModelGrid[]>;
 
   mainForm: FormGroup = this.formBuilder.group({
     case: ['', [Validators.required]],
     compset: ['', [Validators.required, this.compsetValidator()]],
-    grid: ['', [Validators.required]],
+    grid: ['', [Validators.required, this.gridValidator()]],
     ninst: ['', [Validators.pattern(/^[1-9]\d*$/)]],
     'multi-driver': [false],
-  });
+  }, { validators: this.compsetGridValidator() });
 
-  submittedCommand: string = '';
+  gridErrorMatcher = new FormErrorStateMatcher('gridIncompatible');
 
-  constructor(private dataService: CreateNewcaseService, private formBuilder: FormBuilder, private dialog: MatDialog) {
-  }
+  constructor(
+    private dataService: CreateNewcaseService,
+    private formBuilder: FormBuilder,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
+  ) {}
 
   ngOnInit() {
     this.compsetsGroupsOptions = this.mainForm.get('compset').valueChanges
@@ -52,13 +66,17 @@ export class CreateNewcaseComponent implements OnInit {
 
   onSubmit() {
     console.warn('SUBMIT!', this.mainForm.value);
-    this.submittedCommand = `
+    const submittedCommand = `
       create_newcase
         --case=${this.mainForm.get('case').value}
         --compset=${this.mainForm.get('compset').value}
+        --res=${this.mainForm.get('grid').value}
         ${this.mainForm.get('ninst').value ? '--ninst=' + this.mainForm.get('ninst').value : ''}
         ${this.mainForm.get('multi-driver').value ? '--multi-driver' : ''}
-    `;
+    `.trimRight().replace(/^\s*\n/gm, '');
+    this.snackBar.open(submittedCommand, null, {
+      duration: 10000,
+    });
   }
 
   openDialog(command) {
@@ -91,7 +109,7 @@ export class CreateNewcaseComponent implements OnInit {
   }
 
   private compsetValidator(): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} | null => {
+    return (control: AbstractControl): ValidationErrors | null => {
       const compsets = this.compsetGroups.flatMap(group => group.items);
       return compsets.find(compset => compset.name === control.value) ? null : { compsetInvalid: true };
     };
@@ -102,11 +120,50 @@ export class CreateNewcaseComponent implements OnInit {
   private filterGrids(value: string): ModelGrid[] {
     if (value) {
       value = value.trim().toLowerCase();
-      return this.grid
+      return this.grids
         .filter(grid => grid._attributes.alias.toLowerCase().indexOf(value) !== -1);
     } else {
-      return this.grid;
+      return this.grids;
     }
   }
 
+  private gridValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      return this.grids.find(grid => grid._attributes.alias === control.value) ? null : { gridInvalid: true };
+    };
+  }
+
+  // --- form validators
+
+  private compsetGridValidator(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const ctrlCompset: AbstractControl = control.get('compset');
+      const ctrlGrid: AbstractControl = control.get('grid');
+      if (!ctrlCompset || !ctrlGrid || ctrlCompset.errors || ctrlGrid.errors) {
+        return null;
+      }
+      const compset = this.compsetGroups.flatMap(group => group.items).find(c => c.name === ctrlCompset.value);
+      const grid = this.grids.find(g => g._attributes.alias === ctrlGrid.value);
+      if (grid._attributes.compset) {
+        if (compset.longName.match(new RegExp(grid._attributes.compset)) === null) {
+          return { gridIncompatible: `Grid requires compset "${grid._attributes.compset}"` };
+        }
+      }
+      if (grid._attributes.not_compset) {
+        if (compset.longName.match(new RegExp(grid._attributes.not_compset)) !== null) {
+          return { gridIncompatible: `Grid is incompatible with compset "${grid._attributes.not_compset}"` };
+        }
+      }
+      return null;
+    };
+  }
+}
+
+class FormErrorStateMatcher implements ErrorStateMatcher {
+
+  constructor(private formError: string) {}
+
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    return control.dirty && (control.invalid || form.hasError(this.formError));
+  }
 }

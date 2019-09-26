@@ -417,7 +417,6 @@ export class CreateNewcaseService {
       ignoreDeclaration: true,
       ignoreInstruction: true,
     });
-    console.log('GRIDS', parsed);
     return parsed.grid_data;
   }
 }

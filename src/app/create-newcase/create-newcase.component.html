@@ -14,7 +14,7 @@
              formControlName="case"
              required
       >
-      <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openDialog('case')">
+      <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openDialog('case'); $event.stopPropagation()">
         <mat-icon>help_outline</mat-icon>
       </button>
       <mat-error *ngIf="mainForm.get('case').hasError('required')">
@@ -54,16 +54,33 @@
     <mat-form-field style="width: 100%">
       <input matInput
              type="text"
-             placeholder="Select grid"
+             placeholder="Select grid resolution"
              spellcheck="false"
              formControlName="grid"
              [matAutocomplete]="autoGrids"
+             [errorStateMatcher]="gridErrorMatcher"
              required
       >
+      <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openDialog('grid'); $event.stopPropagation()">
+        <mat-icon>help_outline</mat-icon>
+      </button>
+      <mat-error *ngIf="mainForm.get('grid').hasError('gridInvalid') && !mainForm.get('grid').hasError('required')">
+        Grid resolution name is invalid
+      </mat-error>
+      <mat-error *ngIf="mainForm.get('grid').hasError('required')">
+        Grid is <strong>required</strong>
+      </mat-error>
+      <mat-error *ngIf="mainForm.hasError('gridIncompatible')">
+        {{mainForm.getError('gridIncompatible')}}
+      </mat-error>
 
       <mat-autocomplete class="high-autocomplete-panel" #autoGrids="matAutocomplete">
         <mat-option class="small" *ngFor="let grid of gridOptions | async" [value]="grid._attributes.alias">
-          <div class="mat-small">{{grid._attributes.alias}}</div>
+          <div class="mat-small">
+            <div class="grid-short-name">{{grid._attributes.alias}}</div>
+            <div class="grid-compset">{{grid._attributes.compset}}</div>
+            <div class="grid-not-compset">{{grid._attributes.not_compset}}</div>
+          </div>
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
@@ -76,7 +93,7 @@
              placeholder="Number of instances (--ninst)"
              formControlName="ninst"
       >
-      <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openDialog('ninst')">
+      <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openDialog('ninst'); $event.stopPropagation()">
         <mat-icon>help_outline</mat-icon>
       </button>
       <mat-error *ngIf="mainForm.get('ninst').hasError('pattern')">
@@ -92,16 +109,13 @@
       >
       Multi driver?
     </mat-checkbox>
-    <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openDialog('multi-driver')">
+    <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openDialog('multi-driver'); $event.stopPropagation()">
       <mat-icon>help_outline</mat-icon>
     </button>
 
     <br><br>
 
     <button mat-flat-button color="primary" type="submit" [disabled]="!mainForm.valid">Create new case</button>
-
-    <br><br>
-    <mat-toolbar *ngIf="submittedCommand" color="accent">{{submittedCommand}}</mat-toolbar>
 
   </form>
 

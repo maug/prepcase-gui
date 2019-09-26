@@ -7,7 +7,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatCheckboxModule, MatDialogModule, MatDividerModule, MatIconModule, MatTooltipModule } from '@angular/material';
+import {
+  MatCheckboxModule,
+  MatDialogModule,
+  MatDividerModule,
+  MatIconModule,
+  MatSnackBarModule,
+  MatTooltipModule
+} from '@angular/material';
 
 @NgModule({
   declarations: [],
@@ -24,6 +31,7 @@ import { MatCheckboxModule, MatDialogModule, MatDividerModule, MatIconModule, Ma
     MatIconModule,
     MatInputModule,
     MatSelectModule,
+    MatSnackBarModule,
     MatToolbarModule,
     MatTooltipModule,
   ],
