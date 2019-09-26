@@ -7,6 +7,8 @@ import {Observable} from 'rxjs';
 import {startWith, map} from 'rxjs/operators';
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 
+import { ModelGrid } from '../models/GridData';
+
 @Component({
   selector: 'app-create-newcase',
   templateUrl: './create-newcase.component.html',
@@ -16,10 +18,12 @@ export class CreateNewcaseComponent implements OnInit {
 
   compsetGroups: CompsetsGroup[] = this.dataService.data.compsets;
   compsetsGroupsOptions: Observable<CompsetsGroup[]>;
+  gridOptions: ModelGrid[];
 
   mainForm: FormGroup = this.formBuilder.group({
     case: ['', [Validators.required]],
     compset: ['', [Validators.required, this.compsetValidator()]],
+    grid: ['', []],
     ninst: ['', [Validators.pattern(/^[1-9]\d*$/)]],
     'multi-driver': [false],
   });
@@ -37,6 +41,7 @@ export class CreateNewcaseComponent implements OnInit {
         // map(value => typeof value === 'string' ? value : value.longName),
         map((value: string) => this.filterCompsetsGroups(value))
       );
+    this.gridOptions = this.dataService.data.gridData.grids.model_grid;
   }
 
   onSubmit() {

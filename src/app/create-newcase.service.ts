@@ -386,7 +386,11 @@ export class CreateNewcaseService {
   `);
 
   constructor(private http: HttpClient) {
+  }
+
+  loadData() {
     this.data = { compsets: null, gridData: null };
+    // map compsets to modified structure
     this.data.compsets = this.unmappedData.compsets.map(typeObject => {
       return {
         type: Object.keys(typeObject)[0],
@@ -396,15 +400,14 @@ export class CreateNewcaseService {
         }))
       };
     });
-    this.readGridData();
-  }
 
-  private readGridData() {
-    this.http.get('assets/config_grids.xml', {responseType: 'text'})
-      .subscribe(data => {
-        this.parseGridData(data);
-      });
-
+    return new Promise((resolve, reject) => {
+      this.http.get('assets/config_grids.xml', {responseType: 'text'})
+        .subscribe(data => {
+          this.data.gridData = this.parseGridData(data);
+          resolve(true);
+        });
+    });
   }
 
   private parseGridData(defsXML: string): GridData {
@@ -417,4 +420,8 @@ export class CreateNewcaseService {
     console.log('GRIDS', parsed);
     return parsed.grid_data;
   }
+}
+
+export function createNewcaseServiceFactory(service: CreateNewcaseService) {
+  return () => service.loadData();
 }

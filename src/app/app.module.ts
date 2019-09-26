@@ -1,11 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+Aimport { APP_INITIALIZER, NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CreateNewcaseComponent } from './create-newcase/create-newcase.component';
 import { AppMaterialModule } from './app-material.module';
-import { CreateNewcaseService } from './create-newcase.service';
+import { CreateNewcaseService, createNewcaseServiceFactory } from './create-newcase.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HelpDialogComponent } from './help-dialog/help-dialog.component';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material';
@@ -29,6 +29,7 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   providers: [
     CreateNewcaseService,
+    { provide: APP_INITIALIZER, useFactory: createNewcaseServiceFactory, deps: [CreateNewcaseService], multi: true }
     // { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
   ],
   bootstrap: [AppComponent]
