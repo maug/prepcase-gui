@@ -29,6 +29,7 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   providers: [
     CreateNewcaseService,
+    // wait for load as in https://devblog.dymel.pl/2017/10/17/angular-preload/
     { provide: APP_INITIALIZER, useFactory: createNewcaseServiceFactory, deps: [CreateNewcaseService], multi: true }
     // { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
   ],

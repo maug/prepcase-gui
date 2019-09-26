@@ -62,7 +62,7 @@
       >
 
       <mat-autocomplete class="high-autocomplete-panel" #autoGrids="matAutocomplete">
-        <mat-option class="small" *ngFor="let grid of gridOptions" [value]="grid._attributes.alias">
+        <mat-option class="small" *ngFor="let grid of gridOptions | async" [value]="grid._attributes.alias">
           <div class="mat-small">{{grid._attributes.alias}}</div>
         </mat-option>
       </mat-autocomplete>

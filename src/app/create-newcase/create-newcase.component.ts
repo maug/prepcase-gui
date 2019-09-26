@@ -18,12 +18,14 @@ export class CreateNewcaseComponent implements OnInit {
 
   compsetGroups: CompsetsGroup[] = this.dataService.data.compsets;
   compsetsGroupsOptions: Observable<CompsetsGroup[]>;
-  gridOptions: ModelGrid[];
+
+  grid: ModelGrid[] = this.dataService.data.gridData.grids.model_grid;
+  gridOptions: Observable<ModelGrid[]>;
 
   mainForm: FormGroup = this.formBuilder.group({
     case: ['', [Validators.required]],
     compset: ['', [Validators.required, this.compsetValidator()]],
-    grid: ['', []],
+    grid: ['', [Validators.required]],
     ninst: ['', [Validators.pattern(/^[1-9]\d*$/)]],
     'multi-driver': [false],
   });
@@ -41,7 +43,11 @@ export class CreateNewcaseComponent implements OnInit {
         // map(value => typeof value === 'string' ? value : value.longName),
         map((value: string) => this.filterCompsetsGroups(value))
       );
-    this.gridOptions = this.dataService.data.gridData.grids.model_grid;
+    this.gridOptions = this.mainForm.get('grid').valueChanges
+      .pipe(
+        startWith(''),
+        map((value: string) => this.filterGrids(value))
+      );
   }
 
   onSubmit() {
@@ -62,6 +68,8 @@ export class CreateNewcaseComponent implements OnInit {
       }
     });
   }
+
+  // --- compset
 
   private filterCompsetsGroups(value: string): CompsetsGroup[] {
     if (value) {
@@ -87,6 +95,18 @@ export class CreateNewcaseComponent implements OnInit {
       const compsets = this.compsetGroups.flatMap(group => group.items);
       return compsets.find(compset => compset.name === control.value) ? null : { compsetInvalid: true };
     };
+  }
+
+  // --- grid
+
+  private filterGrids(value: string): ModelGrid[] {
+    if (value) {
+      value = value.trim().toLowerCase();
+      return this.grid
+        .filter(grid => grid._attributes.alias.toLowerCase().indexOf(value) !== -1);
+    } else {
+      return this.grid;
+    }
   }
 
 }
