@@ -33,7 +33,7 @@ export class CreateNewcaseComponent implements OnInit {
   gridOptions: Observable<ModelGrid[]>;
 
   mainForm: FormGroup = this.formBuilder.group({
-    case: ['', [Validators.required]],
+    case: ['', [Validators.required, this.caseNameValidator()]],
     compset: ['', [Validators.required, this.compsetValidator()]],
     grid: ['', [Validators.required, this.gridValidator()]],
     ninst: ['', [Validators.pattern(/^[1-9]\d*$/)]],
@@ -85,6 +85,14 @@ export class CreateNewcaseComponent implements OnInit {
         command
       }
     });
+  }
+
+  // --- case name
+
+  private caseNameValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      return control.value.toString().match(/\s/) ? { hasWhitespace: true } : null;
+    };
   }
 
   // --- compset

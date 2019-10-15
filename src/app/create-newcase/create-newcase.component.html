@@ -17,6 +17,9 @@
       <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openDialog('case'); $event.stopPropagation()">
         <mat-icon>help_outline</mat-icon>
       </button>
+      <mat-error *ngIf="mainForm.get('case').hasError('hasWhitespace') && !mainForm.get('case').hasError('required')">
+        Case name should not contain spaces
+      </mat-error>
       <mat-error *ngIf="mainForm.get('case').hasError('required')">
         Case name is <strong>required</strong>
       </mat-error>
