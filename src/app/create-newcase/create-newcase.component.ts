@@ -57,10 +57,10 @@ export class CreateNewcaseComponent implements OnInit {
         // map(value => typeof value === 'string' ? value : value.longName),
         map((value: string) => this.filterCompsetsGroups(value))
       );
-    this.gridOptions = this.mainForm.get('grid').valueChanges
+    this.gridOptions = this.mainForm.valueChanges
       .pipe(
         startWith(''),
-        map((value: string) => this.filterGrids(value))
+        map((value: { [key: string]: string }) => this.filterGrids(value.grid || ''))
       );
   }
 
@@ -126,13 +126,18 @@ export class CreateNewcaseComponent implements OnInit {
   // --- grid
 
   private filterGrids(value: string): ModelGrid[] {
-    if (value) {
-      value = value.trim().toLowerCase();
-      return this.grids
-        .filter(grid => grid._attributes.alias.toLowerCase().indexOf(value) !== -1);
-    } else {
-      return this.grids;
-    }
+    value = value.trim().toLowerCase();
+    return this.grids
+      .filter(grid => grid._attributes.alias.toLowerCase().indexOf(value) !== -1)
+      .filter(grid => {
+        const ctrlCompset: AbstractControl = this.mainForm.get('compset');
+        if (!ctrlCompset || ctrlCompset.errors) {
+          return true;
+        } else {
+          const compset = this.compsetGroups.flatMap(group => group.items).find(c => c.name === ctrlCompset.value);
+          return this.checkCompsetGridCompatibility(compset, grid) === null;
+        }
+      });
   }
 
   private gridValidator(): ValidatorFn {
@@ -152,18 +157,22 @@ export class CreateNewcaseComponent implements OnInit {
       }
       const compset = this.compsetGroups.flatMap(group => group.items).find(c => c.name === ctrlCompset.value);
       const grid = this.grids.find(g => g._attributes.alias === ctrlGrid.value);
-      if (grid._attributes.compset) {
-        if (compset.longName.match(new RegExp(grid._attributes.compset)) === null) {
-          return { gridIncompatible: `Grid requires compset "${grid._attributes.compset}"` };
-        }
-      }
-      if (grid._attributes.not_compset) {
-        if (compset.longName.match(new RegExp(grid._attributes.not_compset)) !== null) {
-          return { gridIncompatible: `Grid is incompatible with compset "${grid._attributes.not_compset}"` };
-        }
-      }
-      return null;
+      return this.checkCompsetGridCompatibility(compset, grid);
     };
+  }
+
+  private checkCompsetGridCompatibility(compset: Compset, grid: ModelGrid): null | { gridIncompatible: string } {
+    if (grid._attributes.compset) {
+      if (compset.longName.match(new RegExp(grid._attributes.compset)) === null) {
+        return { gridIncompatible: `Grid requires compset "${grid._attributes.compset}"` };
+      }
+    }
+    if (grid._attributes.not_compset) {
+      if (compset.longName.match(new RegExp(grid._attributes.not_compset)) !== null) {
+        return { gridIncompatible: `Grid is incompatible with compset "${grid._attributes.not_compset}"` };
+      }
+    }
+    return null;
   }
 }
 
