@@ -25,3 +25,41 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+# Python backend
+
+Python backend lives in directory `prepcase-gui/server`.
+
+Dependencies of the project are managed by [Pipenv](https://github.com/pypa/pipenv).
+To start Python environment loaded with project's dependencies:
+
+```
+$ cd prepcase-gui/server
+$ pipenv shell
+```
+
+## Running development server
+
+After activating project's environment with `pipenv shell` you can start development server.
+
+```
+(server) $ cd src
+(server) $ python api.py
+ * Serving Flask app "api" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+ * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 332-332-280
+```
+
+## Testing
+
+With the development environment running tyou can run tests in `test.py`:
+
+```
+(server) $ python test.py
+```
