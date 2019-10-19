@@ -58,7 +58,7 @@ After activating project's environment with `pipenv shell` you can start develop
 
 ## Testing
 
-With the development environment running tyou can run tests in `test.py`:
+With the development environment running you can run tests in `test.py`:
 
 ```
 (server) $ python test.py
