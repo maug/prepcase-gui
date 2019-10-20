@@ -1,0 +1,139 @@
+[
+    {
+        "action": "help", 
+        "default": "==SUPPRESS==", 
+        "help": "show this help message and exit", 
+        "parameter_name": "--help"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print debug information (very verbose) to file /home/piotr/cmcc/cesm/cime/scripts/query_config.log", 
+        "parameter_name": "--debug"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Add additional context (time and file) to log messages", 
+        "parameter_name": "--verbose"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print only warnings and error messages", 
+        "parameter_name": "--silent"
+    }, 
+    {
+        "choices": [
+            "all", 
+            "allactive", 
+            "drv", 
+            "cam", 
+            "cism", 
+            "clm", 
+            "cice", 
+            "pop", 
+            "nemo"
+        ], 
+        "const": "all", 
+        "help": "Query compsets corresponding to the target component for the cesm model. If no component is given, lists compsets defined by all components", 
+        "nargs": "?", 
+        "parameter_name": "--compsets"
+    }, 
+    {
+        "choices": [
+            "all", 
+            "mct", 
+            "drv", 
+            "datm", 
+            "satm", 
+            "xatm", 
+            "cam", 
+            "clm", 
+            "dlnd", 
+            "slnd", 
+            "xlnd", 
+            "cice", 
+            "dice", 
+            "sice", 
+            "xice", 
+            "pop", 
+            "nemo", 
+            "docn", 
+            "socn", 
+            "xocn", 
+            "rtm", 
+            "mosart", 
+            "drof", 
+            "srof", 
+            "xrof", 
+            "cism", 
+            "dglc", 
+            "sglc", 
+            "xglc", 
+            "ww3", 
+            "dwav", 
+            "swav", 
+            "xwav", 
+            "desp", 
+            "sesp"
+        ], 
+        "const": "all", 
+        "help": "Query component settings corresponding to the target component for cesm model.\nIf the option is empty, then the lists settings defined by all components is output", 
+        "nargs": "?", 
+        "parameter_name": "--components"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Query supported model grids for cesm model.", 
+        "parameter_name": "--grids"
+    }, 
+    {
+        "choices": [
+            "all", 
+            "current", 
+            "aleph", 
+            "athena", 
+            "bluewaters", 
+            "centos7-linux", 
+            "cheyenne", 
+            "constance", 
+            "cori-haswell", 
+            "cori-knl", 
+            "daint", 
+            "eastwind", 
+            "edison", 
+            "euler2", 
+            "euler3", 
+            "euler4", 
+            "gaea", 
+            "hobart", 
+            "homebrew", 
+            "izumi", 
+            "laramie", 
+            "lawrencium-lr3", 
+            "lawrencium-lr2", 
+            "lonestar5", 
+            "melvin", 
+            "mira", 
+            "modex", 
+            "olympus", 
+            "pleiades-bro", 
+            "pleiades-has", 
+            "pleiades-san", 
+            "pleiades-ivy", 
+            "sandia-srn-sems", 
+            "sandiatoss3", 
+            "stampede2-skx", 
+            "stampede2-knl", 
+            "theia", 
+            "theta"
+        ], 
+        "const": "all", 
+        "help": "Query supported machines for cesm model.\nIf option is left empty then all machines are listed,\nIf the option is 'current' then only the current machine details are listed.", 
+        "nargs": "?", 
+        "parameter_name": "--machines"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Provide long output for queries", 
+        "parameter_name": "--long"
+    }
+]

@@ -1,0 +1,233 @@
+[
+    {
+        "action": "help", 
+        "default": "==SUPPRESS==", 
+        "help": "show this help message and exit", 
+        "parameter_name": "--help"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print debug information (very verbose) to file /home/piotr/cmcc/cesm/cime/scripts/create_test.log", 
+        "parameter_name": "--debug"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Add additional context (time and file) to log messages", 
+        "parameter_name": "--verbose"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print only warnings and error messages", 
+        "parameter_name": "--silent"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Do not run generated tests", 
+        "parameter_name": "--no-run"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Do not build generated tests, implies --no-run", 
+        "parameter_name": "--no-build"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Do not setup generated tests, implies --no-build and --no-run", 
+        "parameter_name": "--no-setup"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Use pre-existing case directories they will pick up at the \nlatest PEND state or re-run the first failed state. Requires test-id", 
+        "parameter_name": "--use-existing"
+    }, 
+    {
+        "action": "store_true", 
+        "default": false, 
+        "help": "Enable archiving of performance data.", 
+        "parameter_name": "--save-timing"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Do not submit jobs to batch system, run locally.\nIf false, this will default to machine setting.", 
+        "parameter_name": "--no-batch"
+    }, 
+    {
+        "action": "store_true", 
+        "default": false, 
+        "help": "Use a single interactive allocation to run all the tests. This can \ndrastically reduce queue waiting but only makes sense on batch machines.", 
+        "parameter_name": "--single-submit"
+    }, 
+    {
+        "default": null, 
+        "help": "Where test cases will be created. The default is output root\nas defined in the config_machines file", 
+        "parameter_name": "--test-root"
+    }, 
+    {
+        "default": null, 
+        "help": "Where the case output is written.", 
+        "parameter_name": "--output-root"
+    }, 
+    {
+        "default": null, 
+        "help": "Specifies a root directory for baseline datasets that will \nbe used for Bit-for-bit generate and/or compare testing.", 
+        "parameter_name": "--baseline-root"
+    }, 
+    {
+        "action": "store_true", 
+        "default": false, 
+        "help": "Specifies if tests should be cleaned after run. If set, all object\nexecutables and data files will be removed after the tests are run.", 
+        "parameter_name": "--clean"
+    }, 
+    {
+        "default": null, 
+        "help": "The machine for creating and building tests. This machine must be defined\nin the config_machines.xml file for the given model. The default is to \nto match the name of the machine in the test name or the name of the \nmachine this script is run on to the NODENAME_REGEX field in \nconfig_machines.xml. WARNING: This option is highly unsafe and should \nonly be used if you are an expert.", 
+        "parameter_name": "--machine"
+    }, 
+    {
+        "default": null, 
+        "help": "Specify the mpilib. To see list of supported MPI libraries for each machine, \ninvoke ./query_config. The default is the first listing .", 
+        "parameter_name": "--mpilib"
+    }, 
+    {
+        "help": "While testing, compare baselines against the given compare directory. ", 
+        "parameter_name": "--compare"
+    }, 
+    {
+        "help": "While testing, generate baselines in the given generate directory. \nNOTE: this can also be done after the fact with bless_test_results", 
+        "parameter_name": "--generate"
+    }, 
+    {
+        "help": "Use this machine key in the lookup in testlist.xml. \nThe default is all if any --xml- argument is used.", 
+        "parameter_name": "--xml-machine"
+    }, 
+    {
+        "help": "Use this compiler key in the lookup in testlist.xml. \nThe default is all if any --xml- argument is used.", 
+        "parameter_name": "--xml-compiler"
+    }, 
+    {
+        "help": "Use this category key in the lookup in testlist.xml. \nThe default is all if any --xml- argument is used.", 
+        "parameter_name": "--xml-category"
+    }, 
+    {
+        "help": "Use this testlist to lookup tests.The default is specified in config_files.xml", 
+        "parameter_name": "--xml-testlist"
+    }, 
+    {
+        "help": "Tests to run. Testname form is TEST.GRID.COMPSET[.MACHINE_COMPILER]", 
+        "nargs": "*", 
+        "parameter_name": "testargs"
+    }, 
+    {
+        "default": null, 
+        "help": "Compiler for building cime. Default will be the name in the \nTestname or the default defined for the machine.", 
+        "parameter_name": "--compiler"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Only perform namelist actions for tests", 
+        "parameter_name": "--namelists-only"
+    }, 
+    {
+        "help": "Specify a project id for the case (optional).\nUsed for accounting when on a batch system.\nThe default is user-specified environment variable PROJECT", 
+        "parameter_name": "--project"
+    }, 
+    {
+        "help": "Specify an 'id' for the test. This is simply a string that is appended \nto the end of a test name. If no test-id is specified, a time stamp plus a \nrandom string will be used (ensuring a high probability of uniqueness). \nIf a test-id is specified, it is the user's responsibility to ensure that \neach run of create_test uses a unique test-id. WARNING: problems will occur \nif you use the same test-id twice on the same file system, even if the test \nlists are completely different.", 
+        "parameter_name": "--test-id"
+    }, 
+    {
+        "default": null, 
+        "help": "Number of tasks create_test should perform simultaneously. The default \n is min(num_cores, num_tests).", 
+        "parameter_name": "--parallel-jobs", 
+        "type": "<type 'int'>"
+    }, 
+    {
+        "default": null, 
+        "help": "The size of the processor pool that create_test can use. The default is \nMAX_MPITASKS_PER_NODE + 25 percent.", 
+        "parameter_name": "--proc-pool", 
+        "type": "<type 'int'>"
+    }, 
+    {
+        "default": null, 
+        "help": "Set the wallclock limit for all tests in the suite. \nUse the variable CIME_GLOBAL_WALLTIME to set this for all tests.", 
+        "parameter_name": "--walltime"
+    }, 
+    {
+        "default": null, 
+        "help": "Force batch system to use a certain queue", 
+        "parameter_name": "--queue"
+    }, 
+    {
+        "help": "A file containing an ascii list of tests to run", 
+        "parameter_name": "--testfile"
+    }, 
+    {
+        "action": "store_true", 
+        "default": false, 
+        "help": "If the --generate option is given, then an attempt to overwrite \nan existing baseline directory will raise an error. WARNING: Specifying this \noption will allow existing baseline directories to be silently overwritten.", 
+        "parameter_name": "--allow-baseline-overwrite"
+    }, 
+    {
+        "action": "store_true", 
+        "default": false, 
+        "help": "On batch systems, wait for submitted jobs to complete", 
+        "parameter_name": "--wait"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "If waiting, fail if throughput check fails", 
+        "parameter_name": "--wait-check-throughput"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "If waiting, fail if memory check fails", 
+        "parameter_name": "--wait-check-memory"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "If waiting, ignore if namelist diffs", 
+        "parameter_name": "--wait-ignore-namelists"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "If waiting, ignore if there's a memleak", 
+        "parameter_name": "--wait-ignore-memleak"
+    }, 
+    {
+        "default": null, 
+        "help": "For all tests to run with this number of processors", 
+        "parameter_name": "--force-procs", 
+        "type": "<type 'int'>"
+    }, 
+    {
+        "default": null, 
+        "help": "For all tests to run with this number of threads", 
+        "parameter_name": "--force-threads", 
+        "type": "<type 'int'>"
+    }, 
+    {
+        "default": null, 
+        "help": "Use a non-default location for input files", 
+        "parameter_name": "--input-dir"
+    }, 
+    {
+        "default": null, 
+        "help": "Full pathname of an optional pes specification file. The file\ncan follow either the config_pes.xml or the env_mach_pes.xml format.", 
+        "parameter_name": "--pesfile"
+    }, 
+    {
+        "default": 0, 
+        "help": "Automatically retry failed tests. >0 implies --wait", 
+        "parameter_name": "--retry", 
+        "type": "<type 'int'>"
+    }, 
+    {
+        "help": "Email to be used for batch notification.", 
+        "parameter_name": "--mail-user"
+    }, 
+    {
+        "action": "append", 
+        "help": "When to send user email. Options are: never, all, begin, end, fail.\nYou can specify multiple types with either comma-separated args or multiple -M flags.", 
+        "parameter_name": "--mail-type"
+    }
+]

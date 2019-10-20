@@ -1,0 +1,142 @@
+[
+    {
+        "action": "help", 
+        "default": "==SUPPRESS==", 
+        "help": "show this help message and exit", 
+        "parameter_name": "--help"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print debug information (very verbose) to file /home/piotr/cmcc/cesm/cime/scripts/create_newcase.log", 
+        "parameter_name": "--debug"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Add additional context (time and file) to log messages", 
+        "parameter_name": "--verbose"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print only warnings and error messages", 
+        "parameter_name": "--silent"
+    }, 
+    {
+        "help": "(required) Specify the case name. \nIf this is simply a name (not a path), the case directory is created in the current working directory.\nThis can also be a relative or absolute path specifying where the case should be created;\nwith this usage, the name of the case will be the last component of the path.", 
+        "metavar": "CASENAME", 
+        "parameter_name": "--case", 
+        "required": true
+    }, 
+    {
+        "help": "(required) Specify a compset. \nTo see list of current compsets, use the utility ./query_config --compsets in this directory.\n", 
+        "parameter_name": "--compset", 
+        "required": true
+    }, 
+    {
+        "help": "(required) Specify a model grid resolution. \nTo see list of current model resolutions, use the utility \n./query_config --grids in this directory.", 
+        "metavar": "GRID", 
+        "parameter_name": "--res", 
+        "required": true
+    }, 
+    {
+        "help": "Specify a machine. The default value is the match to NODENAME_REGEX in config_machines.xml. To see \nthe list of current machines, invoke ./query_config --machines.", 
+        "parameter_name": "--machine"
+    }, 
+    {
+        "help": "Specify a compiler. \nTo see list of supported compilers for each machine, use the utility \n./query_config --machines in this directory. \nThe default value will be the first one listed.", 
+        "parameter_name": "--compiler"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Specify that --ninst should modify the number of driver/coupler instances. \nThe default is to have one driver/coupler supporting multiple component instances.", 
+        "parameter_name": "--multi-driver"
+    }, 
+    {
+        "default": 1, 
+        "help": "Specify number of model ensemble instances. \nThe default is multiple components and one driver/coupler. \nUse --multi-driver to run multiple driver/couplers in the ensemble.", 
+        "parameter_name": "--ninst"
+    }, 
+    {
+        "help": "Specify the MPI library. To see list of supported mpilibs for each machine, invoke ./query_config --machines.\nThe default is the first listing in MPILIBS in config_machines.xml.\n", 
+        "parameter_name": "--mpilib"
+    }, 
+    {
+        "help": "Specify a project id as used in batch system accounting.", 
+        "parameter_name": "--project"
+    }, 
+    {
+        "default": "M", 
+        "help": "Specify a target size description for the number of cores. \nThis is used to query the appropriate config_pes.xml file and find the \noptimal PE-layout for your case - if it exists there. \nAllowed options are  ('S','M','L','X1','X2','[0-9]x[0-9]','[0-9]').\n", 
+        "parameter_name": "--pecount"
+    }, 
+    {
+        "help": "Full pathname to a directory containing any combination of user_nl_* files \nand a shell_commands script (typically containing xmlchange commands). \nThe directory can also contain an SourceMods/ directory with the same structure \nas would be found in a case directory.", 
+        "parameter_name": "--user-mods-dir"
+    }, 
+    {
+        "help": "Full pathname of an optional pes specification file. \nThe file can follow either the config_pes.xml or the env_mach_pes.xml format.", 
+        "parameter_name": "--pesfile"
+    }, 
+    {
+        "help": "Full pathname of config grid file to use. \nThis should be a copy of config/config_grids.xml with the new user grid changes added to it. \n", 
+        "parameter_name": "--gridfile"
+    }, 
+    {
+        "default": "default", 
+        "help": "A workflow from config_workflow.xml to apply to this case. ", 
+        "parameter_name": "--workflow-case"
+    }, 
+    {
+        "default": "/home/piotr/cmcc/cesm", 
+        "help": "Alternative pathname for source root directory. The default is cimeroot/../", 
+        "parameter_name": "--srcroot"
+    }, 
+    {
+        "help": "Alternative pathname for the directory where case output is written.", 
+        "parameter_name": "--output-root"
+    }, 
+    {
+        "default": null, 
+        "dest": "script_root", 
+        "help": "==SUPPRESS==", 
+        "parameter_name": "--script-root"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Force the creation of a case that is not tested or supported by CESM developers.", 
+        "parameter_name": "--run-unsupported"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "==SUPPRESS==", 
+        "parameter_name": "--test"
+    }, 
+    {
+        "default": null, 
+        "help": "Set the wallclock limit for this case in the format (the usual format is HH:MM:SS). \nYou may use env var CIME_GLOBAL_WALLTIME to set this. \nIf CIME_GLOBAL_WALLTIME is not defined in the environment, then the walltime\nwill be the maximum allowed time defined for the queue in config_batch.xml.", 
+        "parameter_name": "--walltime"
+    }, 
+    {
+        "default": null, 
+        "help": "Force batch system to use the specified queue. ", 
+        "parameter_name": "--queue"
+    }, 
+    {
+        "choices": [
+            "a", 
+            "r", 
+            "u"
+        ], 
+        "default": null, 
+        "dest": "answer", 
+        "help": "Do not query how to handle pre-existing bld/exe dirs. \nValid options are (a)bort (r)eplace or (u)se existing. \nThis can be useful if you need to run create_newcase non-iteractively.", 
+        "parameter_name": "--handle-preexisting-dirs"
+    }, 
+    {
+        "help": "Use a non-default location for input files. This will change the xml value of DIN_LOC_ROOT.", 
+        "parameter_name": "--input-dir"
+    }, 
+    {
+        "help": "==SUPPRESS==", 
+        "parameter_name": "--driver"
+    }
+]

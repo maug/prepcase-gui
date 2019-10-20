@@ -1,0 +1,67 @@
+[
+    {
+        "action": "help", 
+        "default": "==SUPPRESS==", 
+        "help": "show this help message and exit", 
+        "parameter_name": "--help"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print debug information (very verbose) to file /home/piotr/cmcc/cesm/cime/scripts/query_testlists.log", 
+        "parameter_name": "--debug"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Add additional context (time and file) to log messages", 
+        "parameter_name": "--verbose"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print only warnings and error messages", 
+        "parameter_name": "--silent"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Rather than listing tests, just give counts by category/machine/compiler.", 
+        "parameter_name": "--count"
+    }, 
+    {
+        "choices": [
+            "category", 
+            "categories", 
+            "machine", 
+            "machines", 
+            "compiler", 
+            "compilers"
+        ], 
+        "dest": "list_type", 
+        "help": "Rather than listing tests, list the available options for\n--xml-category, --xml-machine, or --xml-compiler.\n(The singular and plural forms are equivalent - so '--list category'\nis equivalent to '--list categories', etc.)", 
+        "parameter_name": "--list"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "For each test, also show options for that test\n(wallclock time, memory leak tolerance, etc.).\n(Has no effect with --list or --count options.)", 
+        "parameter_name": "--show-options"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "At the top of the list of tests, define all of the possible test types.\n(Has no effect with --list or --count options.)", 
+        "parameter_name": "--define-testtypes"
+    }, 
+    {
+        "help": "Only include tests in this category; default is all categories.", 
+        "parameter_name": "--xml-category"
+    }, 
+    {
+        "help": "Only include tests for this machine; default is all machines.", 
+        "parameter_name": "--xml-machine"
+    }, 
+    {
+        "help": "Only include tests for this compiler; default is all compilers.", 
+        "parameter_name": "--xml-compiler"
+    }, 
+    {
+        "help": "Path to testlist file from which tests are gathered;\ndefault is all files specified in config_files.xml.", 
+        "parameter_name": "--xml-testlist"
+    }
+]
