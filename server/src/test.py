@@ -12,9 +12,8 @@ for case in server.App.list_cases()['result']:
 
 print ("App.run_tool:")
 params = {'--name':"case-D", '--compset':"B1850", '--grid':"T31_g37", '--n-inst':1, '--multi_driver':False}
-r = server.App.run_tool('create_newcase', params)['result']
-print(r['command'], '=>', r['return_code'])
-
+r = server.App.run_tool('create_newcase', params)
+print(r)
 
 print('App.get_config')
 r = server.App.get_config(path_name="wrong_path_name.xml")
@@ -25,3 +24,6 @@ assert 'XML' in str(r['result']['data']).upper()
 
 r = server.App.tools_parameters()
 print(json.dumps(r['result'], indent=4))
+
+r = server.App.run_tool("query_config", {"--compsets": "cam"})
+print (r)

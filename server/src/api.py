@@ -3,6 +3,8 @@ from flask.helpers import safe_join
 from flask_jsonrpc import JSONRPC
 import os
 import json
+import subprocess
+from operator import add
 
 app = Flask(__name__)
 jsonrpc = JSONRPC(app, '/api', enable_web_browsable_api=True)
@@ -10,7 +12,8 @@ jsonrpc = JSONRPC(app, '/api', enable_web_browsable_api=True)
 THIS_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
 # cesm directory on the server
-CESM_DIRECTORY = THIS_DIRECTORY + "/../../../cesm"
+CESM_DIRECTORY = THIS_DIRECTORY + "/../../../cesm/"
+CIME_DIRECTORY = CESM_DIRECTORY + "/cime"
 CESM_TOOLS = 'create_clone create_test query_testlists create_newcase query_config'.split()
 
 @jsonrpc.method('App.tools_parameters')
@@ -30,11 +33,19 @@ def tools_parameters():
 @jsonrpc.method('App.run_tool')
 def run_tool(tool, parameters):
     """
-    Run one of the CESM tools
+    Run one of the supported command line tools.
     """
-    return_code = 0
-    command = tool + "..." # TODO
-    return dict(return_code=return_code, command=command)
+    executable = safe_join(CIME_DIRECTORY, "scripts", tool)
+    args = reduce(add, [[k, str(v)] for k, v in parameters.items()])
+    command = [executable] + args
+
+    p = subprocess.Popen(command, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    stdout, stderr = p.communicate()
+
+    return dict(return_code=p.returncode,
+                stdout=stdout,
+                stderr=stderr,
+                command=" ".join(command))
 
 
 @jsonrpc.method('App.list_cases')
