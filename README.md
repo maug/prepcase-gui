@@ -34,7 +34,8 @@ Dependencies of the project are managed by [Pipenv](https://github.com/pypa/pipe
 To start Python environment loaded with project's dependencies:
 
 ```
-$ cd prepcase-gui/server
+$ cd prepcase-gui/server      
+$ pipenv install
 $ pipenv shell
 ```
 
