@@ -12,8 +12,8 @@ jsonrpc = JSONRPC(app, '/api', enable_web_browsable_api=True)
 THIS_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
 # cesm directory on the server
-CESM_DIRECTORY = THIS_DIRECTORY + "/../../../cesm/"
-CIME_DIRECTORY = CESM_DIRECTORY + "/cime"
+CESM_DIRECTORY = os.path.join(THIS_DIRECTORY, "../../../cesm")
+CIME_DIRECTORY = os.path.join(CESM_DIRECTORY, "cime")
 CESM_TOOLS = 'create_clone create_test query_testlists create_newcase query_config'.split()
 
 @jsonrpc.method('App.tools_parameters')
@@ -38,6 +38,7 @@ def run_tool(tool, parameters):
     executable = safe_join(CIME_DIRECTORY, "scripts", tool)
     args = reduce(add, [[k, str(v)] for k, v in parameters.items()])
     command = [executable] + args
+    command = [txt for txt in command if txt.strip() != ""] # Popen doesn't work with empty parameters
 
     p = subprocess.Popen(command, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     stdout, stderr = p.communicate()
