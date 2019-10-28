@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 flask = "==1.1.1"
 flask-jsonrpc = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "2.7"

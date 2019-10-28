@@ -1,12 +1,14 @@
 from flask import Flask
 from flask.helpers import safe_join
 from flask_jsonrpc import JSONRPC
+from flask_cors import CORS
 import os
 import json
 import subprocess
 from operator import add
 
 app = Flask(__name__)
+CORS(app) # allow CORS for all domains (FOR DEVELOPMENT SERVER)
 jsonrpc = JSONRPC(app, '/api', enable_web_browsable_api=True)
 
 THIS_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
