@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { GridData } from './models/GridData';
+import { JsonRpcService } from './json-rpc.service';
+import { forkJoin } from 'rxjs';
 
 export interface Compset {
   name: string;
@@ -22,29 +24,26 @@ export class CreateNewcaseService {
 
   data: { compsets: CompsetsGroup[], gridData: GridData };
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private jsonRpc: JsonRpcService) {
   }
 
-  loadData() {
+  loadData(): Promise<any> {
     this.data = { compsets: null, gridData: null };
 
-    const compsetsPromise = new Promise((resolve, reject) => {
-      this.http.get('assets/config_compsets.json', {responseType: 'json'})
-        .subscribe(data => {
-          this.data.compsets = this.parseCompsetsData(data);
-          resolve(true);
-        });
+    const allLoaded = new Promise((resolve, reject) => {
+      forkJoin({
+        toolsParameters: this.jsonRpc.rpc('http://prepcase.test:5000/api', 'App.tools_parameters'),
+        compsets: this.http.get('assets/config_compsets.json', {responseType: 'json'}),
+        grids: this.http.get('assets/config_grids.xml', {responseType: 'text'}),
+      }).subscribe(data => {
+        console.log('toolsParameters', data.toolsParameters);
+        this.data.compsets = this.parseCompsetsData(data.compsets);
+        this.data.gridData = this.parseGridData(data.grids);
+        resolve(true);
+      });
     });
 
-    const gridsPromise = new Promise((resolve, reject) => {
-      this.http.get('assets/config_grids.xml', {responseType: 'text'})
-        .subscribe(data => {
-          this.data.gridData = this.parseGridData(data);
-          resolve(true);
-        });
-    });
-
-    return Promise.all([compsetsPromise, gridsPromise]);
+    return allLoaded;
   }
 
   private parseCompsetsData(defs: any): CompsetsGroup[] {

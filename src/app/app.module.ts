@@ -10,6 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HelpDialogComponent } from './help-dialog/help-dialog.component';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material';
 import { HttpClientModule } from '@angular/common/http';
+import { JsonRpcService } from './json-rpc.service';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   providers: [
     CreateNewcaseService,
+    JsonRpcService,
     // wait for load as in https://devblog.dymel.pl/2017/10/17/angular-preload/
     { provide: APP_INITIALIZER, useFactory: createNewcaseServiceFactory, deps: [CreateNewcaseService], multi: true }
     // { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
