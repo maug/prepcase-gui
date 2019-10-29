@@ -33,9 +33,9 @@ export class CreateNewcaseComponent implements OnInit {
   gridOptions: Observable<ModelGrid[]>;
 
   mainForm: FormGroup = this.formBuilder.group({
-    case: ['', [Validators.required, this.caseNameValidator()]],
-    compset: ['', [Validators.required, this.compsetValidator()]],
-    grid: ['', [Validators.required, this.gridValidator()]],
+    '--case': ['', [Validators.required, this.caseNameValidator()]],
+    '--compset': ['', [Validators.required, this.compsetValidator()]],
+    '--res': ['', [Validators.required, this.gridValidator()]],
     ninst: ['', [Validators.pattern(/^[1-9]\d*$/)]],
     'multi-driver': [false],
   }, { validators: this.compsetGridValidator() });
@@ -50,7 +50,7 @@ export class CreateNewcaseComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.compsetsGroupsOptions = this.mainForm.get('compset').valueChanges
+    this.compsetsGroupsOptions = this.mainForm.get('--compset').valueChanges
       .pipe(
         startWith(''),
         // why after selection here goes object (although diplayFn changed it to longName)?
@@ -60,7 +60,7 @@ export class CreateNewcaseComponent implements OnInit {
     this.gridOptions = this.mainForm.valueChanges
       .pipe(
         startWith(''),
-        map((value: { [key: string]: string }) => this.filterGrids(value.grid || ''))
+        map((value: { [key: string]: string }) => this.filterGrids(value['--res'] || ''))
       );
   }
 
@@ -68,9 +68,9 @@ export class CreateNewcaseComponent implements OnInit {
     console.warn('SUBMIT!', this.mainForm.value);
     const submittedCommand = `
       create_newcase
-        --case=${this.mainForm.get('case').value}
-        --compset=${this.mainForm.get('compset').value}
-        --res=${this.mainForm.get('grid').value}
+        --case=${this.mainForm.get('--case').value}
+        --compset=${this.mainForm.get('--compset').value}
+        --res=${this.mainForm.get('--res').value}
         ${this.mainForm.get('ninst').value ? '--ninst=' + this.mainForm.get('ninst').value : ''}
         ${this.mainForm.get('multi-driver').value ? '--multi-driver' : ''}
     `.trimRight().replace(/^\s*\n/gm, '');
@@ -130,7 +130,7 @@ export class CreateNewcaseComponent implements OnInit {
     return this.grids
       .filter(grid => grid._attributes.alias.toLowerCase().indexOf(value) !== -1)
       .filter(grid => {
-        const ctrlCompset: AbstractControl = this.mainForm.get('compset');
+        const ctrlCompset: AbstractControl = this.mainForm.get('--compset');
         if (!ctrlCompset || ctrlCompset.errors) {
           return true;
         } else {
@@ -150,8 +150,8 @@ export class CreateNewcaseComponent implements OnInit {
 
   private compsetGridValidator(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      const ctrlCompset: AbstractControl = control.get('compset');
-      const ctrlGrid: AbstractControl = control.get('grid');
+      const ctrlCompset: AbstractControl = control.get('--compset');
+      const ctrlGrid: AbstractControl = control.get('--grid');
       if (!ctrlCompset || !ctrlGrid || ctrlCompset.errors || ctrlGrid.errors) {
         return null;
       }
