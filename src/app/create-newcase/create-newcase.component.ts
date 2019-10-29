@@ -5,19 +5,25 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  FormGroupDirective, NgForm,
+  FormGroupDirective,
+  NgForm,
   ValidationErrors,
   ValidatorFn,
   Validators
 } from '@angular/forms';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import {ErrorStateMatcher} from '@angular/material/core';
+import { ErrorStateMatcher } from '@angular/material/core';
 
-import {Observable} from 'rxjs';
-import {startWith, map} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 
 import { ModelGrid } from '../types/GridData';
+import { FormItemText } from '../dynamic-form/FormItemText';
+import { FormItemBase } from '../dynamic-form/FormItemBase';
+import { Action } from '../types/ToolsParameters';
+import { FormItemCheckbox } from '../dynamic-form/FormItemCheckbox';
+import { FormItemDropdown } from '../dynamic-form/FormItemDropdown';
 
 @Component({
   selector: 'app-create-newcase',
@@ -32,13 +38,9 @@ export class CreateNewcaseComponent implements OnInit {
   grids: ModelGrid[] = this.dataService.data.gridData.grids.model_grid;
   gridOptions: Observable<ModelGrid[]>;
 
-  mainForm: FormGroup = this.formBuilder.group({
-    '--case': ['', [Validators.required, this.caseNameValidator()]],
-    '--compset': ['', [Validators.required, this.compsetValidator()]],
-    '--res': ['', [Validators.required, this.gridValidator()]],
-    ninst: ['', [Validators.pattern(/^[1-9]\d*$/)]],
-    'multi-driver': [false],
-  }, { validators: this.compsetGridValidator() });
+  mainForm: FormGroup;
+
+  dynamicInputs: FormItemBase<any>[] = [];
 
   gridErrorMatcher = new FormErrorStateMatcher('gridIncompatible');
 
@@ -50,6 +52,8 @@ export class CreateNewcaseComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.createFormControls();
+
     this.compsetsGroupsOptions = this.mainForm.get('--compset').valueChanges
       .pipe(
         startWith(''),
@@ -72,7 +76,6 @@ export class CreateNewcaseComponent implements OnInit {
         --compset=${this.mainForm.get('--compset').value}
         --res=${this.mainForm.get('--res').value}
         ${this.mainForm.get('ninst').value ? '--ninst=' + this.mainForm.get('ninst').value : ''}
-        ${this.mainForm.get('multi-driver').value ? '--multi-driver' : ''}
     `.trimRight().replace(/^\s*\n/gm, '');
     this.snackBar.open(submittedCommand, null, {
       duration: 10000,
@@ -85,6 +88,54 @@ export class CreateNewcaseComponent implements OnInit {
         command
       }
     });
+  }
+
+  private createFormControls(): void {
+    this.mainForm = this.formBuilder.group({
+      '--case': ['test_name', [Validators.required, this.caseNameValidator()]],
+      '--compset': ['B1850', [Validators.required, this.compsetValidator()]],
+      '--res': ['T31_g37', [Validators.required, this.gridValidator()]],
+      ninst: ['', [Validators.pattern(/^[1-9]\d*$/)]],
+    }, { validators: this.compsetGridValidator() });
+
+    for (const entry of this.dataService.data.toolsParameters.create_newcase) {
+      if (this.mainForm.get(entry.parameter_name)) {
+        // skip parameters defined manually
+        continue;
+      }
+      if (entry.parameter_name === '--help') {
+        continue;
+      }
+      // mytodo: required item
+      // mytodo: validations
+      let input: FormItemBase<any>;
+      if (entry.action === Action.StoreTrue) {
+        input = new FormItemCheckbox({
+          help: entry.help,
+          key: entry.parameter_name,
+          label: entry.parameter_name,
+          value: !!entry.default,
+        });
+      } else  if (entry.choices) {
+        input = new FormItemDropdown({
+          help: entry.help,
+          key: entry.parameter_name,
+          label: entry.parameter_name,
+          options: entry.choices.map(o => ({ key: o, value: o })),
+          value: entry.default ? String(entry.default) : '',
+        });
+      } else {
+        input = new FormItemText({
+          help: entry.help,
+          key: entry.parameter_name,
+          label: entry.parameter_name,
+          type: 'text',
+          value: entry.default == null ? '' : String(entry.default),
+        });
+      }
+      this.dynamicInputs.push(input);
+      this.mainForm.addControl(input.key, new FormControl(input.value));
+    }
   }
 
   // --- case name

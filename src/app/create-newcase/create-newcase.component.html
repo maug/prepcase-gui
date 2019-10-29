@@ -104,17 +104,10 @@
       </mat-error>
     </mat-form-field>
 
-    <!-- MULTI-DRIVER -->
 
-    <mat-checkbox
-      formControlName="multi-driver"
-      [labelPosition]="'after'"
-      >
-      Multi driver?
-    </mat-checkbox>
-    <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openDialog('multi-driver'); $event.stopPropagation()">
-      <mat-icon>help_outline</mat-icon>
-    </button>
+    <div *ngFor="let input of dynamicInputs">
+      <app-dynamic-form-item [item]="input" [form]="mainForm" [onHelp]="openDialog"></app-dynamic-form-item>
+    </div>
 
     <br><br>
 

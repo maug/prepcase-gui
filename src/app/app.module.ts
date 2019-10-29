@@ -11,11 +11,13 @@ import { HelpDialogComponent } from './help-dialog/help-dialog.component';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material';
 import { HttpClientModule } from '@angular/common/http';
 import { JsonRpcService } from './json-rpc.service';
+import { DynamicFormItemComponent } from './dynamic-form/dynamic-form-item/dynamic-form-item.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CreateNewcaseComponent,
+    DynamicFormItemComponent,
     HelpDialogComponent,
   ],
   entryComponents: [
