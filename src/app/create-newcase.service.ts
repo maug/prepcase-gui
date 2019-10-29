@@ -1,11 +1,12 @@
 import { xml2js } from 'xml-js';
+import { forkJoin } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { GridData } from './models/GridData';
+import { GridData } from './types/GridData';
 import { JsonRpcService } from './json-rpc.service';
-import { forkJoin } from 'rxjs';
+import { ToolsParameters } from './types/ToolsParameters';
 
 export interface Compset {
   name: string;
@@ -22,13 +23,17 @@ export interface CompsetsGroup {
 })
 export class CreateNewcaseService {
 
-  data: { compsets: CompsetsGroup[], gridData: GridData };
+  data: {
+    toolsParameters: ToolsParameters,
+    compsets: CompsetsGroup[],
+    gridData: GridData,
+  };
 
   constructor(private http: HttpClient, private jsonRpc: JsonRpcService) {
   }
 
   loadData(): Promise<any> {
-    this.data = { compsets: null, gridData: null };
+    this.data = { toolsParameters: null, compsets: null, gridData: null };
 
     const allLoaded = new Promise((resolve, reject) => {
       forkJoin({
@@ -37,6 +42,7 @@ export class CreateNewcaseService {
         grids: this.http.get('assets/config_grids.xml', {responseType: 'text'}),
       }).subscribe(data => {
         console.log('toolsParameters', data.toolsParameters);
+        this.data.toolsParameters = data.toolsParameters;
         this.data.compsets = this.parseCompsetsData(data.compsets);
         this.data.gridData = this.parseGridData(data.grids);
         resolve(true);

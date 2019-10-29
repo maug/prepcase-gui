@@ -17,7 +17,7 @@ import {Observable} from 'rxjs';
 import {startWith, map} from 'rxjs/operators';
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 
-import { ModelGrid } from '../models/GridData';
+import { ModelGrid } from '../types/GridData';
 
 @Component({
   selector: 'app-create-newcase',
