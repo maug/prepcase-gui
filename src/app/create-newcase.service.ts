@@ -42,7 +42,7 @@ export class CreateNewcaseService {
         grids: this.http.get('assets/config_grids.xml', {responseType: 'text'}),
       }).subscribe(data => {
         console.log('toolsParameters', data.toolsParameters);
-        this.data.toolsParameters = data.toolsParameters;
+        this.data.toolsParameters = this.parseToolParametersData(data.toolsParameters);
         this.data.compsets = this.parseCompsetsData(data.compsets);
         this.data.gridData = this.parseGridData(data.grids);
         resolve(true);
@@ -50,6 +50,17 @@ export class CreateNewcaseService {
     });
 
     return allLoaded;
+  }
+
+  private parseToolParametersData(toolParameters: ToolsParameters): ToolsParameters {
+    for (const section of Object.values(toolParameters)) {
+      for (const item of section) {
+        if (item.help === '==SUPPRESS==') {
+          item.help = '';
+        }
+      }
+    }
+    return toolParameters;
   }
 
   private parseCompsetsData(defs: any): CompsetsGroup[] {

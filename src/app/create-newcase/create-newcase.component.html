@@ -14,7 +14,7 @@
              formControlName="--case"
              required
       >
-      <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openDialog('--case'); $event.stopPropagation()">
+      <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openHelp('--case'); $event.stopPropagation()">
         <mat-icon>help_outline</mat-icon>
       </button>
       <mat-error *ngIf="mainForm.get('--case').hasError('hasWhitespace')">
@@ -36,6 +36,9 @@
              [matAutocomplete]="autoCompsets"
              required
       >
+      <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openHelp('--compset'); $event.stopPropagation()">
+        <mat-icon>help_outline</mat-icon>
+      </button>
       <mat-error *ngIf="mainForm.get('--compset').hasError('compsetInvalid') && !mainForm.get('--compset').hasError('required')">
         Compset name is invalid
       </mat-error>
@@ -64,7 +67,7 @@
              [errorStateMatcher]="gridErrorMatcher"
              required
       >
-      <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openDialog('--res'); $event.stopPropagation()">
+      <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openHelp('--res'); $event.stopPropagation()">
         <mat-icon>help_outline</mat-icon>
       </button>
       <mat-error *ngIf="mainForm.get('--res').hasError('gridInvalid') && !mainForm.get('--res').hasError('required')">
@@ -90,23 +93,25 @@
 
     <!-- NINST -->
 
+<!--
     <mat-form-field style="width: 100%">
       <input matInput
              type="text"
-             placeholder="Number of instances (--ninst)"
+             placeholder="Number of instances (&#45;&#45;ninst)"
              formControlName="ninst"
       >
-      <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openDialog('ninst'); $event.stopPropagation()">
+      <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openHelp('ninst'); $event.stopPropagation()">
         <mat-icon>help_outline</mat-icon>
       </button>
       <mat-error *ngIf="mainForm.get('ninst').hasError('pattern')">
         Required positive integer
       </mat-error>
     </mat-form-field>
+-->
 
 
     <div *ngFor="let input of dynamicInputs">
-      <app-dynamic-form-item [item]="input" [form]="mainForm" [onHelp]="openDialog"></app-dynamic-form-item>
+      <app-dynamic-form-item [item]="input" [form]="mainForm" (displayHelp)="openHelp($event)"></app-dynamic-form-item>
     </div>
 
     <br><br>

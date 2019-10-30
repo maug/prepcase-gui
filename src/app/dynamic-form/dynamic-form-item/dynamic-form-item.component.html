@@ -9,7 +9,7 @@
            [formControlName]="item.key"
     >
     <button *ngIf="item.help" type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1"
-            (click)="openDialog('ninst'); $event.stopPropagation()">
+            (click)="this.displayHelp.emit(item); $event.stopPropagation()">
       <mat-icon>help_outline</mat-icon>
     </button>
     <mat-error *ngIf="form.get(item.key).hasError('pattern')">
@@ -17,17 +17,18 @@
     </mat-error>
   </mat-form-field>
 
-  <span *ngSwitchCase="'checkbox'" style="float: left; margin-right: 50px;">
+  <div *ngSwitchCase="'checkbox'" style="float: left; margin-right: 50px; display: inline-block;">
     <mat-checkbox
                   [labelPosition]="'after'"
                   [formControlName]="item.key"
                   [checked]="item.value"
     >{{item.label}}</mat-checkbox>
-    <button *ngIf="item.help" type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1"
-            (click)="openDialog('ninst'); $event.stopPropagation()">
-      <mat-icon style="transform: scale(0.7);">help_outline</mat-icon>
+    <!-- style.visibility instead of ngIf because lack of help button distorted the layout -->
+    <button [style.visibility]="item.help ? 'visible' : 'hidden'" style="transform: scale(0.6);" type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1"
+            (click)="this.displayHelp.emit(item); $event.stopPropagation()">
+      <mat-icon>help_outline</mat-icon>
     </button>
-  </span>
+  </div>
 
   <mat-form-field *ngSwitchCase="'dropdown'" style="width: 100%">
     <mat-label>{{item.label}}</mat-label>
@@ -35,6 +36,10 @@
       <mat-option>None</mat-option>
       <mat-option *ngFor="let opt of item.options" [value]="opt.key">{{opt.value}}</mat-option>
     </mat-select>
+    <button *ngIf="item.help" type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1"
+            (click)="this.displayHelp.emit(item); $event.stopPropagation()">
+      <mat-icon>help_outline</mat-icon>
+    </button>
   </mat-form-field>
 
 </div>

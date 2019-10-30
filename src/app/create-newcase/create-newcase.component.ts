@@ -70,22 +70,46 @@ export class CreateNewcaseComponent implements OnInit {
 
   onSubmit() {
     console.warn('SUBMIT!', this.mainForm.value);
-    const submittedCommand = `
-      create_newcase
-        --case=${this.mainForm.get('--case').value}
-        --compset=${this.mainForm.get('--compset').value}
-        --res=${this.mainForm.get('--res').value}
-        ${this.mainForm.get('ninst').value ? '--ninst=' + this.mainForm.get('ninst').value : ''}
-    `.trimRight().replace(/^\s*\n/gm, '');
+
+    const params = this.dataService.data.toolsParameters.create_newcase.map(item => {
+      const control = this.mainForm.get(item.parameter_name);
+      if (!control) {
+        return null;
+      } else {
+        if (!control.value) {
+          return null;
+        } else {
+          if (control.value === true) {
+            return item.parameter_name;
+          } else {
+            return `${item.parameter_name} ${control.value}`;
+          }
+        }
+      }
+    }).filter(Boolean);
+
+    const submittedCommand = 'create_newcase\n' + params.reduce((param, acc) => `${param}  ${acc}\n`, '');
+
     this.snackBar.open(submittedCommand, null, {
       duration: 10000,
     });
   }
 
-  openDialog(command) {
+  openHelp(keyOrFormItem: string | FormItemBase<any>) {
+    const key: string = typeof keyOrFormItem === 'string' ? keyOrFormItem : keyOrFormItem.key;
+    const item = this.dataService.data.toolsParameters.create_newcase.find(row => row.parameter_name === key);
+    const texts: any[] = [item.help];
+    if (key === '--res') {
+      texts.push({ text: '<p>Each grid alias can be associated with two attributes:</p>' +
+        '      <ul>' +
+        '        <li><span style="color: green">Regular expression for compset matches that are required for this grid</span></li>' +
+        '        <li><span style="color: red">Regular expression for compset matches that are not permitted this grid</span></li>' +
+        '      </ul>', keepHtml: true });
+    }
     this.dialog.open(HelpDialogComponent, {
       data: {
-        command
+        header: key,
+        texts,
       }
     });
   }
@@ -95,7 +119,7 @@ export class CreateNewcaseComponent implements OnInit {
       '--case': ['test_name', [Validators.required, this.caseNameValidator()]],
       '--compset': ['B1850', [Validators.required, this.compsetValidator()]],
       '--res': ['T31_g37', [Validators.required, this.gridValidator()]],
-      ninst: ['', [Validators.pattern(/^[1-9]\d*$/)]],
+      // ninst: ['', [Validators.pattern(/^[1-9]\d*$/)]],
     }, { validators: this.compsetGridValidator() });
 
     for (const entry of this.dataService.data.toolsParameters.create_newcase) {

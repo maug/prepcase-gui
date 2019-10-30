@@ -12,6 +12,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material';
 import { HttpClientModule } from '@angular/common/http';
 import { JsonRpcService } from './json-rpc.service';
 import { DynamicFormItemComponent } from './dynamic-form/dynamic-form-item/dynamic-form-item.component';
+import { EscapeHtmlPipe } from './pipes/keep-html.pipe';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { DynamicFormItemComponent } from './dynamic-form/dynamic-form-item/dynam
     CreateNewcaseComponent,
     DynamicFormItemComponent,
     HelpDialogComponent,
+    EscapeHtmlPipe,
   ],
   entryComponents: [
     HelpDialogComponent,

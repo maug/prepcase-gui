@@ -1,29 +1,7 @@
-<h1 mat-dialog-title *ngIf="data.command === '--case'"><code>--case</code></h1>
-<h1 mat-dialog-title *ngIf="data.command === '--res'"><code>--res</code></h1>
-<h1 mat-dialog-title *ngIf="data.command === 'ninst'"><code>--ninst</code></h1>
-<h1 mat-dialog-title *ngIf="data.command === 'multi-driver'"><code>--multi-driver</code></h1>
+<h1 mat-dialog-title><code>{{header}}</code></h1>
 <div mat-dialog-content>
-  <div *ngIf="data.command === '--case'">
-    <p>Specify the case name.</p>
-    <p>If this is simply a name (not a path), the case directory is created in the current working directory.</p>
-    <p>This can also be a relative or absolute path specifying where the case should be created;
-       with this usage, the name of the case will be the last component of the path</p>
-  </div>
-  <div *ngIf="data.command === '--res'">
-    <p>Specify a model grid resolution</p>
-    <p>Each grid alias can be associated with two attributes:</p>
-    <ul>
-      <li><span style="color: green">Regular expression for compset matches that are required for this grid</span></li>
-      <li><span style="color: red">Regular expression for compset matches that are not permitted this grid</span></li>
-    </ul>
-  </div>
-  <div *ngIf="data.command === 'ninst'">
-    <p>Specify number of model ensemble instances.</p>
-    <p>The default is multiple components and one driver/coupler.</p>
-    <p>Use <code>--multi-driver</code> to run multiple driver/couplers in the ensemble.</p>
-  </div>
-  <div *ngIf="data.command === 'multi-driver'">
-    <p>Specify that <code>--ninst</code> should modify the number of driver/coupler instances.</p>
-    <p>The default is to have one driver/coupler supporting multiple component instances.</p>
+  <div *ngFor="let item of texts">
+    <div *ngIf="item.keepHtml" [innerHTML]="item.text | keepHtml"></div>
+    <div *ngIf="!item.keepHtml">{{item.text}}</div>
   </div>
 </div>
