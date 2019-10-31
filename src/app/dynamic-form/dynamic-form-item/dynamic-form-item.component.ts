@@ -11,11 +11,8 @@ import { FormItemBase } from '../FormItemBase';
 export class DynamicFormItemComponent implements OnInit {
   @Input() item: FormItemBase<any>;
   @Input() form: FormGroup;
-  @Input() onHelp: (item: FormItemBase<any>) => void;
 
   @Output() displayHelp = new EventEmitter<FormItemBase<any>>();
-
-  get isValid() { return this.form.controls[this.item.key].valid; }
 
   constructor() { }
 

@@ -4,7 +4,7 @@
 
   <mat-form-field *ngSwitchCase="'text'" style="width: 100%">
     <input matInput
-           [type]="item.type"
+           [type]="item['type']"
            [placeholder]="item.label"
            [formControlName]="item.key"
     >
@@ -34,7 +34,7 @@
     <mat-label>{{item.label}}</mat-label>
     <mat-select [value]="item.value" [formControlName]="item.key">
       <mat-option>None</mat-option>
-      <mat-option *ngFor="let opt of item.options" [value]="opt.key">{{opt.value}}</mat-option>
+      <mat-option *ngFor="let opt of item['options']" [value]="opt.key">{{opt.value}}</mat-option>
     </mat-select>
     <button *ngIf="item.help" type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1"
             (click)="this.displayHelp.emit(item); $event.stopPropagation()">
