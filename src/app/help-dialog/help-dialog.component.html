@@ -1,7 +1,7 @@
-<h1 mat-dialog-title><code>{{header}}</code></h1>
+<h1 mat-dialog-title *ngIf="header"><code>{{header}}</code></h1>
 <div mat-dialog-content>
   <div *ngFor="let item of texts">
-    <div *ngIf="item.keepHtml" [innerHTML]="item.text | keepHtml"></div>
-    <div *ngIf="!item.keepHtml">{{item.text}}</div>
+    <div *ngIf="item.keepHtml" [innerHTML]="item.text | keepHtml" [ngClass]="item.classes"></div>
+    <div *ngIf="!item.keepHtml" [ngClass]="item.classes">{{item.text}}</div>
   </div>
 </div>

@@ -82,16 +82,48 @@ export class CreateNewcaseComponent implements OnInit {
           if (control.value === true) {
             return item.parameter_name;
           } else {
-            return `${item.parameter_name} ${control.value}`;
+            return `${item.parameter_name}=${control.value}`;
           }
         }
       }
     }).filter(Boolean);
 
-    const submittedCommand = 'create_newcase\n' + params.reduce((param, acc) => `${param}  ${acc}\n`, '');
+    // const submittedCommand = 'create_newcase\n' + params.reduce((param, acc) => `${param}  ${acc}\n`, '');
+    // this.snackBar.open(submittedCommand, null, {
+    //   duration: 10000,
+    // });
 
-    this.snackBar.open(submittedCommand, null, {
-      duration: 10000,
+    this.dialog.open(HelpDialogComponent, {
+      disableClose: true,
+      data: {
+        texts: 'Please wait...',
+      }
+    });
+    this.dataService.createNewcase(params).subscribe(data => {
+      console.log('CREATE_NEWCASE', data);
+      const texts = [
+        { text: 'COMMAND', classes: 'h1' },
+        { text: data.command, classes: 'formatted' },
+      ];
+      if (data.return_code !== 0) {
+        texts.push({ text: 'RETURN CODE: ' + data.return_code, classes: 'h1 error' });
+      }
+      if (data.stderr) {
+        texts.push({ text: 'STDERR', classes: 'h1 error' });
+        texts.push({ text: data.stderr, classes: 'formatted error' });
+      }
+      if (data.stdout) {
+        texts.push({ text: 'STDOUT', classes: 'h1' });
+        texts.push({ text: data.stdout, classes: 'formatted' });
+      }
+      this.dialog.closeAll();
+      this.dialog.open(HelpDialogComponent, {
+        data: {
+          header: 'CREATE_NEWCASE',
+          texts,
+        }
+      });
+
     });
   }
 
@@ -116,9 +148,9 @@ export class CreateNewcaseComponent implements OnInit {
 
   private createFormControls(): void {
     this.mainForm = this.formBuilder.group({
-      '--case': ['test_name', [Validators.required, this.caseNameValidator()]],
-      '--compset': ['B1850', [Validators.required, this.compsetValidator()]],
-      '--res': ['T31_g37', [Validators.required, this.gridValidator()]],
+      '--case': ['/home/vagrant/case_test_name_mynior', [Validators.required, this.caseNameValidator()]],
+      '--compset': ['X', [Validators.required, this.compsetValidator()]],
+      '--res': ['f19_g16', [Validators.required, this.gridValidator()]],
       // ninst: ['', [Validators.pattern(/^[1-9]\d*$/)]],
     }, { validators: this.compsetGridValidator() });
 

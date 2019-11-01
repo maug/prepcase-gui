@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA } from '@angular/material';
 type Texts = Array<{
   text: string;
   keepHtml: boolean;
+  classes: string | string[];
 }>;
 
 @Component({
@@ -18,13 +19,13 @@ export class HelpDialogComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) data: { header: string, texts: string | string[] | Texts }) {
     this.header = data.header;
     if (typeof data.texts === 'string') {
-      this.texts.push({ text: data.texts, keepHtml: false });
+      this.texts.push({ text: data.texts, keepHtml: false, classes: '' });
     } else {
       for (const stringOrText of data.texts) {
         if (typeof stringOrText === 'string') {
-          this.texts.push({ text: stringOrText, keepHtml: false });
+          this.texts.push({ text: stringOrText, keepHtml: false, classes: '' });
         } else {
-          this.texts.push(stringOrText);
+          this.texts.push(Object.assign({ classes: '', keepHtml: false }, stringOrText));
         }
       }
     }
