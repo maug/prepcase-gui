@@ -1,0 +1,152 @@
+---
+# Configure Centos 7 for PrepCASE
+#
+# AFTER CREATING NEW VAGRANT MACHINE: (remove old entry from known_hosts)
+# ssh-keygen -R www.core.test
+#
+# To connect from other applications use private key from config to connect:
+# vagrant ssh-config
+#
+# In case of error "tee: /etc/exports: Operation not permitted"
+# enable Full Disk Access for iTerm: https://gitlab.com/gnachman/iterm2/wikis/fulldiskaccess
+#
+
+- hosts: all
+  user: vagrant
+  gather_facts: no
+  become_user: root
+  become: yes
+  vars:
+    hostname: prepcase.test
+    host_ip: 10.10.10.1 # IP of the host from VM's point of view
+
+  tasks:
+    # - name: install python and deps for ansible modules
+    #   raw: dnf install -y python2 python2-dnf libselinux-python
+    # - name: gather facts
+    #   setup:
+    # - name: use facts
+    #   lineinfile: dest=/etc/some-cfg-file line="myip={{ ansible_eth0.ipv4.address }}" create=true
+
+    - name: Hostname
+      shell: "[ `cat /etc/hostname` != '{{ hostname }}' ] && echo {{ hostname }} >/etc/hostname || echo 'not changed'"
+      register: shell_result
+      changed_when: shell_result.stdout != 'not changed'
+
+    - name: DNS entry for hostname
+      lineinfile: dest=/etc/hosts regexp="{{ hostname }}$" line="127.0.0.1 {{ hostname }}"
+
+    - name: Set Europe/Warsaw timezone
+      shell: cp /usr/share/zoneinfo/Europe/Warsaw /etc/localtime
+
+    - name: Add Wandisco SVN repository
+      yum_repository:
+        name: WandiscoSVN
+        description: Wandisco SVN repo
+        baseurl: http://opensource.wandisco.com/centos/$releasever/svn-1.10/RPMS/$basearch/
+        enabled: 1
+        gpgcheck: 0
+
+    - name: Add yarn repository
+      yum_repository:
+        name: yarn
+        description: Yarn Repository
+        baseurl: https://dl.yarnpkg.com/rpm/
+        enabled: 1
+        gpgcheck: 1
+        gpgkey: https://dl.yarnpkg.com/rpm/pubkey.gpg
+
+    - name: Upgrade all packages
+      yum:
+        name: '*'
+        state: latest
+
+    - name: Install command line tools & software
+      yum:
+        state: present 
+        pkg:
+          - epel-release
+          - environment-modules
+          - git
+          - subversion
+          - mc
+          - tmux
+          - telnet
+          - net-tools
+          - lsof
+          - wget
+          - vim
+          - python-pip
+          - yarn
+          - gcc-c++ 
+          - make
+
+    - name: Install pipenv
+      pip:
+        name: pipenv
+
+    - name: Install chrony (datetime synchronization)
+      yum: name=chrony state=present
+    - name: Chrony service state
+      service: name=chronyd state=started enabled=yes
+
+    - block:
+      - name: Install zsh
+        yum: name=zsh state=present
+      - name: Copy .zshrc
+        copy: src=files/.zshrc dest=~ mode=0640
+        become: no
+      - name: Check if oh-my-zsh is installed
+        shell: "[ -d ~/.oh-my-zsh ] && echo 'Found' || echo ''"
+        register: zsh_installed
+        become: no
+      - name: Install oh-my-zsh
+        git: repo=git://github.com/robbyrussell/oh-my-zsh.git dest=~/.oh-my-zsh accept_hostkey=yes
+        when: (not zsh_installed.stdout)
+        become: no
+      - name: Set zsh as default shell
+        user: name=vagrant shell=/bin/zsh
+        when: (not zsh_installed.stdout)
+      tags:
+        - zsh
+
+    # - block:
+    #   - name: Install Apache web server
+    #     yum: name=httpd state=present
+
+    #   # - name: Install PHP module for Apache
+    #   #   apt: name=libapache2-mod-php7.0 state=present
+
+    #   - name: Enable SSL for apache
+    #     apache2_module: name=ssl state=present
+
+    #   - name: Enable Rewrite for apache
+    #     apache2_module: name=rewrite state=present
+
+    #   - name: Copy Apache's virtual host file
+    #     copy: src=files/httpd/conf.d/prepcase.conf dest=/etc/httpd/conf.d/ mode=0640
+    #     tags:
+
+    #   - name: Copy SSL certificate and private key
+    #     copy: >
+    #       src={{ item }}
+    #       dest=/etc/httpd/ssl/
+    #       mode=0640
+    #     with_fileglob:
+    #       - files/httpd/ssl/*
+
+    #   - name: Apache service state
+    #     service: name=apache2 state=restarted enabled=yes
+    #   tags:
+    #     - apache
+    
+    - name: Clone CESM repo
+      git:
+        repo: git@github.com:ESCOMP/CESM.git
+        dest: /home/vagrant/cesm
+        update: no
+
+  # handlers:
+  #   - name: restart apache
+  #     action: service name=httpd state=restarted
+
