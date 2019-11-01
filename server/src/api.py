@@ -36,10 +36,10 @@ def tools_parameters():
 def run_tool(tool, parameters):
     """
     Run one of the supported command line tools.
+    Parameters are accepted as array of strings.
     """
     executable = safe_join(CIME_DIRECTORY, "scripts", tool)
-    args = reduce(add, [[k, str(v)] for k, v in parameters.items()])
-    command = [executable] + args
+    command = [executable] + parameters
     command = [txt for txt in command if txt.strip() != ""] # Popen doesn't work with empty parameters
 
     p = subprocess.Popen(command, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
