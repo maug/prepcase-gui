@@ -82,7 +82,7 @@ export class CreateNewcaseComponent implements OnInit {
           if (control.value === true) {
             return item.parameter_name;
           } else {
-            return `${item.parameter_name}=${control.value}`;
+            return `${item.parameter_name} ${control.value}`;
           }
         }
       }
