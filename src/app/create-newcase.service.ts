@@ -64,6 +64,9 @@ export class CreateNewcaseService {
         if (item.help === '==SUPPRESS==') {
           item.help = '';
         }
+        if (item.default != null) {
+          item.help += '\n\nDefault value: ' + String(item.default);
+        }
       }
     }
     return toolParameters;

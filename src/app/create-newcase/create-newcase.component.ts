@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, isDevMode, OnInit } from '@angular/core';
 import { Compset, CompsetsGroup, CreateNewcaseService } from '../create-newcase.service';
 import {
   AbstractControl,
@@ -103,18 +103,18 @@ export class CreateNewcaseComponent implements OnInit {
       console.log('CREATE_NEWCASE', data);
       const texts = [
         { text: 'COMMAND', classes: 'h1' },
-        { text: data.command, classes: 'formatted' },
+        { text: data.command, classes: 'formatted monospace' },
       ];
       if (data.return_code !== 0) {
         texts.push({ text: 'RETURN CODE: ' + data.return_code, classes: 'h1 error' });
       }
       if (data.stderr) {
         texts.push({ text: 'STDERR', classes: 'h1 error' });
-        texts.push({ text: data.stderr, classes: 'formatted error' });
+        texts.push({ text: data.stderr, classes: 'formatted monospace error' });
       }
       if (data.stdout) {
         texts.push({ text: 'STDOUT', classes: 'h1' });
-        texts.push({ text: data.stdout, classes: 'formatted' });
+        texts.push({ text: data.stdout, classes: 'formatted monospace' });
       }
       this.dialog.closeAll();
       this.dialog.open(HelpDialogComponent, {
@@ -130,7 +130,7 @@ export class CreateNewcaseComponent implements OnInit {
   openHelp(keyOrFormItem: string | FormItemBase<any>) {
     const key: string = typeof keyOrFormItem === 'string' ? keyOrFormItem : keyOrFormItem.key;
     const item = this.dataService.data.toolsParameters.create_newcase.find(row => row.parameter_name === key);
-    const texts: any[] = [item.help];
+    const texts: any[] = [{ text: item.help, classes: 'formatted' }];
     if (key === '--res') {
       texts.push({ text: '<p>Each grid alias can be associated with two attributes:</p>' +
         '      <ul>' +
@@ -148,9 +148,9 @@ export class CreateNewcaseComponent implements OnInit {
 
   private createFormControls(): void {
     this.mainForm = this.formBuilder.group({
-      '--case': ['/home/vagrant/case_test_name_mynior', [Validators.required, this.caseNameValidator()]],
-      '--compset': ['X', [Validators.required, this.compsetValidator()]],
-      '--res': ['f19_g16', [Validators.required, this.gridValidator()]],
+      '--case': ['', [Validators.required, this.caseNameValidator()]],
+      '--compset': ['', [Validators.required, this.compsetValidator()]],
+      '--res': ['', [Validators.required, this.gridValidator()]],
       // ninst: ['', [Validators.pattern(/^[1-9]\d*$/)]],
     }, { validators: this.compsetGridValidator() });
 
@@ -172,7 +172,7 @@ export class CreateNewcaseComponent implements OnInit {
           label: entry.parameter_name,
           value: !!entry.default,
         });
-      } else  if (entry.choices) {
+      } else if (entry.choices) {
         input = new FormItemDropdown({
           help: entry.help,
           key: entry.parameter_name,
@@ -182,16 +182,24 @@ export class CreateNewcaseComponent implements OnInit {
         });
       } else {
         input = new FormItemText({
-          help: entry.help,
+          help: entry.help + (entry.default == null ? '' : '\n\nDefault value: ' + String(entry.default)),
           key: entry.parameter_name,
           label: entry.parameter_name,
           type: 'text',
-          value: entry.default == null ? '' : String(entry.default),
+          value: '',
         });
       }
       this.dynamicInputs.push(input);
       this.mainForm.addControl(input.key, new FormControl(input.value));
     }
+
+    if (isDevMode()) {
+      this.mainForm.get('--case').setValue('/home/vagrant/case_mynior');
+      this.mainForm.get('--compset').setValue('X');
+      this.mainForm.get('--res').setValue('f19_g16');
+      this.mainForm.get('--machine').setValue('centos7-linux');
+    }
+
   }
 
   // --- case name
