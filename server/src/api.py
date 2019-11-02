@@ -12,7 +12,9 @@ app = Flask(__name__)
 CORS(app) # allow CORS for all domains (FOR DEVELOPMENT SERVER)
 jsonrpc = JSONRPC(app, '/api', enable_web_browsable_api=True)
 
-# cesm directory on the server
+REMOTE_USER="vagrant"
+REMOTE_HOST="prepcase.test"
+# CESM directory on the server
 CESM_DIRECTORY = "cesm" 
 CIME_DIRECTORY = "cesm/cime"
 CESM_TOOLS = 'create_clone create_test query_testlists create_newcase query_config'.split()
@@ -69,7 +71,17 @@ def run_tool(tool, parameters):
     Parameters are accepted as array of strings.
     """
     executable = safe_join(CIME_DIRECTORY, "scripts", tool)
-    return ssh_execute("vagrant", "prepcase.test", executable, parameters)
+    return ssh_execute(REMOTE_USER, REMOTE_HOST, executable, parameters)
+
+
+@jsonrpc.method('App.run_script_in_case')
+def run_script_in_case(case_path, script, parameters):
+    """
+    Run script in case directory.
+    Parameters are accepted as array of strings.
+    """
+    executable = safe_join(case_path, script)
+    return ssh_execute(REMOTE_USER, REMOTE_HOST, executable, parameters)
 
 
 @jsonrpc.method('App.list_cases')
