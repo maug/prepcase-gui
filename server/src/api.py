@@ -6,16 +6,15 @@ import os
 import json
 import subprocess
 from operator import add
+import logging
 
 app = Flask(__name__)
 CORS(app) # allow CORS for all domains (FOR DEVELOPMENT SERVER)
 jsonrpc = JSONRPC(app, '/api', enable_web_browsable_api=True)
 
-THIS_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
-
 # cesm directory on the server
-CESM_DIRECTORY = os.path.join(THIS_DIRECTORY, "../../../cesm")
-CIME_DIRECTORY = os.path.join(CESM_DIRECTORY, "cime")
+CESM_DIRECTORY = "cesm" 
+CIME_DIRECTORY = "cesm/cime"
 CESM_TOOLS = 'create_clone create_test query_testlists create_newcase query_config'.split()
 
 @jsonrpc.method('App.tools_parameters')
@@ -32,16 +31,12 @@ def tools_parameters():
     return dict([(tool, read_config(tool)) for tool in CESM_TOOLS])
 
 
-@jsonrpc.method('App.run_tool')
-def run_tool(tool, parameters):
+def execute(command):
     """
-    Run one of the supported command line tools.
-    Parameters are accepted as array of strings.
-    """
-    executable = safe_join(CIME_DIRECTORY, "scripts", tool)
-    command = [executable] + parameters
-    command = [txt for txt in command if txt.strip() != ""] # Popen doesn't work with empty parameters
+    Execute a command.
 
+    :param command:  a list: executable name and parameters
+    """
     p = subprocess.Popen(command, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     stdout, stderr = p.communicate()
 
@@ -49,6 +44,22 @@ def run_tool(tool, parameters):
                 stdout=stdout,
                 stderr=stderr,
                 command=" ".join(command))
+
+@jsonrpc.method('App.run_tool')
+def run_tool(tool, parameters):
+    """
+    Run one of the supported command line tools.
+    Parameters are accepted as array of strings.
+    """
+    executable = safe_join(CIME_DIRECTORY, "scripts", tool)
+    command = [executable] + [str(p).strip() for p in parameters]
+    command = [txt for txt in command if txt] # Popen doesn't work with empty parameters
+
+    cmd = " ".join(command)
+    ssh_command = ["ssh", "vagrant@prepcase.test"] + [cmd]
+
+    logging.info("EXECUTE {}".format(ssh_command))
+    return execute(ssh_command)
 
 
 @jsonrpc.method('App.list_cases')
