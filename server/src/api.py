@@ -45,6 +45,23 @@ def execute(command):
                 stderr=stderr,
                 command=" ".join(command))
 
+
+def ssh_execute(user, hostname, executable, parameters):
+    """
+    Execute command on remote host via ssh.
+
+    :param command:  a list: executable name and parameters
+    """
+    command = [executable] + [str(p).strip() for p in parameters]
+    command = [txt for txt in command if txt] # Popen doesn't work with empty parameters
+
+    cmd = " ".join(command)
+    ssh_command = ["ssh", user + "@" + hostname, cmd]
+
+    logging.info("EXECUTE {}".format(ssh_command))
+    return execute(ssh_command)
+
+
 @jsonrpc.method('App.run_tool')
 def run_tool(tool, parameters):
     """
@@ -52,14 +69,7 @@ def run_tool(tool, parameters):
     Parameters are accepted as array of strings.
     """
     executable = safe_join(CIME_DIRECTORY, "scripts", tool)
-    command = [executable] + [str(p).strip() for p in parameters]
-    command = [txt for txt in command if txt] # Popen doesn't work with empty parameters
-
-    cmd = " ".join(command)
-    ssh_command = ["ssh", "vagrant@prepcase.test"] + [cmd]
-
-    logging.info("EXECUTE {}".format(ssh_command))
-    return execute(ssh_command)
+    return ssh_execute("vagrant", "prepcase.test", executable, parameters)
 
 
 @jsonrpc.method('App.list_cases')
