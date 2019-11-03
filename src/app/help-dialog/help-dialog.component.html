@@ -5,3 +5,9 @@
     <div *ngIf="!item.keepHtml" [ngClass]="item.classes">{{item.text}}</div>
   </div>
 </div>
+<div *ngIf="buttons.length > 0">
+  <br>
+  <span *ngFor="let btn of buttons">
+    <button mat-raised-button [mat-dialog-close]="btn.id">{{btn.label}}</button>
+  </span>
+</div>

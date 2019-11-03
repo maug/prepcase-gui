@@ -24,6 +24,7 @@ import { FormItemBase } from '../dynamic-form/FormItemBase';
 import { Action } from '../types/ToolsParameters';
 import { FormItemCheckbox } from '../dynamic-form/FormItemCheckbox';
 import { FormItemDropdown } from '../dynamic-form/FormItemDropdown';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-newcase',
@@ -45,6 +46,7 @@ export class CreateNewcaseComponent implements OnInit {
   gridErrorMatcher = new FormErrorStateMatcher('gridIncompatible');
 
   constructor(
+    private router: Router,
     private dataService: CreateNewcaseService,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
@@ -101,6 +103,7 @@ export class CreateNewcaseComponent implements OnInit {
     });
     this.dataService.createNewcase(params).subscribe(data => {
       console.log('CREATE_NEWCASE', data);
+      const buttons = [];
       const texts = [
         { text: 'COMMAND', classes: 'h1' },
         { text: data.command, classes: 'formatted monospace' },
@@ -116,11 +119,28 @@ export class CreateNewcaseComponent implements OnInit {
         texts.push({ text: 'STDOUT', classes: 'h1' });
         texts.push({ text: data.stdout, classes: 'formatted monospace' });
       }
+
+      let caseRoot: string;
+      if (data.return_code === 0) {
+        const match = data.stdout.match(/Creating Case directory (.+)$/m);
+        if (match) {
+          caseRoot = match[1];
+          texts.push({ text: `New case was created in "${caseRoot}"`, classes: 'h1' });
+          buttons.push({ label: 'Go to case', id: 'go_to_case' });
+        }
+      }
       this.dialog.closeAll();
-      this.dialog.open(HelpDialogComponent, {
+      const dialogRef = this.dialog.open(HelpDialogComponent, {
         data: {
           header: 'CREATE_NEWCASE',
           texts,
+          buttons,
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(buttonId => {
+        if (caseRoot && buttonId === 'go_to_case') {
+          this.router.navigate(['/case', caseRoot]);
         }
       });
 
