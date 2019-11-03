@@ -53,7 +53,7 @@ export class CreateNewcaseService {
     return allLoaded;
   }
 
-  createNewcase(params: string[]): Observable<any> {
+  createNewcase(params: string[]): Observable<RpcExecuteCommandResponse> {
     return this.jsonRpc.rpc(environment.jsonRpcUrl, 'App.run_tool', ['create_newcase', params]);
   }
 

@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CaseService } from './case.service';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-case',
@@ -12,16 +17,86 @@ export class CaseComponent implements OnInit {
   caseRoot: string;
 
   caseData: string;
+  caseVars: { [key: string]: string } = {};
+  caseVarsOptions: Observable<string[]>;
 
-  constructor(private activatedRoute: ActivatedRoute, private dataService: CaseService) { }
+  mainForm: FormGroup;
+
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private dataService: CaseService,
+    private formBuilder: FormBuilder,
+    private dialog: MatDialog,
+  ) { }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(paramMap => {
       this.caseRoot = paramMap.get('caseRoot');
-      this.dataService.getCaseData(this.caseRoot).subscribe(data => {
-        this.caseData = data.stdout;
-      });
+      this.loadCaseData();
     });
+
+    this.mainForm = this.formBuilder.group({
+      'xmlchange_key': ['', [this.varNameValidator()]],
+      'xmlchange_value': ['', []],
+    });
+
+    // options from autocomplete
+    this.caseVarsOptions = this.mainForm.get('xmlchange_key').valueChanges
+      .pipe(
+        startWith(''),
+        map((value: string) => Object.keys(this.caseVars).sort()
+          .filter(key => key.toLowerCase().includes(value.toLowerCase()))
+        )
+      );
+
+    // fill var value when value selected
+    this.mainForm.get('xmlchange_key').valueChanges.subscribe(key => {
+      if (this.caseVars.hasOwnProperty(key)) {
+        this.mainForm.get('xmlchange_value').setValue(this.caseVars[key]);
+      }
+    });
+  }
+
+  onSubmit() {
+    this.dialog.open(HelpDialogComponent, {
+      disableClose: true,
+      data: {
+        texts: 'Please wait...',
+      }
+    });
+    this.dataService.xmlChange(
+      this.caseRoot,
+      this.mainForm.get('xmlchange_key').value,
+      this.mainForm.get('xmlchange_value').value
+    ).subscribe(data => {
+      this.dialog.closeAll();
+      if (data.return_code !== 0) {
+        this.dialog.open(HelpDialogComponent, {
+          data: {
+            texts: [{ text: data.stderr, classes: 'error' }],
+          }
+        });
+      } else {
+        this.loadCaseData();
+      }
+    });
+  }
+
+  private loadCaseData() {
+    this.dataService.getCaseData(this.caseRoot).subscribe(data => {
+      this.caseData = data.stdout;
+      const matches = this.caseData.matchAll(/^\s*(.+): (.*)$/mg);
+      this.caseVars = {};
+      for (const match of matches) {
+        this.caseVars[match[1]] = match[2];
+      }
+    });
+  }
+
+  private varNameValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      return Object.keys(this.caseVars).find(key => key === control.value) ? null : { invalidCaseVar: true };
+    };
   }
 
 }

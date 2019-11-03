@@ -1,4 +1,37 @@
 <mat-toolbar>Case {{caseRoot}}</mat-toolbar>
+<div class="contents">
+  <br>
+  <form [formGroup]="mainForm" (ngSubmit)="onSubmit()">
+
+    <mat-form-field style="width: 40%">
+      <input matInput
+             type="text"
+             placeholder="Case variable"
+             spellcheck="false"
+             formControlName="xmlchange_key"
+             [matAutocomplete]="autoCompsets"
+             required
+      >
+      <mat-autocomplete class="high-autocomplete-panel" #autoCompsets="matAutocomplete">
+        <mat-option class="small" *ngFor="let key of caseVarsOptions | async" [value]="key">
+          {{key}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field style="width: 60%">
+      <input matInput
+             type="text"
+             placeholder="Variable value"
+             spellcheck="false"
+             formControlName="xmlchange_value"
+             required
+      >
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" type="submit" [disabled]="!mainForm.valid">Change</button>
+  </form>
+</div>
 <div class="contents formatted">
   {{caseData}}
 </div>
