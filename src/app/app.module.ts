@@ -13,10 +13,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { JsonRpcService } from './json-rpc.service';
 import { DynamicFormItemComponent } from './dynamic-form/dynamic-form-item/dynamic-form-item.component';
 import { EscapeHtmlPipe } from './pipes/keep-html.pipe';
+import { appRoutes } from './app.routing';
+import { CaseComponent } from './case/case.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
     AppComponent,
+    CaseComponent,
     CreateNewcaseComponent,
     DynamicFormItemComponent,
     HelpDialogComponent,
@@ -26,11 +30,12 @@ import { EscapeHtmlPipe } from './pipes/keep-html.pipe';
     HelpDialogComponent,
   ],
   imports: [
+    AppMaterialModule,
     BrowserModule,
     BrowserAnimationsModule,
-    AppMaterialModule,
     HttpClientModule,
     ReactiveFormsModule,
+    RouterModule.forRoot(appRoutes, { enableTracing: false }),
   ],
   providers: [
     CreateNewcaseService,
