@@ -7,8 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { GridData } from './types/GridData';
 import { JsonRpcService } from './json-rpc.service';
 import { ToolsParameters } from './types/ToolsParameters';
-
-const JSON_ENDPOINT = 'http://prepcase.test:5000/api';
+import { environment } from '../environments/environment';
 
 export interface Compset {
   name: string;
@@ -39,7 +38,7 @@ export class CreateNewcaseService {
 
     const allLoaded = new Promise((resolve, reject) => {
       forkJoin({
-        toolsParameters: this.jsonRpc.rpc(JSON_ENDPOINT, 'App.tools_parameters'),
+        toolsParameters: this.jsonRpc.rpc(environment.jsonRpcUrl, 'App.tools_parameters'),
         compsets: this.http.get('assets/config_compsets.json', {responseType: 'json'}),
         grids: this.http.get('assets/config_grids.xml', {responseType: 'text'}),
       }).subscribe(data => {
@@ -55,7 +54,7 @@ export class CreateNewcaseService {
   }
 
   createNewcase(params: string[]): Observable<any> {
-    return this.jsonRpc.rpc(JSON_ENDPOINT, 'App.run_tool', ['create_newcase', params]);
+    return this.jsonRpc.rpc(environment.jsonRpcUrl, 'App.run_tool', ['create_newcase', params]);
   }
 
   private parseToolParametersData(toolParameters: ToolsParameters): ToolsParameters {
