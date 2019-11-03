@@ -122,18 +122,18 @@ export class CaseComponent implements OnInit {
     cmd$.subscribe(data => {
       const texts = [
         { text: 'COMMAND', classes: 'h1' },
-        { text: data.command, classes: 'formatted monospace' },
+        { text: data.command, classes: 'pre-wrap monospace' },
       ];
       if (data.return_code !== 0) {
         texts.push({ text: 'RETURN CODE: ' + data.return_code, classes: 'h1 error' });
       }
       if (data.stderr) {
         texts.push({ text: 'STDERR', classes: 'h1 error' });
-        texts.push({ text: data.stderr, classes: 'formatted monospace error' });
+        texts.push({ text: data.stderr, classes: 'pre-wrap monospace error' });
       }
       if (data.stdout) {
         texts.push({ text: 'STDOUT', classes: 'h1' });
-        texts.push({ text: data.stdout, classes: 'formatted monospace' });
+        texts.push({ text: data.stdout, classes: 'pre-wrap monospace' });
       }
       this.dialog.closeAll();
       this.dialog.open(HelpDialogComponent, {
