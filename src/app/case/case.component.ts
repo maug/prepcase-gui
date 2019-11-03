@@ -82,9 +82,72 @@ export class CaseComponent implements OnInit {
     });
   }
 
+  runCommand(cmd: string) {
+    switch (cmd) {
+      case 'check_case': {
+        this.processCommand('Check case', this.dataService.checkCase(this.caseRoot));
+        break;
+      }
+      case 'check_input_data': {
+        this.processCommand('Check input data (download)', this.dataService.checkInputData(this.caseRoot));
+        break;
+      }
+      case 'case_setup': {
+        this.processCommand('Case setup', this.dataService.caseSetup(this.caseRoot));
+        break;
+      }
+      case 'preview_run': {
+        this.processCommand('Preview run', this.dataService.previewRun(this.caseRoot));
+        break;
+      }
+      case 'case_build': {
+        this.processCommand('Case setup', this.dataService.caseBuild(this.caseRoot));
+        break;
+      }
+      case 'case_submit': {
+        this.processCommand('Case submit', this.dataService.caseSubmit(this.caseRoot));
+        break;
+      }
+      default: throw new Error('Unknown command ' + cmd);
+    }
+  }
+
+  private processCommand(name: string, cmd$: Observable<RpcExecuteCommandResponse>) {
+    this.dialog.open(HelpDialogComponent, {
+      disableClose: true,
+      data: {
+        texts: 'Please wait...',
+      }
+    });
+    cmd$.subscribe(data => {
+      const texts = [
+        { text: 'COMMAND', classes: 'h1' },
+        { text: data.command, classes: 'formatted monospace' },
+      ];
+      if (data.return_code !== 0) {
+        texts.push({ text: 'RETURN CODE: ' + data.return_code, classes: 'h1 error' });
+      }
+      if (data.stderr) {
+        texts.push({ text: 'STDERR', classes: 'h1 error' });
+        texts.push({ text: data.stderr, classes: 'formatted monospace error' });
+      }
+      if (data.stdout) {
+        texts.push({ text: 'STDOUT', classes: 'h1' });
+        texts.push({ text: data.stdout, classes: 'formatted monospace' });
+      }
+      this.dialog.closeAll();
+      this.dialog.open(HelpDialogComponent, {
+        data: {
+          header: name,
+          texts,
+        }
+      });
+    });
+  }
+
   private loadCaseData() {
     this.dataService.getCaseData(this.caseRoot).subscribe(data => {
-      this.caseData = data.stdout;
+      this.caseData = data.stdout.trim();
       const matches = this.caseData.matchAll(/^\s*(.+): (.*)$/mg);
       this.caseVars = {};
       for (const match of matches) {
