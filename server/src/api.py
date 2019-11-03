@@ -15,7 +15,7 @@ jsonrpc = JSONRPC(app, '/api', enable_web_browsable_api=True)
 REMOTE_USER="vagrant"
 REMOTE_HOST="prepcase.test"
 # CESM directory on the server
-CESM_DIRECTORY = "cesm" 
+CESM_DIRECTORY = "cesm"
 CIME_DIRECTORY = "cesm/cime"
 CESM_TOOLS = 'create_clone create_test query_testlists create_newcase query_config'.split()
 
@@ -81,7 +81,7 @@ def run_script_in_case(case_path, script, parameters):
     Parameters are accepted as array of strings.
     """
     executable = safe_join(case_path, script)
-    return ssh_execute(REMOTE_USER, REMOTE_HOST, executable, parameters)
+    return ssh_execute(REMOTE_USER, REMOTE_HOST, "cd " + case_path + " && " + executable, parameters)
 
 
 @jsonrpc.method('App.list_cases')
