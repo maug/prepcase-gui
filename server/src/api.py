@@ -10,10 +10,12 @@ import logging
 
 app = Flask(__name__)
 CORS(app) # allow CORS for all domains (FOR DEVELOPMENT SERVER)
-jsonrpc = JSONRPC(app, '/api', enable_web_browsable_api=True)
+jsonrpc = JSONRPC(app, '/', enable_web_browsable_api=True)
 
-REMOTE_USER="vagrant"
-REMOTE_HOST="prepcase.test"
+# REMOTE_USER="vagrant"
+# REMOTE_HOST="prepcase.test"
+REMOTE_USER="pk21219"
+REMOTE_HOST="athena01"
 # CESM directory on the server
 CESM_DIRECTORY = "cesm"
 CIME_DIRECTORY = "cesm/cime"
@@ -26,7 +28,7 @@ def tools_parameters():
     """
 
     def read_config(tool):
-        config_file = 'config/' + tool + '_parameters.json'
+        config_file = os.path.join(os.path.dirname(__file__), 'config/' + tool + '_parameters.json')
         with open(config_file) as f:
             return json.load(open(config_file))
 
