@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  jsonRpcUrl: 'http://prepcase.test:5000/api',
+  jsonRpcUrl: 'http://prepcase.test:5000',
 };
 
 /*

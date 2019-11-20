@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  jsonRpcUrl: 'http://prepcase.test:5000/api',
+  jsonRpcUrl: 'http://prepcase.cmcc.scc:81',
 };
