@@ -1,0 +1,1 @@
+192.168.118.33 ansible_ssh_private_key_file=../../_resources/vpn/key.rsa
