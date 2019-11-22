@@ -8,14 +8,12 @@ import subprocess
 from operator import add
 import logging
 
+import env
+
 app = Flask(__name__)
 CORS(app) # allow CORS for all domains (FOR DEVELOPMENT SERVER)
 jsonrpc = JSONRPC(app, '/', enable_web_browsable_api=True)
 
-# REMOTE_USER="vagrant"
-# REMOTE_HOST="prepcase.test"
-REMOTE_USER="pk21219"
-REMOTE_HOST="athena01"
 # CESM directory on the server
 CESM_DIRECTORY = "cesm"
 CIME_DIRECTORY = "cesm/cime"
@@ -73,7 +71,7 @@ def run_tool(tool, parameters):
     Parameters are accepted as array of strings.
     """
     executable = safe_join(CIME_DIRECTORY, "scripts", tool)
-    return ssh_execute(REMOTE_USER, REMOTE_HOST, executable, parameters)
+    return ssh_execute(env.REMOTE_USER, env.REMOTE_HOST, executable, parameters)
 
 
 @jsonrpc.method('App.run_script_in_case')
@@ -83,7 +81,7 @@ def run_script_in_case(case_path, script, parameters):
     Parameters are accepted as array of strings.
     """
     executable = safe_join(case_path, script)
-    return ssh_execute(REMOTE_USER, REMOTE_HOST, "cd " + case_path + " && " + executable, parameters)
+    return ssh_execute(env.REMOTE_USER, env.REMOTE_HOST, "cd " + case_path + " && " + executable, parameters)
 
 
 @jsonrpc.method('App.list_cases')

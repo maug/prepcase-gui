@@ -1,0 +1,2 @@
+# Exclude .development file from syncing with production
+- **/.development
