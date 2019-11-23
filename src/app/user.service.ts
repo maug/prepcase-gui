@@ -4,6 +4,7 @@ import { environment } from '../environments/environment';
 import { JsonRpcService } from './json-rpc.service';
 import { UserConfig } from './types/UserConfig';
 import { tap } from 'rxjs/operators';
+import { RpcCaseListResponse, RpcLoginResponse } from './types/RpcResponses';
 
 @Injectable({
   providedIn: 'root'
@@ -44,7 +45,7 @@ export class UserService {
     );
   }
 
-  getCaseList() {
+  getCaseList(): Observable<RpcCaseListResponse>  {
     return this.jsonRpc.rpc(
       environment.jsonRpcUrl,
       'App.list_cases',

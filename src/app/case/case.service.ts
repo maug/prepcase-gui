@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { JsonRpcService } from '../json-rpc.service';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { RpcExecuteCommandResponse } from '../types/RpcResponses';
 
 @Injectable({
   providedIn: 'root'

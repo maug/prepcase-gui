@@ -9,7 +9,7 @@ import { UserService } from '../user.service';
 export class CaseListComponent implements OnInit {
 
   private isLoaded = false;
-  private userCases: { [parentDir: string]: string[] };
+  private userCases: { [parentDir: string]: { fullPath: string, dirName: string }[] };
 
   constructor(
     private userService: UserService,
@@ -17,7 +17,14 @@ export class CaseListComponent implements OnInit {
 
   ngOnInit() {
     this.userService.getCaseList().subscribe(data => {
-      this.userCases = data;
+      this.userCases = {};
+      for (const [parent, dirs] of Object.entries(data)) {
+        this.userCases[parent] = dirs
+          .map(dir => ({
+            fullPath: dir,
+            dirName: dir.replace(/\/$/, '').split('/').slice(-1)[0],
+          }));
+      }
       this.isLoaded = true;
     });
   }

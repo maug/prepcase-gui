@@ -6,6 +6,7 @@ import { map, startWith } from 'rxjs/operators';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 import { MatDialog } from '@angular/material';
+import { RpcExecuteCommandResponse } from '../types/RpcResponses';
 
 @Component({
   selector: 'app-case',

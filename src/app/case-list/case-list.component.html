@@ -8,7 +8,7 @@
   <div *ngFor="let group of userCases | keyvalue">
     {{group.key}}<br>
     <div *ngFor="let dir of group.value">
-      {{dir}}<br>
+      {{dir.dirName}}<br>
     </div>
   </div>
 </div>
