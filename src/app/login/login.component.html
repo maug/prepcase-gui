@@ -21,7 +21,7 @@
 </mat-card>
 
 <mat-card *ngIf="userService.isLogged()" style="width: 300px; margin: 50px auto;">
-  <mat-card-title>You are logged as <b>{{userService.username}}</b></mat-card-title>
+  <mat-card-title>You are logged as <b>{{userService.userConfig.username}}</b></mat-card-title>
   <mat-card-content>
       <button mat-raised-button (click)="logout()">Logout</button>
   </mat-card-content>

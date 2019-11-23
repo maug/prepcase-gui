@@ -15,7 +15,7 @@ import { RpcExecuteCommandResponse } from '../types/RpcResponses';
 })
 export class CaseComponent implements OnInit {
 
-  private isLoaded = false;
+  public isLoaded = false;
 
   caseRoot: string;
 

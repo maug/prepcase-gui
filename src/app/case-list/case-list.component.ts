@@ -8,8 +8,8 @@ import { UserService } from '../user.service';
 })
 export class CaseListComponent implements OnInit {
 
-  private isLoaded = false;
-  private userCases: { [parentDir: string]: { fullPath: string, dirName: string }[] };
+  public isLoaded = false;
+  public userCases: { [parentDir: string]: { fullPath: string, dirName: string }[] };
 
   constructor(
     private userService: UserService,

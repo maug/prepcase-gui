@@ -15,9 +15,9 @@ export class LoginComponent implements OnInit {
   mainForm: FormGroup;
 
   constructor(
+    public userService: UserService,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
-    private userService: UserService,
     private router: Router,
   ) { }
 
