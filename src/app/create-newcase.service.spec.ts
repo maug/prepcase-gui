@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CreateNewcaseService } from './create-newcase.service';
+import { CreateNewcaseService } from './create-newcase/create-newcase.service';
 
 describe('CreateNewcaseService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CreateNewcaseComponent } from './create-newcase/create-newcase.component';
 import { AppMaterialModule } from './app-material.module';
-import { CreateNewcaseService, createNewcaseServiceFactory } from './create-newcase.service';
+import { CreateNewcaseService, createNewcaseServiceFactory } from './create-newcase/create-newcase.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HelpDialogComponent } from './help-dialog/help-dialog.component';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material';

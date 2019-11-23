@@ -1,5 +1,5 @@
 import { Component, isDevMode, OnInit } from '@angular/core';
-import { Compset, CompsetsGroup, CreateNewcaseService } from '../create-newcase.service';
+import { Compset, CompsetsGroup, CreateNewcaseService } from './create-newcase.service';
 import {
   AbstractControl,
   FormBuilder,

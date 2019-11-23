@@ -4,11 +4,11 @@ import { forkJoin, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { GridData } from './types/GridData';
-import { JsonRpcService } from './json-rpc.service';
-import { ToolsParameters } from './types/ToolsParameters';
-import { environment } from '../environments/environment';
-import { RpcExecuteCommandResponse } from './types/RpcResponses';
+import { GridData } from '../types/GridData';
+import { JsonRpcService } from '../json-rpc.service';
+import { ToolsParameters } from '../types/ToolsParameters';
+import { environment } from '../../environments/environment';
+import { RpcExecuteCommandResponse } from '../types/RpcResponses';
 
 export interface Compset {
   name: string;
