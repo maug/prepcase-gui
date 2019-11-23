@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CreateNewcaseComponent } from './create-newcase/create-newcase.component';
 import { AppMaterialModule } from './app-material.module';
-import { CreateNewcaseService, createNewcaseServiceFactory } from './create-newcase/create-newcase.service';
+import { CreateNewcaseService } from './create-newcase/create-newcase.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HelpDialogComponent } from './help-dialog/help-dialog.component';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material';
@@ -46,8 +46,6 @@ import { CaseListComponent } from './case-list/case-list.component';
     CreateNewcaseService,
     JsonRpcService,
     UserService,
-    // wait for load as in https://devblog.dymel.pl/2017/10/17/angular-preload/
-    { provide: APP_INITIALIZER, useFactory: createNewcaseServiceFactory, deps: [CreateNewcaseService], multi: true }
     // { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
   ],
   bootstrap: [AppComponent]

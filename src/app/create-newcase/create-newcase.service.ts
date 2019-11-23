@@ -95,7 +95,3 @@ export class CreateNewcaseService {
     return parsed.grid_data;
   }
 }
-
-export function createNewcaseServiceFactory(service: CreateNewcaseService) {
-  return () => service.loadData();
-}

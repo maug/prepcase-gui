@@ -33,10 +33,10 @@ import { Router } from '@angular/router';
 })
 export class CreateNewcaseComponent implements OnInit {
 
-  compsetGroups: CompsetsGroup[] = this.dataService.data.compsets;
+  compsetGroups: CompsetsGroup[];
   compsetsGroupsOptions: Observable<CompsetsGroup[]>;
 
-  grids: ModelGrid[] = this.dataService.data.gridData.grids.model_grid;
+  grids: ModelGrid[];
   gridOptions: Observable<ModelGrid[]>;
 
   mainForm: FormGroup;
@@ -54,6 +54,9 @@ export class CreateNewcaseComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.compsetGroups = this.dataService.data.compsets;
+    this.grids = this.dataService.data.gridData.grids.model_grid;
+
     this.createFormControls();
 
     this.compsetsGroupsOptions = this.mainForm.get('--compset').valueChanges
