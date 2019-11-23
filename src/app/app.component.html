@@ -3,13 +3,13 @@
   <span class="spacer-max"></span>
   <div *ngIf="userService.isLogged()">
     You are logged in as <i>{{userService.userConfig.username}}</i>
+    <span class="spacer"></span>
+    <span class="spacer"></span>
+    <span class="spacer"></span>
+    <button mat-raised-button routerLink="/case-list">Your cases</button>
+    <span class="spacer"></span>
+    <button mat-raised-button routerLink="/create-newcase">Create new case</button>
   </div>
-  <span class="spacer"></span>
-  <span class="spacer"></span>
-  <span class="spacer"></span>
-  <button mat-raised-button routerLink="/case-list">Your cases</button>
-  <span class="spacer"></span>
-  <button mat-raised-button routerLink="/create-newcase">Create new case</button>
 </mat-toolbar>
 
 <div class="contents">
