@@ -81,6 +81,15 @@
       tags:
         - apache
 
+    - name: Create /usr/share/httpd/flask_session directory and set access for apache
+      file:
+        path: /usr/share/httpd/flask_session
+        state: directory
+        mode: '0770'
+        group: apache
+      tags:
+        - session
+
     - name: Copy server source code with environment files (pipenv)
       synchronize:
         src: "{{ server_code_src }}"
