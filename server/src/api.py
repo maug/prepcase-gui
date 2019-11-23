@@ -26,18 +26,6 @@ CESM_TOOLS = 'create_clone create_test query_testlists create_newcase query_conf
 
 ssh = Ssh(env.SSH_REMOTE_HOST, env.SSH_OPTIONS)
 
-# def jsonrcp_headers(fn):
-#     def wrapped(*args, **kwargs):
-#         response = make_response(fn(*args, **kwargs))
-#         response.headers['Access-Control-Allow-Origin'] = 'http://localhost:4200'
-#         response.headers['Access-Control-Allow-Credentials'] = 'true'
-#         # response.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
-#         # response.headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-#         # response.headers['Access-Control-Max-Age'] = '1728000'
-#         # response.headers['Set-Cookie'] = 'dupa=kupa; Expires=Mon, 23-Dec-2019 20:26:02 GMT; Domain=zacheta; Path=/; SameSite=Lax'
-#         return response
-#     return wrapped
-
 @app.before_request
 def before_request():
     session.permanent = env.SESSION_PERMANENT
@@ -51,7 +39,6 @@ def before_request():
 
 
 @jsonrpc.method('App.login')
-#@jsonrcp_headers
 def login(username, password):
     """
     Tries to log in.
@@ -94,7 +81,6 @@ def login(username, password):
 
 
 @jsonrpc.method('App.tools_parameters')
-#@jsonrcp_headers
 def tools_parameters():
     """
     Return definitions of arguments of CESM tools.
