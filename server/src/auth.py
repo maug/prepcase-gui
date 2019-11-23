@@ -52,7 +52,6 @@ def login_user(username, password):
         try:
             config = json.loads(res_ssh['stdout'])
             password_on_server = config.pop('password') # read & remove password form config
-            print 'password', password_on_server
             if password_on_server is None:
                 res['error_code'] = 'error'
                 res['error'] = 'No password in file .prepcase.json'
