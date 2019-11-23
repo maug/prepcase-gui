@@ -1,11 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material';
 
-type Texts = Array<{
+interface Text {
   text: string;
-  keepHtml: boolean;
-  classes: string | string[];
-}>;
+  keepHtml?: boolean;
+  classes?: string | string[];
+}
+
+export type DialogTexts = string | Array<Text | string>;
 
 interface Button {
   id: string;
@@ -14,7 +16,7 @@ interface Button {
 
 interface DialogData {
   header: string;
-  texts: string | string[] | Texts;
+  texts: DialogTexts;
   buttons?: Button[];
 }
 
@@ -25,7 +27,7 @@ interface DialogData {
 })
 export class HelpDialogComponent implements OnInit {
   header: string;
-  texts: Texts;
+  texts: DialogTexts;
   buttons: Button[];
 
   constructor(@Inject(MAT_DIALOG_DATA) data: DialogData) {

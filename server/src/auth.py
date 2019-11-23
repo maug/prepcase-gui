@@ -27,7 +27,7 @@ def login_user(username, password):
     """
     Tries to log in.
     Returns dict(
-        error_code: '' | 'permission_denied' | 'no_prepcase_file' | 'error'
+        error_code: '' | 'permission_denied' | 'no_prepcase_file' | 'invalid_prepcase_file' | 'error'
         error: Error description or empty string
         config: If success, user config from .prepcase.json without password
     )
@@ -66,7 +66,7 @@ def login_user(username, password):
                 # config for frontend
                 res['config'] = user
         except ValueError:
-            res['error_code'] = 'error'
+            res['error_code'] = 'invalid_prepcase_file'
             res['error'] = 'File .prepcase.json is malformed'
 
     return res
