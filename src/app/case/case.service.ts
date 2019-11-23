@@ -9,7 +9,9 @@ import { RpcExecuteCommandResponse } from '../types/RpcResponses';
 })
 export class CaseService {
 
-  constructor(private jsonRpc: JsonRpcService) { }
+  constructor(
+    private jsonRpc: JsonRpcService,
+  ) { }
 
   getCaseData(caseRoot): Observable<RpcExecuteCommandResponse> {
     return this.jsonRpc.rpc(

@@ -1,50 +1,54 @@
-<mat-toolbar>Case {{caseRoot}}</mat-toolbar>
-<div class="contents">
+<div *ngIf="!isLoaded">Loading...</div>
+<div *ngIf="isLoaded">
+
+  <mat-toolbar>Case {{caseRoot}}</mat-toolbar>
+  <div class="contents">
+    <br>
+    <form [formGroup]="mainForm" (ngSubmit)="onSubmit()">
+
+      <mat-form-field style="width: 40%">
+        <input matInput
+               type="text"
+               placeholder="Case variable"
+               spellcheck="false"
+               formControlName="xmlchange_key"
+               [matAutocomplete]="autoCompsets"
+               required
+        >
+        <mat-autocomplete class="high-autocomplete-panel" #autoCompsets="matAutocomplete">
+          <mat-option class="small" *ngFor="let key of caseVarsOptions | async" [value]="key">
+            {{key}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field style="width: 60%">
+        <input matInput
+               type="text"
+               placeholder="Variable value"
+               spellcheck="false"
+               formControlName="xmlchange_value"
+               required
+        >
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" type="submit" [disabled]="!mainForm.valid">Change</button>
+    </form>
+  </div>
+
   <br>
-  <form [formGroup]="mainForm" (ngSubmit)="onSubmit()">
+  <mat-divider></mat-divider>
+  <br>
+  <div class="button-row">
+    <button mat-raised-button (click)="runCommand('check_case')">Check case</button>
+    <button mat-raised-button (click)="runCommand('check_input_data')">Check input data (download)</button>
+    <button mat-raised-button (click)="runCommand('case_setup')">Case setup</button>
+    <button mat-raised-button (click)="runCommand('preview_run')">Preview run</button>
+    <button mat-raised-button (click)="runCommand('case_build')">Case build</button>
+    <button mat-raised-button (click)="runCommand('case_submit')">Case submit</button>
+  </div>
 
-    <mat-form-field style="width: 40%">
-      <input matInput
-             type="text"
-             placeholder="Case variable"
-             spellcheck="false"
-             formControlName="xmlchange_key"
-             [matAutocomplete]="autoCompsets"
-             required
-      >
-      <mat-autocomplete class="high-autocomplete-panel" #autoCompsets="matAutocomplete">
-        <mat-option class="small" *ngFor="let key of caseVarsOptions | async" [value]="key">
-          {{key}}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-
-    <mat-form-field style="width: 60%">
-      <input matInput
-             type="text"
-             placeholder="Variable value"
-             spellcheck="false"
-             formControlName="xmlchange_value"
-             required
-      >
-    </mat-form-field>
-
-    <button mat-flat-button color="primary" type="submit" [disabled]="!mainForm.valid">Change</button>
-  </form>
+  <br>
+  <div class="mat-h2">Case variables:</div>
+  <div class="contents pre-wrap">{{caseData}}</div>
 </div>
-
-<br>
-<mat-divider></mat-divider>
-<br>
-<div class="button-row">
-  <button mat-raised-button (click)="runCommand('check_case')">Check case</button>
-  <button mat-raised-button (click)="runCommand('check_input_data')">Check input data (download)</button>
-  <button mat-raised-button (click)="runCommand('case_setup')">Case setup</button>
-  <button mat-raised-button (click)="runCommand('preview_run')">Preview run</button>
-  <button mat-raised-button (click)="runCommand('case_build')">Case build</button>
-  <button mat-raised-button (click)="runCommand('case_submit')">Case submit</button>
-</div>
-
-<br>
-<div class="mat-h2">Case variables:</div>
-<div class="contents pre-wrap">{{caseData}}</div>

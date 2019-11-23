@@ -15,6 +15,8 @@ import { RpcExecuteCommandResponse } from '../types/RpcResponses';
 })
 export class CaseComponent implements OnInit {
 
+  private isLoaded = false;
+
   caseRoot: string;
 
   caseData: string;
@@ -31,9 +33,10 @@ export class CaseComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.activatedRoute.paramMap.subscribe(paramMap => {
+    this.activatedRoute.paramMap.subscribe(async paramMap => {
       this.caseRoot = paramMap.get('caseRoot');
-      this.loadCaseData();
+      await this.loadCaseData();
+      this.isLoaded = true;
     });
 
     this.mainForm = this.formBuilder.group({
@@ -146,14 +149,17 @@ export class CaseComponent implements OnInit {
     });
   }
 
-  private loadCaseData() {
-    this.dataService.getCaseData(this.caseRoot).subscribe(data => {
-      this.caseData = data.stdout.trim();
-      const matches = this.caseData.matchAll(/^\s*(.+): (.*)$/mg);
-      this.caseVars = {};
-      for (const match of matches) {
-        this.caseVars[match[1]] = match[2];
-      }
+  private loadCaseData(): Promise<void> {
+    return new Promise(resolve => {
+      this.dataService.getCaseData(this.caseRoot).subscribe(data => {
+        this.caseData = data.stdout.trim();
+        const matches = this.caseData.matchAll(/^\s*(.+): (.*)$/mg);
+        this.caseVars = {};
+        for (const match of matches) {
+          this.caseVars[match[1]] = match[2];
+        }
+        resolve();
+      });
     });
   }
 
