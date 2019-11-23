@@ -7,9 +7,10 @@ from flask_session import Session
 import os
 import json
 
-from ssh import Ssh
+import globals
 import env
 import auth
+import cases
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(64)
@@ -24,18 +25,15 @@ CESM_DIRECTORY = "cesm"
 CIME_DIRECTORY = "cesm/cime"
 CESM_TOOLS = 'create_clone create_test query_testlists create_newcase query_config'.split()
 
-ssh = Ssh(env.SSH_REMOTE_HOST, env.SSH_OPTIONS)
-
 @app.before_request
 def before_request():
     session.permanent = env.SESSION_PERMANENT
-    global ssh
     if not auth.check_user_logged():
         data = json.loads(request.data)
         if data['method'] not in ['App.login', 'App.tools_parameters']:
             return make_response("__not_logged__")
     else:
-        ssh.set_user(auth.user['username'])
+        globals.ssh.set_user(auth.user['username'])
 
 
 @jsonrpc.method('App.login')
@@ -43,41 +41,7 @@ def login(username, password):
     """
     Tries to log in.
     """
-
-    ssh.set_user(username)
-    res_ssh = ssh.ssh_execute('cat ~/.prepcase.json', [])
-
-    res = dict(error_code='', error='', config='')
-
-    if res_ssh['return_code'] == 255:
-        res['error_code'] = 'permission_denied'
-        res['error'] = 'Wrong username or no public key logging set'
-    elif res_ssh['return_code'] == 1:
-        res['error_code'] = 'no_prepcase_file'
-        res['error'] = 'No .prepcase.json file in home directory'
-    elif res_ssh['return_code'] != 0:
-        res['error_code'] = 'error'
-        res['error'] = res_ssh['stderr']
-    else:
-        try:
-            config = json.loads(res_ssh['stdout'])
-            password_on_server = config.pop('password') # read & remove password form config
-            print 'password', password_on_server
-            if password_on_server is None:
-                res['error_code'] = 'error'
-                res['error'] = 'No password in file .prepcase.json'
-            elif password != password_on_server:
-                res['error_code'] = 'error'
-                res['error'] = 'Wrong password'
-            else:
-                # password matches
-                res['config'] = config # config for frontend (without password)
-                auth.login_user(username, config)
-        except ValueError:
-            res['error_code'] = 'error'
-            res['error'] = 'File .prepcase.json is malformed'
-
-    return res
+    return auth.login_user(username, password)
 
 
 @jsonrpc.method('App.logout')
@@ -109,7 +73,7 @@ def run_tool(tool, parameters):
     Parameters are accepted as array of strings.
     """
     executable = safe_join(CIME_DIRECTORY, "scripts", tool)
-    return ssh.ssh_execute(executable, parameters)
+    return globals.ssh.ssh_execute(executable, parameters)
 
 
 @jsonrpc.method('App.run_script_in_case')
@@ -119,15 +83,15 @@ def run_script_in_case(case_path, script, parameters):
     Parameters are accepted as array of strings.
     """
     executable = safe_join(case_path, script)
-    return ssh.ssh_execute("cd " + case_path + " && " + executable, parameters)
+    return globals.ssh.ssh_execute("cd " + case_path + " && " + executable, parameters)
 
 
 @jsonrpc.method('App.list_cases')
-def list_cases():
+def list_cases(case_dirs):
     """
-    TODO: List existing user's cases.
+    Returns list of user cases grouped by directory
     """
-    return ['case-A', 'case-B', 'case-C']
+    return cases.list_cases(case_dirs)
 
 
 @jsonrpc.method('App.get_config')
