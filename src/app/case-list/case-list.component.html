@@ -1,14 +1,13 @@
 <div *ngIf="!isLoaded">Loading...</div>
 <div *ngIf="isLoaded">
-  <p>case-list works!</p>
-
-  You are logged as "{{userService.userConfig.username}}"
-
-  Your cases:<br>
+  <mat-toolbar>Your cases</mat-toolbar>
+  <br>
   <div *ngFor="let group of userCases | keyvalue">
-    {{group.key}}<br>
-    <div *ngFor="let dir of group.value">
-      {{dir.dirName}}<br>
+    <div class="mat-h2">{{group.key}}</div>
+    <div class="cases">
+      <div class="mat-body-strong" *ngFor="let dir of group.value">
+        <a [routerLink]="['/case', dir.fullPath]">{{dir.dirName}}</a><br>
+      </div>
     </div>
   </div>
 </div>
