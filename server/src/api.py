@@ -80,6 +80,14 @@ def login(username, password):
     return res
 
 
+@jsonrpc.method('App.logout')
+def logout():
+    """
+    Logs out user (if logged in).
+    """
+    auth.logout_user()
+
+
 @jsonrpc.method('App.tools_parameters')
 def tools_parameters():
     """
