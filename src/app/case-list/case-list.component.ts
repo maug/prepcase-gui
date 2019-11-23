@@ -8,11 +8,18 @@ import { UserService } from '../user.service';
 })
 export class CaseListComponent implements OnInit {
 
+  private isLoaded = false;
+  private userCases: { [parentDir: string]: string[] };
+
   constructor(
     private userService: UserService,
   ) { }
 
   ngOnInit() {
+    this.userService.getCaseList().subscribe(data => {
+      this.userCases = data;
+      this.isLoaded = true;
+    });
   }
 
 }

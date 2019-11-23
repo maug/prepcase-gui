@@ -1,3 +1,14 @@
-<p>case-list works!</p>
+<div *ngIf="!isLoaded">Loading...</div>
+<div *ngIf="isLoaded">
+  <p>case-list works!</p>
 
-You are logged as "{{userService.username}}"
+  You are logged as "{{userService.userConfig.username}}"
+
+  Your cases:<br>
+  <div *ngFor="let group of userCases | keyvalue">
+    {{group.key}}<br>
+    <div *ngFor="let dir of group.value">
+      {{dir}}<br>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,7 @@
 import json
 from flask import session
 import globals
+import cases
 
 user = {
     'username': '',
@@ -60,10 +61,11 @@ def login_user(username, password):
                 res['error'] = 'Wrong password'
             else:
                 # config file ok and password matches
-                res['config'] = config # config for frontend (without password)
                 user['username'] = username
-                user['case_dirs'] = config.get('case_dirs', [])
+                user['case_dirs'] = cases.get_real_case_dirs(config.get('case_dirs', []))
                 session['user'] = user
+                # config for frontend
+                res['config'] = user
         except ValueError:
             res['error_code'] = 'error'
             res['error'] = 'File .prepcase.json is malformed'

@@ -10,39 +10,34 @@ import { tap } from 'rxjs/operators';
 })
 export class UserService {
 
-  username: string = '';
-  userConfig: UserConfig;
+  userConfig: UserConfig | null = null;
 
   constructor(
     private jsonRpc: JsonRpcService,
   ) { }
 
   login(username, password): Observable<RpcLoginResponse> {
-    let res = this.jsonRpc.rpc(
+    const res = this.jsonRpc.rpc(
       environment.jsonRpcUrl,
       'App.login',
       [username, password]
     ) as Observable<RpcLoginResponse>;
 
-    res = res.pipe(
+    return res.pipe(
       tap(data => {
-        console.log('TAP', data);
         if (data.error_code === '') {
-          this.username = username;
           this.userConfig = this.validateUserConfig(data.config);
         }
       }),
     );
-
-    return res;
   }
 
   isLogged(): boolean {
-    return this.username !== '';
+    return this.userConfig !== null;
   }
 
   logout() {
-    this.username = '';
+    this.userConfig = null;
     this.jsonRpc.rpc(
       environment.jsonRpcUrl,
       'App.logout',
@@ -50,6 +45,11 @@ export class UserService {
   }
 
   getCaseList() {
+    return this.jsonRpc.rpc(
+      environment.jsonRpcUrl,
+      'App.list_cases',
+      [this.userConfig.case_dirs]
+    );
 
   }
 

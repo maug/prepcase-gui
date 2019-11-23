@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, isDevMode, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 import { MatDialog } from '@angular/material';
@@ -27,6 +27,10 @@ export class LoginComponent implements OnInit {
       'password': ['', [Validators.required]],
     });
 
+    if (isDevMode()) {
+      this.mainForm.get('username').setValue('vagrant');
+      this.mainForm.get('password').setValue('test');
+    }
   }
 
   onSubmit() {
