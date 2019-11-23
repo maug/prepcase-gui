@@ -1,8 +1,8 @@
 ---
-# Configure Centos 7 for PrepCASE
+# Configure Centos 7 for PrepCASE development
 #
 # AFTER CREATING NEW VAGRANT MACHINE: (remove old entry from known_hosts)
-# ssh-keygen -R www.core.test
+# ssh-keygen -R prepcase.test
 #
 # To connect from other applications use private key from config to connect:
 # vagrant ssh-config
@@ -61,11 +61,13 @@
         name: '*'
         state: latest
 
+    - name: Install epel-release (for python-pip)
+      yum: name=epel-release state=present
+
     - name: Install command line tools & software
       yum:
-        state: present 
+        state: present
         pkg:
-          - epel-release
           - environment-modules
           - git
           - subversion
@@ -78,7 +80,7 @@
           - vim
           - python-pip
           - yarn
-          - gcc-c++ 
+          - gcc-c++
           - make
 
     - name: Install pipenv
@@ -139,12 +141,24 @@
     #     service: name=apache2 state=restarted enabled=yes
     #   tags:
     #     - apache
-    
+
     - name: Clone CESM repo
       git:
-        repo: git@github.com:ESCOMP/CESM.git
+        repo: https://github.com/ESCOMP/CESM.git
         dest: /home/vagrant/cesm
         update: no
+      tags:
+        - cesm
+
+    - name: Checkout CESM externals
+      shell: 'cd /home/vagrant/cesm && ./manage_externals/checkout_externals'
+      tags:
+        - cesm
+
+    - name: Checkout CIME master branch
+      shell: 'cd /home/vagrant/cesm/cime && git checkout master && git pull origin master'
+      tags:
+        - cesm
 
   # handlers:
   #   - name: restart apache
