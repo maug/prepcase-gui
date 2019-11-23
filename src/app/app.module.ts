@@ -16,6 +16,9 @@ import { EscapeHtmlPipe } from './pipes/keep-html.pipe';
 import { appRoutes } from './app.routing';
 import { CaseComponent } from './case/case.component';
 import { RouterModule } from '@angular/router';
+import { LoginComponent } from './login/login.component';
+import { UserService } from './user.service';
+import { CaseListComponent } from './case-list/case-list.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +28,8 @@ import { RouterModule } from '@angular/router';
     DynamicFormItemComponent,
     HelpDialogComponent,
     EscapeHtmlPipe,
+    LoginComponent,
+    CaseListComponent,
   ],
   entryComponents: [
     HelpDialogComponent,
@@ -40,6 +45,7 @@ import { RouterModule } from '@angular/router';
   providers: [
     CreateNewcaseService,
     JsonRpcService,
+    UserService,
     // wait for load as in https://devblog.dymel.pl/2017/10/17/angular-preload/
     { provide: APP_INITIALIZER, useFactory: createNewcaseServiceFactory, deps: [CreateNewcaseService], multi: true }
     // { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },

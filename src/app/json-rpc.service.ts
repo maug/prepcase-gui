@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector, NgZone } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 
 interface JsonRpcRequest {
   jsonrpc: '2.0';
@@ -24,7 +25,7 @@ export class JsonRpcService {
   // id incremented by each RPC call
   private rpcId = 1;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private injector: Injector) { }
 
   public rpc(endpoint: string, method: string, params: object = []): Observable<any> {
     const headers = new HttpHeaders({
@@ -37,10 +38,17 @@ export class JsonRpcService {
       method,
       params,
     };
-    return this.http.post(endpoint, JSON.stringify(body), { headers, responseType: 'json' })
+    return this.http.post(endpoint, JSON.stringify(body), { headers, responseType: 'json', withCredentials: true })
       .pipe(
+        tap((res: JsonRpcResponse) => {
+          if (res.result === '__not_logged__') {
+            console.log('NOT LOGGED');
+            this.injector.get(Router).navigate(['/login']);
+            //throw new Error('User not logged');
+          }
+        }),
         map(this.getResult),
-        catchError(err => { console.error(err); throw new Error(err); }),
+        catchError(err => { console.error(err); return []; }),
       );
   }
 

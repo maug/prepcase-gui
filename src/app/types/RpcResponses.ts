@@ -4,3 +4,10 @@ interface RpcExecuteCommandResponse {
   stderr: string;
   stdout: string;
 }
+
+interface RpcLoginResponse {
+  config: any;
+  error: string;
+  error_code: 'permission_denied' | 'no_prepcase_file' | 'error' | '';
+  ssh: RpcExecuteCommandResponse;
+}
