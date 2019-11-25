@@ -33,6 +33,8 @@ import { Router } from '@angular/router';
 })
 export class CreateNewcaseComponent implements OnInit {
 
+  isLoaded = false;
+
   compsetGroups: CompsetsGroup[];
   compsetsGroupsOptions: Observable<CompsetsGroup[]>;
 
@@ -53,7 +55,10 @@ export class CreateNewcaseComponent implements OnInit {
     private snackBar: MatSnackBar,
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.dataService.loadData();
+    this.isLoaded = true;
+
     this.compsetGroups = this.dataService.data.compsets;
     this.grids = this.dataService.data.gridData.grids.model_grid;
 

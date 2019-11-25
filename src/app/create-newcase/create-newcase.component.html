@@ -1,123 +1,126 @@
-<mat-toolbar>Create new case</mat-toolbar>
-<div class="contents">
-  <h1 class="mat-h4">Set parameters for CIME script <code>create_newcase</code></h1>
+<div *ngIf="!isLoaded">Loading...</div>
+<div *ngIf="isLoaded">
+  <mat-toolbar>Create new case</mat-toolbar>
+  <div class="contents">
+    <h1 class="mat-h4">Set parameters for CIME script <code>create_newcase</code></h1>
 
-  <form [formGroup]="mainForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="mainForm" (ngSubmit)="onSubmit()">
 
-    <!-- CASENAME -->
+      <!-- CASENAME -->
 
-    <mat-form-field style="width: 100%">
-      <input matInput
-             type="text"
-             placeholder="Case name"
-             spellcheck="false"
-             formControlName="--case"
-             required
-      >
-      <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openHelp('--case'); $event.stopPropagation()">
-        <mat-icon>help_outline</mat-icon>
-      </button>
-      <mat-error *ngIf="mainForm.get('--case').hasError('hasWhitespace')">
-        Case name should not contain spaces
-      </mat-error>
-      <mat-error *ngIf="mainForm.get('--case').hasError('required')">
-        Case name is <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field style="width: 100%">
+        <input matInput
+               type="text"
+               placeholder="Case name"
+               spellcheck="false"
+               formControlName="--case"
+               required
+        >
+        <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openHelp('--case'); $event.stopPropagation()">
+          <mat-icon>help_outline</mat-icon>
+        </button>
+        <mat-error *ngIf="mainForm.get('--case').hasError('hasWhitespace')">
+          Case name should not contain spaces
+        </mat-error>
+        <mat-error *ngIf="mainForm.get('--case').hasError('required')">
+          Case name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
 
-    <!-- COMPSET -->
+      <!-- COMPSET -->
 
-    <mat-form-field style="width: 100%">
-      <input matInput
-             type="text"
-             placeholder="Select compset"
-             spellcheck="false"
-             formControlName="--compset"
-             [matAutocomplete]="autoCompsets"
-             required
-      >
-      <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openHelp('--compset'); $event.stopPropagation()">
-        <mat-icon>help_outline</mat-icon>
-      </button>
-      <mat-error *ngIf="mainForm.get('--compset').hasError('compsetInvalid') && !mainForm.get('--compset').hasError('required')">
-        Compset name is invalid
-      </mat-error>
-      <mat-error *ngIf="mainForm.get('--compset').hasError('required')">
-        Compset is <strong>required</strong>
-      </mat-error>
+      <mat-form-field style="width: 100%">
+        <input matInput
+               type="text"
+               placeholder="Select compset"
+               spellcheck="false"
+               formControlName="--compset"
+               [matAutocomplete]="autoCompsets"
+               required
+        >
+        <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openHelp('--compset'); $event.stopPropagation()">
+          <mat-icon>help_outline</mat-icon>
+        </button>
+        <mat-error *ngIf="mainForm.get('--compset').hasError('compsetInvalid') && !mainForm.get('--compset').hasError('required')">
+          Compset name is invalid
+        </mat-error>
+        <mat-error *ngIf="mainForm.get('--compset').hasError('required')">
+          Compset is <strong>required</strong>
+        </mat-error>
 
-      <mat-autocomplete class="high-autocomplete-panel" #autoCompsets="matAutocomplete">
-        <mat-optgroup *ngFor="let group of compsetsGroupsOptions | async" [label]="group.type">
-          <mat-option class="small" *ngFor="let compset of group.items" [value]="compset.name">
-            <div class="mat-small"><div class="compset-short-name">{{compset.name}}</div> {{compset.longName}}</div>
+        <mat-autocomplete class="high-autocomplete-panel" #autoCompsets="matAutocomplete">
+          <mat-optgroup *ngFor="let group of compsetsGroupsOptions | async" [label]="group.type">
+            <mat-option class="small" *ngFor="let compset of group.items" [value]="compset.name">
+              <div class="mat-small"><div class="compset-short-name">{{compset.name}}</div> {{compset.longName}}</div>
+            </mat-option>
+          </mat-optgroup>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <!-- GRID -->
+
+      <mat-form-field style="width: 100%">
+        <input matInput
+               type="text"
+               placeholder="Select grid resolution"
+               spellcheck="false"
+               formControlName="--res"
+               [matAutocomplete]="autoGrids"
+               [errorStateMatcher]="gridErrorMatcher"
+               required
+        >
+        <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openHelp('--res'); $event.stopPropagation()">
+          <mat-icon>help_outline</mat-icon>
+        </button>
+        <mat-error *ngIf="mainForm.get('--res').hasError('gridInvalid') && !mainForm.get('--res').hasError('required')">
+          Grid resolution name is invalid
+        </mat-error>
+        <mat-error *ngIf="mainForm.get('--res').hasError('required')">
+          Grid is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="mainForm.hasError('gridIncompatible')">
+          {{mainForm.getError('gridIncompatible')}}
+        </mat-error>
+
+        <mat-autocomplete class="high-autocomplete-panel" #autoGrids="matAutocomplete">
+          <mat-option class="small" *ngFor="let grid of gridOptions | async" [value]="grid._attributes.alias">
+            <div class="mat-small">
+              <div class="grid-short-name">{{grid._attributes.alias}}</div>
+              <div class="grid-compset">{{grid._attributes.compset}}</div>
+              <div class="grid-not-compset">{{grid._attributes.not_compset}}</div>
+            </div>
           </mat-option>
-        </mat-optgroup>
-      </mat-autocomplete>
-    </mat-form-field>
+        </mat-autocomplete>
+      </mat-form-field>
 
-    <!-- GRID -->
+      <!-- NINST -->
 
-    <mat-form-field style="width: 100%">
-      <input matInput
-             type="text"
-             placeholder="Select grid resolution"
-             spellcheck="false"
-             formControlName="--res"
-             [matAutocomplete]="autoGrids"
-             [errorStateMatcher]="gridErrorMatcher"
-             required
-      >
-      <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openHelp('--res'); $event.stopPropagation()">
-        <mat-icon>help_outline</mat-icon>
-      </button>
-      <mat-error *ngIf="mainForm.get('--res').hasError('gridInvalid') && !mainForm.get('--res').hasError('required')">
-        Grid resolution name is invalid
-      </mat-error>
-      <mat-error *ngIf="mainForm.get('--res').hasError('required')">
-        Grid is <strong>required</strong>
-      </mat-error>
-      <mat-error *ngIf="mainForm.hasError('gridIncompatible')">
-        {{mainForm.getError('gridIncompatible')}}
-      </mat-error>
-
-      <mat-autocomplete class="high-autocomplete-panel" #autoGrids="matAutocomplete">
-        <mat-option class="small" *ngFor="let grid of gridOptions | async" [value]="grid._attributes.alias">
-          <div class="mat-small">
-            <div class="grid-short-name">{{grid._attributes.alias}}</div>
-            <div class="grid-compset">{{grid._attributes.compset}}</div>
-            <div class="grid-not-compset">{{grid._attributes.not_compset}}</div>
-          </div>
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-
-    <!-- NINST -->
-
-<!--
-    <mat-form-field style="width: 100%">
-      <input matInput
-             type="text"
-             placeholder="Number of instances (&#45;&#45;ninst)"
-             formControlName="ninst"
-      >
-      <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openHelp('ninst'); $event.stopPropagation()">
-        <mat-icon>help_outline</mat-icon>
-      </button>
-      <mat-error *ngIf="mainForm.get('ninst').hasError('pattern')">
-        Required positive integer
-      </mat-error>
-    </mat-form-field>
--->
+  <!--
+      <mat-form-field style="width: 100%">
+        <input matInput
+               type="text"
+               placeholder="Number of instances (&#45;&#45;ninst)"
+               formControlName="ninst"
+        >
+        <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openHelp('ninst'); $event.stopPropagation()">
+          <mat-icon>help_outline</mat-icon>
+        </button>
+        <mat-error *ngIf="mainForm.get('ninst').hasError('pattern')">
+          Required positive integer
+        </mat-error>
+      </mat-form-field>
+  -->
 
 
-    <div *ngFor="let input of dynamicInputs">
-      <app-dynamic-form-item [item]="input" [form]="mainForm" (displayHelp)="openHelp($event)"></app-dynamic-form-item>
-    </div>
+      <div *ngFor="let input of dynamicInputs">
+        <app-dynamic-form-item [item]="input" [form]="mainForm" (displayHelp)="openHelp($event)"></app-dynamic-form-item>
+      </div>
 
-    <br><br>
+      <br><br>
 
-    <button mat-flat-button color="primary" type="submit" [disabled]="!mainForm.valid">Create new case</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="!mainForm.valid">Create new case</button>
 
-  </form>
+    </form>
 
+  </div>
 </div>

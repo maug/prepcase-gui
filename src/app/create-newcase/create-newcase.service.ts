@@ -34,10 +34,10 @@ export class CreateNewcaseService {
   constructor(private http: HttpClient, private jsonRpc: JsonRpcService) {
   }
 
-  async loadData(): Promise<any> {
+  async loadData(): Promise<void> {
     this.data = { toolsParameters: null, compsets: null, gridData: null };
 
-    const allLoaded = new Promise((resolve, reject) => {
+    const allLoaded = new Promise<void>((resolve, reject) => {
       forkJoin({
         toolsParameters: this.jsonRpc.rpc(environment.jsonRpcUrl, 'App.tools_parameters'),
         compsets: this.http.get('assets/config_compsets.json', {responseType: 'json'}),
@@ -47,7 +47,7 @@ export class CreateNewcaseService {
         this.data.toolsParameters = this.parseToolParametersData(data.toolsParameters);
         this.data.compsets = this.parseCompsetsData(data.compsets);
         this.data.gridData = this.parseGridData(data.grids);
-        resolve(true);
+        resolve();
       });
     });
 
