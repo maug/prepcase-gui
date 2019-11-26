@@ -10,6 +10,7 @@ export interface RpcLoginResponse {
   config: any;
   error: string;
   error_code: 'permission_denied' | 'no_prepcase_file' | 'invalid_prepcase_file' | 'error' | '';
+  hostname: string;
   ssh: RpcExecuteCommandResponse;
 }
 

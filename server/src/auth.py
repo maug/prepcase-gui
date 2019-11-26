@@ -1,10 +1,12 @@
 import json
 from flask import session
+import env
 import globals
 import cases
 
 user = {
     'username': '',
+    'hostname': '',
     'case_dirs': [],
 }
 
@@ -37,7 +39,7 @@ def login_user(username, password):
     globals.ssh.set_user(username)
     res_ssh = globals.ssh.ssh_execute('cat ~/.prepcase.json', [])
 
-    res = dict(error_code='', error='', config='')
+    res = dict(error_code='', error='', config='', hostname='')
 
     if res_ssh['return_code'] == 255:
         res['error_code'] = 'permission_denied'
@@ -61,6 +63,7 @@ def login_user(username, password):
             else:
                 # config file ok and password matches
                 user['username'] = username
+                user['hostname'] = env.SSH_REMOTE_HOST
                 user['case_dirs'] = cases.get_real_case_dirs(config.get('case_dirs', []))
                 session['user'] = user
                 # config for frontend
