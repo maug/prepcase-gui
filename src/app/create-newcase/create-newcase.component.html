@@ -2,7 +2,7 @@
 <div *ngIf="isLoaded">
   <mat-toolbar>Create new case</mat-toolbar>
   <div class="contents">
-    <h1 class="mat-h4">Set parameters for CIME script <code>create_newcase</code></h1>
+    <h3>Set parameters for CIME script <code>create_newcase</code></h3>
 
     <form [formGroup]="mainForm" (ngSubmit)="onSubmit()">
 
@@ -115,8 +115,6 @@
       <div *ngFor="let input of dynamicInputs">
         <app-dynamic-form-item [item]="input" [form]="mainForm" (displayHelp)="openHelp($event)"></app-dynamic-form-item>
       </div>
-
-      <br><br>
 
       <button mat-flat-button color="primary" type="submit" [disabled]="!mainForm.valid">Create new case</button>
 
