@@ -46,8 +46,8 @@ export class ToolParametersService {
         }
       }
       // move positional arguments to the end of list
-      // (if nargs is set, it is positional argument)
-      section.sort((a, b) => (a.nargs ? 1 : 0) - (b.nargs ? 1 : 0));
+      // (if nargs is set to '?', it is positional argument)
+      section.sort((a, b) => (a.nargs === '?' ? 1 : 0) - (b.nargs === '?' ? 1 : 0));
     }
     return toolParameters;
   }

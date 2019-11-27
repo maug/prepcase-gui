@@ -64,7 +64,7 @@ export class DynamicFormService {
         return null;
       } else if (control.value === true) {
         return item.parameter_name;
-      } else if (item.nargs) {
+      } else if (item.nargs === '?') {
         // positional argument
         return `${control.value}`;
       } else {
