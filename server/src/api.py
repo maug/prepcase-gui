@@ -20,9 +20,6 @@ Session(app)
 CORS(app, supports_credentials=True, origins=env.CORS_ORIGIN) # CORS on different ports
 jsonrpc = JSONRPC(app, '/', enable_web_browsable_api=True)
 
-# CESM directory on the server
-CESM_DIRECTORY = "cesm"
-CIME_DIRECTORY = "cesm/cime"
 CESM_TOOLS = 'create_clone create_test query_testlists create_newcase query_config'.split()
 
 @app.before_request
@@ -72,7 +69,7 @@ def run_tool(tool, parameters):
     Run one of the supported command line tools.
     Parameters are accepted as array of strings.
     """
-    executable = safe_join(CIME_DIRECTORY, "scripts", tool)
+    executable = safe_join(auth.user['cesm_path'], 'cime', "scripts", tool)
     return globals.ssh.ssh_execute(executable, parameters)
 
 
@@ -94,14 +91,15 @@ def list_cases(case_dirs):
     return cases.list_cases(case_dirs)
 
 
-@jsonrpc.method('App.get_config')
-def get_config(path_name):
-    """
-    Return content of XML file in CESM directory
-    """
-    absolute_path_name = safe_join(CESM_DIRECTORY, path_name)
-    with open(absolute_path_name, "r") as f:
-        return dict(path_name=path_name, data=f.read())
+# DEPRECATED
+# @jsonrpc.method('App.get_config')
+# def get_config(path_name):
+#     """
+#     Return content of XML file in CESM directory
+#     """
+#     absolute_path_name = safe_join(CESM_DIRECTORY, path_name)
+#     with open(absolute_path_name, "r") as f:
+#         return dict(path_name=path_name, data=f.read())
 
 
 if __name__ == '__main__':

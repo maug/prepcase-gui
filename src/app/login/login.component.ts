@@ -49,10 +49,10 @@ export class LoginComponent implements OnInit {
         const texts: DialogTexts = [{ text: data.error, classes: 'error' }];
         if (['no_prepcase_file', 'invalid_prepcase_file'].includes(data.error_code) ) {
           texts.push({ text: '<br>', keepHtml: true });
-          // mytodo: "Athena" ma się ciągnąć z serwerka jako nazwa hosta
-          texts.push(`Please create .prepcase.json file in your home directory on Athena with contents:`);
-          texts.push({ text: '{ "password": "YOUR_PASSWORD_HERE" }', classes: 'monospace' });
+          texts.push(`Please create .prepcase.json file in your home directory on Athena:`);
+          texts.push({ text: 'echo >$HOME/.prepcase.json \'{ "password": "YOUR_PASSWORD_HERE", "cesm_path": "~/cesm" }\'', classes: 'monospace' });
           texts.push('The password will be used to login to PrepCASE.');
+          texts.push('"cesm_path" should point to your CESM installation.');
           texts.push('The file should be readable and writable only by your user:');
           texts.push({ text: ' chmod 600 $HOME/.prepcase.json', classes: 'monospace' });
         }

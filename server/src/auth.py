@@ -7,6 +7,7 @@ import cases
 user = {
     'username': '',
     'hostname': '',
+    'cesm_path': '',
     'case_dirs': [],
 }
 
@@ -64,6 +65,9 @@ def login_user(username, password):
                 # config file ok and password matches
                 user['username'] = username
                 user['hostname'] = env.SSH_REMOTE_HOST
+                user['cesm_path'] = config.get('cesm_path')
+                if user['cesm_path'] is None:
+                    raise ValueError
                 user['case_dirs'] = cases.get_real_case_dirs(config.get('case_dirs', []))
                 session['user'] = user
                 # config for frontend
