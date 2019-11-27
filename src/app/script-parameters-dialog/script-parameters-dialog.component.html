@@ -1,1 +1,13 @@
-<p>script-parameters-dialog works!</p>
+<h1 mat-dialog-title *ngIf="data.header"><code>{{data.header}}</code></h1>
+<div mat-dialog-content>
+  <form [formGroup]="mainForm">
+    <div *ngFor="let input of dynamicInputs">
+      <app-dynamic-form-item [item]="input" [form]="mainForm" (displayHelp)="openHelp($event)"></app-dynamic-form-item>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="onRun()">Run script</button>
+  <span class="spacer-max"></span>
+  <button mat-raised-button (click)="onCancel()">Cancel</button>
+</div>

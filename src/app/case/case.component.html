@@ -40,12 +40,13 @@
   <mat-divider></mat-divider>
   <br>
   <div class="button-row">
-    <button mat-raised-button (click)="runCommand('check_case')">Check case</button>
-    <button mat-raised-button (click)="runCommand('check_input_data')">Check input data (download)</button>
-    <button mat-raised-button (click)="runCommand('case_setup')">Case setup</button>
-    <button mat-raised-button (click)="runCommand('preview_run')">Preview run</button>
-    <button mat-raised-button (click)="runCommand('case_build')">Case build</button>
-    <button mat-raised-button (click)="runCommand('case_submit')">Case submit</button>
+    <button mat-raised-button (click)="runCommand('case.setup')">case.setup</button>
+    <button mat-raised-button (click)="runCommand('case.build')">case.build</button>
+    <button mat-raised-button (click)="runCommand('check_case')">check_case</button>
+    <button mat-raised-button (click)="runCommand('check_input_data')">check_input_data</button>
+    <button mat-raised-button (click)="runCommand('preview_namelists')">preview_namelists</button>
+    <button mat-raised-button (click)="runCommand('preview_run')">preview_run</button>
+    <button mat-raised-button (click)="runCommand('case.submit')">case.submit</button>
   </div>
 
   <br>

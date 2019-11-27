@@ -44,7 +44,7 @@ export interface ToolParameter {
   dest?: string;
   help: string;
   metavar?: string;
-  nargs?: string;
+  nargs?: '?' | '*' | '+';
   parameter_name: string;
   required?: boolean;
   type?: string;
@@ -54,4 +54,5 @@ export enum Action {
   Append = 'append',
   Help = 'help',
   StoreTrue = 'store_true',
+  Store = 'store',
 }

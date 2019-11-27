@@ -26,3 +26,13 @@ body { margin: 0; }
 .mat-simple-snackbar {
   white-space: pre;
 }
+
+.spacer-max {
+  display: inline-block;
+  flex: 1 1 auto;
+}
+
+.spacer {
+  display: inline-block;
+  width: 10px;
+}

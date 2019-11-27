@@ -3,8 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../environments/environment';
 import { JsonRpcService } from './json-rpc.service';
-import { ToolsParameters } from './types/ToolsParameters';
-import { ToolParameter } from './types/ToolsParameters';
+import { Action, ToolParameter, ToolsParameters } from './types/ToolsParameters';
 
 @Injectable({
   providedIn: 'root'
@@ -31,8 +30,14 @@ export class ToolParametersService {
   }
 
   private parseToolParametersData(toolParameters: ToolsParameters): ToolsParameters {
-    for (const section of Object.values(toolParameters)) {
+    for (const section of Object.values(toolParameters) as Array<ToolParameter[]>) {
       for (const item of section) {
+        item.help = item.help.trim();
+        if (item.parameter_name === '--help') {
+          // convert --help parameter to checkbox
+          item.action = Action.StoreTrue;
+          item.default = null;
+        }
         if (item.help === '==SUPPRESS==') {
           item.help = '';
         }
@@ -40,6 +45,9 @@ export class ToolParametersService {
           item.help += '\n\nDefault value: ' + String(item.default);
         }
       }
+      // move positional arguments to the end of list
+      // (if nargs is set, it is positional argument)
+      section.sort((a, b) => (a.nargs ? 1 : 0) - (b.nargs ? 1 : 0));
     }
     return toolParameters;
   }

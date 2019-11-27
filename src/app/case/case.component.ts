@@ -7,7 +7,8 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn}
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 import { MatDialog } from '@angular/material';
 import { RpcExecuteCommandResponse } from '../types/RpcResponses';
-import { ToolParameter } from '../types/ToolsParameters';
+import { ToolParametersService } from '../tool-parameters.service';
+import { ScriptParametersDialogComponent } from '../script-parameters-dialog/script-parameters-dialog.component';
 
 @Component({
   selector: 'app-case',
@@ -29,6 +30,7 @@ export class CaseComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private dataService: CaseService,
+    private toolParametersService: ToolParametersService,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
   ) { }
@@ -88,40 +90,23 @@ export class CaseComponent implements OnInit {
     });
   }
 
-  runCommand(cmd: string) {
-    switch (cmd) {
-      case 'check_case': {
-        // const params = this.getScriptParams(cmd);
-        this.processCommand('Check case', this.dataService.checkCase(this.caseRoot));
-        break;
+  async runCommand(cmd: string) {
+    const scriptParams = await this.toolParametersService.getToolParameters(cmd);
+    const dialogRef = this.dialog.open(ScriptParametersDialogComponent, {
+      disableClose: true,
+      minWidth: 600,
+      data: {
+        header: cmd,
+        scriptParams,
       }
-      case 'check_input_data': {
-        this.processCommand('Check input data (download)', this.dataService.checkInputData(this.caseRoot));
-        break;
+    });
+    dialogRef.afterClosed().subscribe((result: string[] | false) => {
+      console.log('dialog closed', cmd, result);
+      if (result) {
+        this.processCommand(cmd, this.dataService.runScript(this.caseRoot, cmd, result));
       }
-      case 'case_setup': {
-        this.processCommand('Case setup', this.dataService.caseSetup(this.caseRoot));
-        break;
-      }
-      case 'preview_run': {
-        this.processCommand('Preview run', this.dataService.previewRun(this.caseRoot));
-        break;
-      }
-      case 'case_build': {
-        this.processCommand('Case setup', this.dataService.caseBuild(this.caseRoot));
-        break;
-      }
-      case 'case_submit': {
-        this.processCommand('Case submit', this.dataService.caseSubmit(this.caseRoot));
-        break;
-      }
-      default: throw new Error('Unknown command ' + cmd);
-    }
+    });
   }
-
-  // private getScriptParams(cmd: string): ToolParameter {
-  //   this.
-  // }
 
   private processCommand(name: string, cmd$: Observable<RpcExecuteCommandResponse>) {
     this.dialog.open(HelpDialogComponent, {

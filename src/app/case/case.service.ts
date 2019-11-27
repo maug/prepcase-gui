@@ -45,51 +45,11 @@ export class CaseService {
     );
   }
 
-  checkCase(caseRoot): Observable<RpcExecuteCommandResponse> {
+  runScript(caseRoot: string, script: string, params: string[]): Observable<RpcExecuteCommandResponse> {
     return this.jsonRpc.rpc(
       environment.jsonRpcUrl,
       'App.run_script_in_case',
-      [caseRoot, 'check_case', []]
-    );
-  }
-
-  checkInputData(caseRoot): Observable<RpcExecuteCommandResponse> {
-    return this.jsonRpc.rpc(
-      environment.jsonRpcUrl,
-      'App.run_script_in_case',
-      [caseRoot, 'check_input_data', ['--download']]
-    );
-  }
-
-  caseSetup(caseRoot): Observable<RpcExecuteCommandResponse> {
-    return this.jsonRpc.rpc(
-      environment.jsonRpcUrl,
-      'App.run_script_in_case',
-      [caseRoot, 'case.setup', []]
-    );
-  }
-
-  previewRun(caseRoot): Observable<RpcExecuteCommandResponse> {
-    return this.jsonRpc.rpc(
-      environment.jsonRpcUrl,
-      'App.run_script_in_case',
-      [caseRoot, 'preview_run', []]
-    );
-  }
-
-  caseBuild(caseRoot): Observable<RpcExecuteCommandResponse> {
-    return this.jsonRpc.rpc(
-      environment.jsonRpcUrl,
-      'App.run_script_in_case',
-      [caseRoot, 'case.build', []]
-    );
-  }
-
-  caseSubmit(caseRoot): Observable<RpcExecuteCommandResponse> {
-    return this.jsonRpc.rpc(
-      environment.jsonRpcUrl,
-      'App.run_script_in_case',
-      [caseRoot, 'case.submit', []]
+      [caseRoot, script, params]
     );
   }
 }

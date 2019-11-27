@@ -36,6 +36,7 @@ import { ToolParametersService } from './tool-parameters.service';
   ],
   entryComponents: [
     HelpDialogComponent,
+    ScriptParametersDialogComponent,
   ],
   imports: [
     AppMaterialModule,

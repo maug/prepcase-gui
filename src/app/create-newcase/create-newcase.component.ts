@@ -19,13 +19,11 @@ import { map, startWith } from 'rxjs/operators';
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 
 import { ModelGrid } from '../types/GridData';
-import { FormItemText } from '../dynamic-form/FormItemText';
 import { FormItemBase } from '../dynamic-form/FormItemBase';
-import { Action, ToolParameter } from '../types/ToolsParameters';
-import { FormItemCheckbox } from '../dynamic-form/FormItemCheckbox';
-import { FormItemDropdown } from '../dynamic-form/FormItemDropdown';
+import { ToolParameter } from '../types/ToolsParameters';
 import { Router } from '@angular/router';
 import { ToolParametersService } from '../tool-parameters.service';
+import { DynamicFormService } from '../dynamic-form/dynamic-form.service';
 
 @Component({
   selector: 'app-create-newcase',
@@ -54,6 +52,7 @@ export class CreateNewcaseComponent implements OnInit {
     private router: Router,
     private dataService: CreateNewcaseService,
     private toolParametersService: ToolParametersService,
+    private dynamicFormService: DynamicFormService,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
@@ -185,44 +184,11 @@ export class CreateNewcaseComponent implements OnInit {
       // ninst: ['', [Validators.pattern(/^[1-9]\d*$/)]],
     }, { validators: this.compsetGridValidator() });
 
-    for (const entry of this.createNewcaseParameters) {
-      if (this.mainForm.get(entry.parameter_name)) {
-        // skip parameters defined manually
-        continue;
-      }
-      if (entry.parameter_name === '--help') {
-        continue;
-      }
-      // mytodo: required item
-      // mytodo: validations
-      let input: FormItemBase<any>;
-      if (entry.action === Action.StoreTrue) {
-        input = new FormItemCheckbox({
-          help: entry.help,
-          key: entry.parameter_name,
-          label: entry.parameter_name,
-          value: !!entry.default,
-        });
-      } else if (entry.choices) {
-        input = new FormItemDropdown({
-          help: entry.help,
-          key: entry.parameter_name,
-          label: entry.parameter_name,
-          options: entry.choices.map(o => ({ key: o, value: o })),
-          value: entry.default ? String(entry.default) : '',
-        });
-      } else {
-        input = new FormItemText({
-          help: entry.help + (entry.default == null ? '' : '\n\nDefault value: ' + String(entry.default)),
-          key: entry.parameter_name,
-          label: entry.parameter_name,
-          type: 'text',
-          value: '',
-        });
-      }
-      this.dynamicInputs.push(input);
-      this.mainForm.addControl(input.key, new FormControl(input.value));
-    }
+    this.dynamicInputs = this.dynamicFormService.createInputs(
+      this.createNewcaseParameters,
+      Object.keys(this.mainForm.controls).concat(['--help']),
+      this.mainForm
+    );
 
     if (isDevMode()) {
       this.mainForm.get('--case').setValue('/home/vagrant/case_mynior');
