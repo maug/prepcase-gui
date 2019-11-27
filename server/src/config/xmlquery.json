@@ -53,5 +53,53 @@
         "action": "store_true", 
         "help": "Do not resolve variable values.", 
         "parameter_name": "--no-resolve"
+    }, 
+    {
+        "action": "store_true", 
+        "default": false, 
+        "help": "Print a full listing for each variable, including value, type,\nvalid values, description and file.", 
+        "parameter_name": "--full"
+    }, 
+    {
+        "action": "store_true", 
+        "default": false, 
+        "help": "Only print the filename that each variable is defined in.", 
+        "parameter_name": "--fileonly"
+    }, 
+    {
+        "action": "store_true", 
+        "default": false, 
+        "help": "Only print one value without newline character.\nIf more than one has been found print first value in list.", 
+        "parameter_name": "--value"
+    }, 
+    {
+        "action": "store_true", 
+        "default": false, 
+        "help": "Print the complete raw record associated with each variable.", 
+        "parameter_name": "--raw"
+    }, 
+    {
+        "action": "store_true", 
+        "default": false, 
+        "help": "Print the description associated with each variable.", 
+        "parameter_name": "--description"
+    }, 
+    {
+        "action": "store_true", 
+        "default": false, 
+        "help": "Print the group associated with each variable.", 
+        "parameter_name": "--get-group"
+    }, 
+    {
+        "action": "store_true", 
+        "default": false, 
+        "help": "Print the data type associated with each variable.", 
+        "parameter_name": "--type"
+    }, 
+    {
+        "action": "store_true", 
+        "default": false, 
+        "help": "Print the valid values associated with each variable, if defined.", 
+        "parameter_name": "--valid-values"
     }
 ]

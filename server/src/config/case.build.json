@@ -25,5 +25,82 @@
         "help": "Case directory to build.\nDefault is current directory.", 
         "nargs": "?", 
         "parameter_name": "caseroot"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Only build shared libraries.", 
+        "parameter_name": "--sharedlib-only"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Assume shared libraries are already built.", 
+        "parameter_name": "--model-only"
+    }, 
+    {
+        "choices": [
+            "cpl", 
+            "atm", 
+            "lnd", 
+            "ice", 
+            "ocn", 
+            "rof", 
+            "glc", 
+            "wav", 
+            "esp", 
+            "csmshare", 
+            "mct", 
+            "pio", 
+            "gptl"
+        ], 
+        "help": "Libraries to build.\nWill cause namelist generation to be skipped.", 
+        "nargs": "+", 
+        "parameter_name": "--build"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Do not check and save build provenance", 
+        "parameter_name": "--skip-provenance-check"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Clean all objects (including sharedlib objects that may be\nused by other builds).", 
+        "parameter_name": "--clean-all"
+    }, 
+    {
+        "choices": [
+            "cpl", 
+            "atm", 
+            "lnd", 
+            "ice", 
+            "ocn", 
+            "rof", 
+            "glc", 
+            "wav", 
+            "esp", 
+            "csmshare", 
+            "mct", 
+            "pio", 
+            "gptl"
+        ], 
+        "help": "Clean objects associated with specific libraries.\nWith no arguments, clean all objects other than sharedlib objects.", 
+        "nargs": "*", 
+        "parameter_name": "--clean"
+    }, 
+    {
+        "choices": [
+            "cpl", 
+            "atm", 
+            "lnd", 
+            "ice", 
+            "ocn", 
+            "rof", 
+            "glc", 
+            "wav", 
+            "esp", 
+            "csmshare"
+        ], 
+        "help": "Clean Depends and Srcfiles only.\nThis allows you to rebuild after adding new\nfiles in the source tree or in SourceMods.", 
+        "nargs": "*", 
+        "parameter_name": "--clean-depends"
     }
 ]
