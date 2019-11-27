@@ -9,6 +9,8 @@ interface Text {
 
 export type DialogTexts = string | Array<Text | string>;
 
+type DialogTextsInternal = Required<Text>[];
+
 interface Button {
   id: string;
   label: string;
@@ -27,7 +29,7 @@ interface DialogData {
 })
 export class HelpDialogComponent implements OnInit {
   header: string;
-  texts: DialogTexts;
+  texts: DialogTextsInternal;
   buttons: Button[];
 
   constructor(@Inject(MAT_DIALOG_DATA) data: DialogData) {
