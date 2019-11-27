@@ -7,6 +7,7 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn}
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 import { MatDialog } from '@angular/material';
 import { RpcExecuteCommandResponse } from '../types/RpcResponses';
+import { ToolParameter } from '../types/ToolsParameters';
 
 @Component({
   selector: 'app-case',
@@ -19,7 +20,7 @@ export class CaseComponent implements OnInit {
 
   caseRoot: string;
 
-  caseData: string;
+  caseDescription: string;
   caseVars: { [key: string]: string } = {};
   caseVarsOptions: Observable<string[]>;
 
@@ -35,7 +36,7 @@ export class CaseComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(async paramMap => {
       this.caseRoot = paramMap.get('caseRoot');
-      await this.loadCaseData();
+      ({ desc: this.caseDescription, vars: this.caseVars } = await this.dataService.loadCaseData(this.caseRoot));
       this.isLoaded = true;
     });
 
@@ -72,16 +73,17 @@ export class CaseComponent implements OnInit {
       this.caseRoot,
       this.mainForm.get('xmlchange_key').value,
       this.mainForm.get('xmlchange_value').value
-    ).subscribe(data => {
-      this.dialog.closeAll();
+    ).subscribe(async data => {
       if (data.return_code !== 0) {
+        this.dialog.closeAll();
         this.dialog.open(HelpDialogComponent, {
           data: {
             texts: [{ text: data.stderr, classes: 'error' }],
           }
         });
       } else {
-        this.loadCaseData();
+        ({ desc: this.caseDescription, vars: this.caseVars } = await this.dataService.loadCaseData(this.caseRoot));
+        this.dialog.closeAll();
       }
     });
   }
@@ -89,6 +91,7 @@ export class CaseComponent implements OnInit {
   runCommand(cmd: string) {
     switch (cmd) {
       case 'check_case': {
+        // const params = this.getScriptParams(cmd);
         this.processCommand('Check case', this.dataService.checkCase(this.caseRoot));
         break;
       }
@@ -115,6 +118,10 @@ export class CaseComponent implements OnInit {
       default: throw new Error('Unknown command ' + cmd);
     }
   }
+
+  // private getScriptParams(cmd: string): ToolParameter {
+  //   this.
+  // }
 
   private processCommand(name: string, cmd$: Observable<RpcExecuteCommandResponse>) {
     this.dialog.open(HelpDialogComponent, {
@@ -145,20 +152,6 @@ export class CaseComponent implements OnInit {
           header: name,
           texts,
         }
-      });
-    });
-  }
-
-  private loadCaseData(): Promise<void> {
-    return new Promise(resolve => {
-      this.dataService.getCaseData(this.caseRoot).subscribe(data => {
-        this.caseData = data.stdout.trim();
-        const matches = this.caseData.matchAll(/^\s*(.+): (.*)$/mg);
-        this.caseVars = {};
-        for (const match of matches) {
-          this.caseVars[match[1]] = match[2];
-        }
-        resolve();
       });
     });
   }

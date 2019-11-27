@@ -13,11 +13,27 @@ export class CaseService {
     private jsonRpc: JsonRpcService,
   ) { }
 
-  getCaseData(caseRoot): Observable<RpcExecuteCommandResponse> {
+  loadCaseData(caseRoot: string): Promise<{desc: string, vars: { [key: string]: string }}> {
+    return new Promise(resolve => {
+      this.xmlQuery(caseRoot, ['--listall']).subscribe(data => {
+        const result = {
+          desc: data.stdout.trim(),
+          vars: {},
+        };
+        const matches = result.desc.matchAll(/^\s*(.+): (.*)$/mg);
+        for (const match of matches) {
+          result.vars[match[1]] = match[2];
+        }
+        resolve(result);
+      });
+    });
+  }
+
+  xmlQuery(caseRoot: string, params: string[] = []): Observable<RpcExecuteCommandResponse> {
     return this.jsonRpc.rpc(
       environment.jsonRpcUrl,
       'App.run_script_in_case',
-      [caseRoot, 'xmlquery', ['--listall']]
+      [caseRoot, 'xmlquery', params]
     );
   }
 
