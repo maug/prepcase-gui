@@ -19,6 +19,8 @@ import { RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { UserService } from './user.service';
 import { CaseListComponent } from './case-list/case-list.component';
+import { ScriptParametersDialogComponent } from './script-parameters-dialog/script-parameters-dialog.component';
+import { ToolParametersService } from './tool-parameters.service';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,7 @@ import { CaseListComponent } from './case-list/case-list.component';
     EscapeHtmlPipe,
     LoginComponent,
     CaseListComponent,
+    ScriptParametersDialogComponent,
   ],
   entryComponents: [
     HelpDialogComponent,
@@ -46,6 +49,7 @@ import { CaseListComponent } from './case-list/case-list.component';
     CreateNewcaseService,
     JsonRpcService,
     UserService,
+    ToolParametersService,
     // { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
   ],
   bootstrap: [AppComponent]

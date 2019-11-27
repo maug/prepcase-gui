@@ -21,10 +21,11 @@ import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 import { ModelGrid } from '../types/GridData';
 import { FormItemText } from '../dynamic-form/FormItemText';
 import { FormItemBase } from '../dynamic-form/FormItemBase';
-import { Action } from '../types/ToolsParameters';
+import { Action, ToolParameter } from '../types/ToolsParameters';
 import { FormItemCheckbox } from '../dynamic-form/FormItemCheckbox';
 import { FormItemDropdown } from '../dynamic-form/FormItemDropdown';
 import { Router } from '@angular/router';
+import { ToolParametersService } from '../tool-parameters.service';
 
 @Component({
   selector: 'app-create-newcase',
@@ -47,9 +48,12 @@ export class CreateNewcaseComponent implements OnInit {
 
   gridErrorMatcher = new FormErrorStateMatcher('gridIncompatible');
 
+  private createNewcaseParameters: ToolParameter[];
+
   constructor(
     private router: Router,
     private dataService: CreateNewcaseService,
+    private toolParametersService: ToolParametersService,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
@@ -57,18 +61,15 @@ export class CreateNewcaseComponent implements OnInit {
 
   async ngOnInit() {
     await this.dataService.loadData();
-    this.isLoaded = true;
-
     this.compsetGroups = this.dataService.data.compsets;
     this.grids = this.dataService.data.gridData.grids.model_grid;
+    this.createNewcaseParameters = await this.toolParametersService.getToolParameters('create_newcase');
 
     this.createFormControls();
 
     this.compsetsGroupsOptions = this.mainForm.get('--compset').valueChanges
       .pipe(
         startWith(''),
-        // why after selection here goes object (although diplayFn changed it to longName)?
-        // map(value => typeof value === 'string' ? value : value.longName),
         map((value: string) => this.filterCompsetsGroups(value))
       );
     this.gridOptions = this.mainForm.valueChanges
@@ -76,12 +77,14 @@ export class CreateNewcaseComponent implements OnInit {
         startWith(''),
         map((value: { [key: string]: string }) => this.filterGrids(value['--res'] || ''))
       );
+
+    this.isLoaded = true;
   }
 
   onSubmit() {
     console.warn('SUBMIT!', this.mainForm.value);
 
-    const params = this.dataService.data.toolsParameters.create_newcase.map(item => {
+    const params = this.createNewcaseParameters.map(item => {
       const control = this.mainForm.get(item.parameter_name);
       if (!control) {
         return null;
@@ -157,7 +160,7 @@ export class CreateNewcaseComponent implements OnInit {
 
   openHelp(keyOrFormItem: string | FormItemBase<any>) {
     const key: string = typeof keyOrFormItem === 'string' ? keyOrFormItem : keyOrFormItem.key;
-    const item = this.dataService.data.toolsParameters.create_newcase.find(row => row.parameter_name === key);
+    const item = this.createNewcaseParameters.find(row => row.parameter_name === key);
     const texts: any[] = [{ text: item.help, classes: 'pre-wrap' }];
     if (key === '--res') {
       texts.push({ text: '<p>Each grid alias can be associated with two attributes:</p>' +
@@ -182,7 +185,7 @@ export class CreateNewcaseComponent implements OnInit {
       // ninst: ['', [Validators.pattern(/^[1-9]\d*$/)]],
     }, { validators: this.compsetGridValidator() });
 
-    for (const entry of this.dataService.data.toolsParameters.create_newcase) {
+    for (const entry of this.createNewcaseParameters) {
       if (this.mainForm.get(entry.parameter_name)) {
         // skip parameters defined manually
         continue;

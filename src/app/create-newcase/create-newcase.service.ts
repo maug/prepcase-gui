@@ -6,7 +6,6 @@ import { HttpClient } from '@angular/common/http';
 
 import { GridData } from '../types/GridData';
 import { JsonRpcService } from '../json-rpc.service';
-import { ToolsParameters } from '../types/ToolsParameters';
 import { environment } from '../../environments/environment';
 import { RpcExecuteCommandResponse } from '../types/RpcResponses';
 
@@ -26,7 +25,6 @@ export interface CompsetsGroup {
 export class CreateNewcaseService {
 
   data: {
-    toolsParameters: ToolsParameters,
     compsets: CompsetsGroup[],
     gridData: GridData,
   };
@@ -38,7 +36,7 @@ export class CreateNewcaseService {
     if (this.data) {
       return Promise.resolve();
     }
-    this.data = { toolsParameters: null, compsets: null, gridData: null };
+    this.data = { compsets: null, gridData: null };
 
     const allLoaded = new Promise<void>((resolve, reject) => {
       forkJoin({
@@ -46,8 +44,6 @@ export class CreateNewcaseService {
         compsets: this.http.get('assets/config_compsets.json', {responseType: 'json'}),
         grids: this.http.get('assets/config_grids.xml', {responseType: 'text'}),
       }).subscribe(data => {
-        console.log('toolsParameters', data.toolsParameters);
-        this.data.toolsParameters = this.parseToolParametersData(data.toolsParameters);
         this.data.compsets = this.parseCompsetsData(data.compsets);
         this.data.gridData = this.parseGridData(data.grids);
         resolve();
@@ -59,20 +55,6 @@ export class CreateNewcaseService {
 
   createNewcase(params: string[]): Observable<RpcExecuteCommandResponse> {
     return this.jsonRpc.rpc(environment.jsonRpcUrl, 'App.run_tool', ['create_newcase', params]);
-  }
-
-  private parseToolParametersData(toolParameters: ToolsParameters): ToolsParameters {
-    for (const section of Object.values(toolParameters)) {
-      for (const item of section) {
-        if (item.help === '==SUPPRESS==') {
-          item.help = '';
-        }
-        if (item.default != null) {
-          item.help += '\n\nDefault value: ' + String(item.default);
-        }
-      }
-    }
-    return toolParameters;
   }
 
   private parseCompsetsData(defs: any): CompsetsGroup[] {
