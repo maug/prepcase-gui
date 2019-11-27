@@ -1,0 +1,75 @@
+[
+    {
+        "action": "help", 
+        "default": "==SUPPRESS==", 
+        "help": "show this help message and exit", 
+        "parameter_name": "--help"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print debug information (very verbose) to file /home/piotr/cmcc/cesm/cime.args/scripts/Tools/case.submit.log", 
+        "parameter_name": "--debug"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Add additional context (time and file) to log messages", 
+        "parameter_name": "--verbose"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print only warnings and error messages", 
+        "parameter_name": "--silent"
+    }, 
+    {
+        "default": "/home/piotr/cmcc/cesm/cime.args/scripts/Tools", 
+        "help": "Case directory to submit.\nDefault is current directory.", 
+        "nargs": "?", 
+        "parameter_name": "caseroot"
+    }, 
+    {
+        "help": "Name of the job to be submitted;\ncan be any of the jobs listed in env_batch.xml.\nDefault is case.run.", 
+        "parameter_name": "--job"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Do not submit jobs to batch system, run locally.", 
+        "parameter_name": "--no-batch"
+    }, 
+    {
+        "help": "Specify a prerequisite job id, this job will not start until the\njob with this id is completed (batch mode only).", 
+        "parameter_name": "--prereq"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Allows starting the run even if the prerequisite fails.\nThis also allows resubmits to run if the original failed and the\nresubmit was submitted to the queue with the orginal as a dependency,\nas in the case of --resubmit-immediate.", 
+        "parameter_name": "--prereq-allow-failure"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Used with tests only, to continue rather than restart a test.", 
+        "parameter_name": "--resubmit"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "This queues all of the resubmissions immediately after\nthe first job is queued. These rely on the queue system to\nhandle dependencies.", 
+        "parameter_name": "--resubmit-immediate"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Skip calling preview-namelist during case.run.", 
+        "parameter_name": "--skip-preview-namelist"
+    }, 
+    {
+        "help": "Email to be used for batch notification.", 
+        "parameter_name": "--mail-user"
+    }, 
+    {
+        "action": "append", 
+        "help": "When to send user email. Options are: never, all, begin, end, fail.\nYou can specify multiple types with either comma-separated args or multiple -M flags.", 
+        "parameter_name": "--mail-type"
+    }, 
+    {
+        "help": "Used to pass additional arguments to batch system.", 
+        "parameter_name": "--batch-args"
+    }
+]

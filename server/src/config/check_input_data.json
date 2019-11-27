@@ -1,0 +1,53 @@
+[
+    {
+        "action": "help", 
+        "default": "==SUPPRESS==", 
+        "help": "show this help message and exit", 
+        "parameter_name": "--help"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print debug information (very verbose) to file /home/piotr/cmcc/cesm/cime.args/scripts/Tools/check_input_data.log", 
+        "parameter_name": "--debug"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Add additional context (time and file) to log messages", 
+        "parameter_name": "--verbose"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print only warnings and error messages", 
+        "parameter_name": "--silent"
+    }, 
+    {
+        "default": null, 
+        "help": "The input data protocol to download data.", 
+        "parameter_name": "--protocol"
+    }, 
+    {
+        "default": null, 
+        "help": "The input data repository from which to download data.", 
+        "parameter_name": "--server"
+    }, 
+    {
+        "default": null, 
+        "help": "The root directory where input data goes,\nuse xmlquery DIN_LOC_ROOT to see default value.", 
+        "parameter_name": "--input-data-root"
+    }, 
+    {
+        "default": "Buildconf", 
+        "help": "Where to find list of input files", 
+        "parameter_name": "--data-list-dir"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Attempt to download missing input files", 
+        "parameter_name": "--download"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "chksum inputfiles against inputdata_chksum.dat (if available)", 
+        "parameter_name": "--chksum"
+    }
+]

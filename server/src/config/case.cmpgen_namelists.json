@@ -1,0 +1,51 @@
+[
+    {
+        "action": "help", 
+        "default": "==SUPPRESS==", 
+        "help": "show this help message and exit", 
+        "parameter_name": "--help"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print debug information (very verbose) to file /home/piotr/cmcc/cesm/cime.args/scripts/Tools/case.cmpgen_namelists.log", 
+        "parameter_name": "--debug"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Add additional context (time and file) to log messages", 
+        "parameter_name": "--verbose"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print only warnings and error messages", 
+        "parameter_name": "--silent"
+    }, 
+    {
+        "default": "/home/piotr/cmcc/cesm/cime.args/scripts/Tools", 
+        "help": "Case directory for which namelists are compared/generated. \nDefault is current directory.", 
+        "nargs": "?", 
+        "parameter_name": "caseroot"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Force a namelist comparison against baselines. \nDefault is to follow the case specification.", 
+        "parameter_name": "--compare"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Force a generation of namelist baselines. \nDefault is to follow the case specification.", 
+        "parameter_name": "--generate"
+    }, 
+    {
+        "help": "Force comparison to use baselines with this name. \nDefault is to follow the case specification.", 
+        "parameter_name": "--compare-name"
+    }, 
+    {
+        "help": "Force generation to use baselines with this name. \nDefault is to follow the case specification.", 
+        "parameter_name": "--generate-name"
+    }, 
+    {
+        "help": "Root of baselines. \nDefault is the case's BASELINE_ROOT.", 
+        "parameter_name": "--baseline-root"
+    }
+]

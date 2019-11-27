@@ -1,0 +1,91 @@
+[
+    {
+        "action": "help", 
+        "default": "==SUPPRESS==", 
+        "help": "show this help message and exit", 
+        "parameter_name": "--help"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print debug information (very verbose) to file /home/piotr/cmcc/cesm/cime.args/scripts/Tools/jenkins_generic_job.log", 
+        "parameter_name": "--debug"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Add additional context (time and file) to log messages", 
+        "parameter_name": "--verbose"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print only warnings and error messages", 
+        "parameter_name": "--silent"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Generate baselines", 
+        "parameter_name": "--generate-baselines"
+    }, 
+    {
+        "help": "Do baseline comparisons (yes/no)", 
+        "parameter_name": "--baseline-compare"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Send results to CDash", 
+        "parameter_name": "--submit-to-cdash"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Do not use batch system even if on batch machine", 
+        "parameter_name": "--no-batch"
+    }, 
+    {
+        "help": "Build name to use for CDash submission. Default will be <TEST_SUITE>_<BRANCH>_<COMPILER>", 
+        "parameter_name": "--cdash-build-name"
+    }, 
+    {
+        "default": "ACME_Climate", 
+        "help": "The name of the CDash project where results should be uploaded", 
+        "parameter_name": "--cdash-project"
+    }, 
+    {
+        "default": "cmcc-dev", 
+        "help": "Baseline name for baselines to use. Also impacts dashboard job name. Useful for testing a branch other than next or master", 
+        "parameter_name": "--baseline-name"
+    }, 
+    {
+        "help": "Force comparison with these baseines without impacting dashboard or test-id.", 
+        "parameter_name": "--override-baseline-name"
+    }, 
+    {
+        "help": "Override default e3sm test suite that will be run", 
+        "parameter_name": "--test-suite"
+    }, 
+    {
+        "help": "Override default e3sm scratch root. Use this to avoid conflicting with other jenkins jobs", 
+        "parameter_name": "--scratch-root"
+    }, 
+    {
+        "default": "ACME_Latest", 
+        "help": "The build group to be used to display results on the CDash dashboard.", 
+        "parameter_name": "--cdash-build-group"
+    }, 
+    {
+        "default": null, 
+        "help": "Number of tasks create_test should perform simultaneously. Default will be min(num_cores, num_tests).", 
+        "parameter_name": "--parallel-jobs", 
+        "type": "<type 'int'>"
+    }, 
+    {
+        "help": "Force a specific walltime for all tests.", 
+        "parameter_name": "--walltime"
+    }, 
+    {
+        "help": "The machine for which to build tests, this machine must be defined in the config_machines.xml file for the given model. Default is to match the name of the machine in the test name or the name of the machine this script is run on to the NODENAME_REGEX field in config_machines.xml. This option is highly unsafe and should only be used if you know what you're doing.", 
+        "parameter_name": "--machine"
+    }, 
+    {
+        "help": "Compiler to use to build cime.  Default will be the default defined for the machine.", 
+        "parameter_name": "--compiler"
+    }
+]

@@ -1,0 +1,78 @@
+[
+    {
+        "action": "help", 
+        "default": "==SUPPRESS==", 
+        "help": "show this help message and exit", 
+        "parameter_name": "--help"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print debug information (very verbose) to file /home/piotr/cmcc/cesm/cime.args/scripts/Tools/wait_for_tests.log", 
+        "parameter_name": "--debug"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Add additional context (time and file) to log messages", 
+        "parameter_name": "--verbose"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print only warnings and error messages", 
+        "parameter_name": "--silent"
+    }, 
+    {
+        "default": ".", 
+        "help": "Paths to test directories or status file. Pwd default.", 
+        "nargs": "*", 
+        "parameter_name": "paths"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Do not wait for tests to finish", 
+        "parameter_name": "--no-wait"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Fail if throughput check fails (fail if tests slow down)", 
+        "parameter_name": "--check-throughput"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Fail if memory check fails (fail if tests footprint grows)", 
+        "parameter_name": "--check-memory"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Do not fail a test if the only problem is diffing namelists", 
+        "parameter_name": "--ignore-namelist-diffs"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Do not fail a test if the only problem is a memleak", 
+        "parameter_name": "--ignore-memleak"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Always upload logs to cdash, even if test passed", 
+        "parameter_name": "--force-log-upload"
+    }, 
+    {
+        "help": "Build name, implies you want results send to Cdash", 
+        "parameter_name": "--cdash-build-name"
+    }, 
+    {
+        "default": "ACME_Climate", 
+        "help": "The name of the CDash project where results should be uploaded", 
+        "parameter_name": "--cdash-project"
+    }, 
+    {
+        "default": "ACME_Latest", 
+        "help": "The build group to be used to display results on the CDash dashboard.", 
+        "parameter_name": "--cdash-build-group"
+    }, 
+    {
+        "help": "Timeout wait in seconds.", 
+        "parameter_name": "--timeout", 
+        "type": "<type 'int'>"
+    }
+]

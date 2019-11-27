@@ -4,6 +4,7 @@ from flask_jsonrpc import JSONRPC
 from flask_jsonrpc.helpers import make_response
 from flask_cors import CORS, cross_origin
 from flask_session import Session
+import glob
 import os
 import json
 
@@ -19,8 +20,6 @@ Session(app)
 # Server and client code are served on different ports, CORS is needed to allow setting cookies in browser
 CORS(app, supports_credentials=True, origins=env.CORS_ORIGIN) # CORS on different ports
 jsonrpc = JSONRPC(app, '/', enable_web_browsable_api=True)
-
-CESM_TOOLS = 'create_clone create_test query_testlists create_newcase query_config'.split()
 
 @app.before_request
 def before_request():
@@ -55,12 +54,12 @@ def tools_parameters():
     Return definitions of arguments of CESM tools.
     """
 
-    def read_config(tool):
-        config_file = os.path.join(os.path.dirname(__file__), 'config/' + tool + '_parameters.json')
+    def read_config(config_file):
         with open(config_file) as f:
             return json.load(open(config_file))
 
-    return dict([(tool, read_config(tool)) for tool in CESM_TOOLS])
+    files = [f for f in glob.glob(os.path.join(os.path.dirname(__file__), 'config/*.json'))]
+    return dict([(os.path.basename(f).replace('.json', ''), read_config(f)) for f in files])
 
 
 @jsonrpc.method('App.run_tool')

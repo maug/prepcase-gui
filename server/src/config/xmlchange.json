@@ -1,0 +1,80 @@
+[
+    {
+        "action": "help", 
+        "default": "==SUPPRESS==", 
+        "help": "show this help message and exit", 
+        "parameter_name": "--help"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print debug information (very verbose) to file /home/piotr/cmcc/cesm/cime.args/scripts/Tools/xmlchange.log", 
+        "parameter_name": "--debug"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Add additional context (time and file) to log messages", 
+        "parameter_name": "--verbose"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print only warnings and error messages", 
+        "parameter_name": "--silent"
+    }, 
+    {
+        "default": "", 
+        "help": "Comma-separated list of settings in the form: var1=value,var2=value,...", 
+        "nargs": "?", 
+        "parameter_name": "listofsettings"
+    }, 
+    {
+        "default": "/home/piotr/cmcc/cesm/cime.args/scripts/Tools", 
+        "help": "Case directory to change.\nDefault is current directory.", 
+        "parameter_name": "--caseroot"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Append to the existing value rather than overwriting it.", 
+        "parameter_name": "--append"
+    }, 
+    {
+        "help": "Apply to this subgroup only.", 
+        "parameter_name": "--subgroup"
+    }, 
+    {
+        "help": "The variable to set.\n(Used in the alternative --id var --val value form, rather than\nthe recommended var=value form.)", 
+        "parameter_name": "--id"
+    }, 
+    {
+        "help": "The value to set.\n(Used in the alternative --id var --val value form, rather than\nthe recommended var=value form.)", 
+        "parameter_name": "--val"
+    }, 
+    {
+        "help": "XML file to edit.\nGenerally not needed, but can be specified to ensure that only the\nexpected file is being changed. (If a variable is not found in this file,\nan error will be generated.)", 
+        "parameter_name": "--file"
+    }, 
+    {
+        "default": ",", 
+        "help": "Delimiter string in listofvalues.\nDefault is ','.", 
+        "parameter_name": "--delimiter", 
+        "type": "<type 'str'>"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Parse settings and print key-value pairs, but don't actually change anything.", 
+        "parameter_name": "--dryrun"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Do not update CaseStatus with this change.\nThis option is mainly meant to be used by cime scripts: the 'paper trail' in\nCaseStatus is meant to show changes made by the user, so we generally don't\nwant this to be contaminated by changes made automatically by cime scripts.", 
+        "parameter_name": "--noecho"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Ignore typing checks and store value.", 
+        "parameter_name": "--force"
+    }, 
+    {
+        "help": "Ignored, only for backwards compatibility.", 
+        "parameter_name": "-loglevel"
+    }
+]

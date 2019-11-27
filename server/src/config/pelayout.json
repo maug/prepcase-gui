@@ -1,0 +1,54 @@
+[
+    {
+        "action": "help", 
+        "default": "==SUPPRESS==", 
+        "help": "show this help message and exit", 
+        "parameter_name": "--help"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print debug information (very verbose) to file /home/piotr/cmcc/cesm/cime.args/scripts/Tools/pelayout.log", 
+        "parameter_name": "--debug"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Add additional context (time and file) to log messages", 
+        "parameter_name": "--verbose"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print only warnings and error messages", 
+        "parameter_name": "--silent"
+    }, 
+    {
+        "default": null, 
+        "help": "Total number of tasks to set for the case", 
+        "parameter_name": "--set-ntasks"
+    }, 
+    {
+        "default": null, 
+        "help": "Number of threads to set for all components", 
+        "parameter_name": "--set-nthrds"
+    }, 
+    {
+        "default": "%4C: %6T/%6H; %6R", 
+        "help": "Format the PE layout items for each component (see below)", 
+        "parameter_name": "--format"
+    }, 
+    {
+        "default": "Comp  NTASKS  NTHRDS  ROOTPE", 
+        "help": "Custom header for PE layout display", 
+        "parameter_name": "--header"
+    }, 
+    {
+        "action": "store_true", 
+        "default": false, 
+        "help": "Do not print any PE layout header", 
+        "parameter_name": "--no-header"
+    }, 
+    {
+        "default": "/home/piotr/cmcc/cesm/cime.args/scripts/Tools", 
+        "help": "Case directory to reference", 
+        "parameter_name": "--caseroot"
+    }
+]

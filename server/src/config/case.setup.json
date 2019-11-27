@@ -1,0 +1,44 @@
+[
+    {
+        "action": "help", 
+        "default": "==SUPPRESS==", 
+        "help": "show this help message and exit", 
+        "parameter_name": "--help"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print debug information (very verbose) to file /home/piotr/cmcc/cesm/cime.args/scripts/Tools/case.setup.log", 
+        "parameter_name": "--debug"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Add additional context (time and file) to log messages", 
+        "parameter_name": "--verbose"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print only warnings and error messages", 
+        "parameter_name": "--silent"
+    }, 
+    {
+        "default": "/home/piotr/cmcc/cesm/cime.args/scripts/Tools", 
+        "help": "Case directory to setup.\nDefault is current directory.", 
+        "nargs": "?", 
+        "parameter_name": "caseroot"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Removes the batch run script for target machine.\nIf the testmode argument is present then keep the test\nscript if it is present - otherwise remove it.\nThe user_nl_xxx and Macros files are never removed by case.setup -\nyou must remove them manually.", 
+        "parameter_name": "--clean"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Keeps the test script when the --clean argument is used.", 
+        "parameter_name": "--test-mode"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Does a clean followed by setup.\nThis flag should be used when rerunning case.setup after it\nhas already been run for this case.", 
+        "parameter_name": "--reset"
+    }
+]

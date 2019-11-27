@@ -1,0 +1,43 @@
+[
+    {
+        "action": "help", 
+        "default": "==SUPPRESS==", 
+        "help": "show this help message and exit", 
+        "parameter_name": "--help"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print debug information (very verbose) to file /home/piotr/cmcc/cesm/cime.args/scripts/Tools/e3sm_cime_merge.log", 
+        "parameter_name": "--debug"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Add additional context (time and file) to log messages", 
+        "parameter_name": "--verbose"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Print only warnings and error messages", 
+        "parameter_name": "--silent"
+    }, 
+    {
+        "help": "Location of repo to use, default is based on current location", 
+        "nargs": "?", 
+        "parameter_name": "repo"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Resume merge after fixing conflicts", 
+        "parameter_name": "--resume"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Abort merge", 
+        "parameter_name": "--abort"
+    }, 
+    {
+        "action": "store_true", 
+        "help": "Do the merge as squashy as possible", 
+        "parameter_name": "--squash"
+    }
+]
