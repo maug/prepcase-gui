@@ -5,6 +5,10 @@ import { FormItemCheckbox } from './FormItemCheckbox';
 import { FormItemDropdown } from './FormItemDropdown';
 import { FormItemText } from './FormItemText';
 import { FormControl, FormGroup } from '@angular/forms';
+import { FormItemDropdownConfig } from './FormItemDropdownConfig';
+import { pairwise, startWith } from 'rxjs/operators';
+
+const noOptionsSymbol = Symbol('no_options');
 
 @Injectable({
   providedIn: 'root'
@@ -31,13 +35,23 @@ export class DynamicFormService {
           value: !!entry.default,
         });
       } else if (entry.choices) {
-        input = new FormItemDropdown({
+        const config: FormItemDropdownConfig = {
           help: entry.help,
           key: entry.parameter_name,
           label: entry.parameter_name,
-          options: entry.choices.map(o => ({ key: o, value: o })),
           value: entry.default ? String(entry.default) : '',
-        });
+          options: entry.choices.map(o => ({ key: o, value: o })),
+          multiple: ['*', '+'].includes(entry.nargs),
+        };
+        if (config.multiple) {
+          if (entry.nargs === '*') {
+            // zero or more options
+            config.options.unshift({ key: noOptionsSymbol, value: '== without options ==' });
+          }
+        } else {
+          config.options.unshift({ key: null, value: 'None' });
+        }
+        input = new FormItemDropdown(config);
       } else {
         input = new FormItemText({
           help: entry.help,
@@ -49,28 +63,60 @@ export class DynamicFormService {
       }
       inputs.push(input);
       if (form) {
-        form.addControl(input.key, new FormControl(input.value));
+        let value: string | string[] = input.value;
+        if (input instanceof FormItemDropdown) {
+          // multiselect - convert to array
+          value = input.value.split(',').filter(Boolean);
+        }
+        form.addControl(input.key, new FormControl(value));
+
+        // add reactive listener to mutually exclude noOptionsSymbol and other options
+        if (input instanceof FormItemDropdown) {
+          const formInput = form.get(input.key);
+          formInput.valueChanges
+            .pipe(startWith(value), pairwise())
+            .subscribe(([oldValues, newValues]) => {
+              if (newValues.length > oldValues.length) {
+                const newValue = newValues.filter(x => !oldValues.includes(x))[0];
+                if (newValue === noOptionsSymbol) {
+                  // deselect other options
+                  formInput.setValue([noOptionsSymbol]);
+                } else {
+                  // deselect no-options
+                  formInput.setValue(newValues.filter(x => x !== noOptionsSymbol));
+                }
+              }
+            });
+        }
       }
     }
     return inputs;
   }
 
   readInputs(formParams: ToolParameter[], form: FormGroup) {
-    const params = formParams.map(item => {
+    return formParams.map(item => {
       const control = form.get(item.parameter_name);
       if (!control) {
         return null;
       } else if (!control.value) {
         return null;
       } else if (control.value === true) {
+        // simple switch (checkbox)
         return item.parameter_name;
       } else if (item.nargs === '?') {
-        // positional argument
+        // positional unnamed argument (text)
         return `${control.value}`;
+      } else if (['*', '+'].includes(item.nargs)) {
+        // named multiselect argument (array)
+        if (control.value.length === 0) {
+          return null;
+        } else {
+          return `${item.parameter_name} ${control.value.filter(v => v !== noOptionsSymbol).join(' ')}`.trim();
+        }
       } else {
+        // named argument (text)
         return `${item.parameter_name} ${control.value}`;
       }
     }).filter(Boolean);
-    return params;
   }
 }

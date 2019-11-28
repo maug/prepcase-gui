@@ -44,7 +44,7 @@ export interface ToolParameter {
   dest?: string;
   help: string;
   metavar?: string;
-  nargs?: '?' | '*' | '+';
+  nargs?: '?' | '*' | '+'; // ? - positional optional argument, * zero or more options, + one ore more options
   parameter_name: string;
   required?: boolean;
   type?: string;

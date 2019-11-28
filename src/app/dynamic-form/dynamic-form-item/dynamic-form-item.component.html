@@ -23,7 +23,7 @@
                   [formControlName]="item.key"
                   [checked]="item.value"
     >{{item.label}}</mat-checkbox>
-    <!-- style.visibility instead of ngIf because lack of help button distorted the layout -->
+    <!-- style.visibility instead of ngIf because lack of help button distorts the layout -->
     <button [style.visibility]="item.help ? 'visible' : 'hidden'" style="transform: scale(0.6);" type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1"
             (click)="this.displayHelp.emit(item); $event.stopPropagation()">
       <mat-icon>help_outline</mat-icon>
@@ -32,8 +32,7 @@
 
   <mat-form-field *ngSwitchCase="'dropdown'" style="width: 100%">
     <mat-label>{{item.label}}</mat-label>
-    <mat-select [value]="item.value" [formControlName]="item.key">
-      <mat-option>None</mat-option>
+    <mat-select [value]="item.value" [formControlName]="item.key" [multiple]="item['multiple']">
       <mat-option *ngFor="let opt of item['options']" [value]="opt.key">{{opt.value}}</mat-option>
     </mat-select>
     <button *ngIf="item.help" type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1"
