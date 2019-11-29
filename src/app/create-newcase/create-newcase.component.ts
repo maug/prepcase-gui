@@ -24,6 +24,7 @@ import { ToolParameter } from '../types/ToolsParameters';
 import { Router } from '@angular/router';
 import { ToolParametersService } from '../tool-parameters.service';
 import { DynamicFormService } from '../dynamic-form/dynamic-form.service';
+import { PleaseWaitOverlayService } from '../please-wait-overlay/please-wait-overlay.service';
 
 @Component({
   selector: 'app-create-newcase',
@@ -53,6 +54,7 @@ export class CreateNewcaseComponent implements OnInit {
     private dataService: CreateNewcaseService,
     private toolParametersService: ToolParametersService,
     private dynamicFormService: DynamicFormService,
+    private pleaseWaitService: PleaseWaitOverlayService,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
@@ -105,12 +107,7 @@ export class CreateNewcaseComponent implements OnInit {
     //   duration: 10000,
     // });
 
-    this.dialog.open(HelpDialogComponent, {
-      disableClose: true,
-      data: {
-        texts: 'Please wait...',
-      }
-    });
+    this.pleaseWaitService.show();
     this.dataService.createNewcase(params).subscribe(data => {
       console.log('CREATE_NEWCASE', data);
       const buttons = [];
@@ -139,7 +136,7 @@ export class CreateNewcaseComponent implements OnInit {
           buttons.push({ label: 'Go to case', id: 'go_to_case' });
         }
       }
-      this.dialog.closeAll();
+      this.pleaseWaitService.hide();
       const dialogRef = this.dialog.open(HelpDialogComponent, {
         data: {
           header: 'CREATE_NEWCASE',

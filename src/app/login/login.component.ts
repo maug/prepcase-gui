@@ -4,6 +4,7 @@ import { DialogTexts, HelpDialogComponent } from '../help-dialog/help-dialog.com
 import { MatDialog } from '@angular/material';
 import { UserService } from '../user.service';
 import { Router } from '@angular/router';
+import { PleaseWaitOverlayService } from '../please-wait-overlay/please-wait-overlay.service';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     public userService: UserService,
+    private pleaseWaitService: PleaseWaitOverlayService,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private router: Router,
@@ -34,17 +36,12 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.dialog.open(HelpDialogComponent, {
-      disableClose: true,
-      data: {
-        texts: 'Please wait...',
-      }
-    });
+    this.pleaseWaitService.show();
     this.userService.login(
       this.mainForm.get('username').value,
       this.mainForm.get('password').value
     ).subscribe(data => {
-      this.dialog.closeAll();
+      this.pleaseWaitService.hide();
       if (data.error_code !== '') {
         const texts: DialogTexts = [{ text: data.error, classes: 'error' }];
         if (['no_prepcase_file', 'invalid_prepcase_file'].includes(data.error_code) ) {

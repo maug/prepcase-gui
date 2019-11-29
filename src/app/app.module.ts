@@ -21,6 +21,7 @@ import { UserService } from './user.service';
 import { CaseListComponent } from './case-list/case-list.component';
 import { ScriptParametersDialogComponent } from './script-parameters-dialog/script-parameters-dialog.component';
 import { ToolParametersService } from './tool-parameters.service';
+import { PleaseWaitOverlayComponent } from './please-wait-overlay/please-wait-overlay.component';
 
 @NgModule({
   declarations: [
@@ -33,10 +34,12 @@ import { ToolParametersService } from './tool-parameters.service';
     LoginComponent,
     CaseListComponent,
     ScriptParametersDialogComponent,
+    PleaseWaitOverlayComponent,
   ],
   entryComponents: [
     HelpDialogComponent,
     ScriptParametersDialogComponent,
+    PleaseWaitOverlayComponent,
   ],
   imports: [
     AppMaterialModule,

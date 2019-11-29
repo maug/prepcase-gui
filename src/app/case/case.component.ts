@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material';
 import { RpcExecuteCommandResponse } from '../types/RpcResponses';
 import { ToolParametersService } from '../tool-parameters.service';
 import { ScriptParametersDialogComponent } from '../script-parameters-dialog/script-parameters-dialog.component';
+import { PleaseWaitOverlayService } from '../please-wait-overlay/please-wait-overlay.service';
 
 @Component({
   selector: 'app-case',
@@ -31,6 +32,7 @@ export class CaseComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private dataService: CaseService,
     private toolParametersService: ToolParametersService,
+    private pleaseWaitService: PleaseWaitOverlayService,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
   ) { }
@@ -65,19 +67,14 @@ export class CaseComponent implements OnInit {
   }
 
   onSubmit() {
-    this.dialog.open(HelpDialogComponent, {
-      disableClose: true,
-      data: {
-        texts: 'Please wait...',
-      }
-    });
+    this.pleaseWaitService.show();
     this.dataService.xmlChange(
       this.caseRoot,
       this.mainForm.get('xmlchange_key').value,
       this.mainForm.get('xmlchange_value').value
     ).subscribe(async data => {
       if (data.return_code !== 0) {
-        this.dialog.closeAll();
+        this.pleaseWaitService.hide();
         this.dialog.open(HelpDialogComponent, {
           data: {
             texts: [{ text: data.stderr, classes: 'error' }],
@@ -85,7 +82,7 @@ export class CaseComponent implements OnInit {
         });
       } else {
         ({ desc: this.caseDescription, vars: this.caseVars } = await this.dataService.loadCaseData(this.caseRoot));
-        this.dialog.closeAll();
+        this.pleaseWaitService.hide();
       }
     });
   }
@@ -109,12 +106,7 @@ export class CaseComponent implements OnInit {
   }
 
   private processCommand(name: string, cmd$: Observable<RpcExecuteCommandResponse>) {
-    this.dialog.open(HelpDialogComponent, {
-      disableClose: true,
-      data: {
-        texts: 'Please wait...',
-      }
-    });
+    this.pleaseWaitService.show();
     cmd$.subscribe(data => {
       const texts = [
         { text: 'COMMAND', classes: 'h1' },
@@ -131,7 +123,7 @@ export class CaseComponent implements OnInit {
         texts.push({ text: 'STDOUT', classes: 'h1' });
         texts.push({ text: data.stdout, classes: 'pre-wrap monospace' });
       }
-      this.dialog.closeAll();
+      this.pleaseWaitService.hide();
       this.dialog.open(HelpDialogComponent, {
         data: {
           header: name,
