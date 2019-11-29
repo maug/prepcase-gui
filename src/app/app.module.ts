@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CreateNewcaseComponent } from './create-newcase/create-newcase.component';
 import { AppMaterialModule } from './app-material.module';
 import { CreateNewcaseService } from './create-newcase/create-newcase.service';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HelpDialogComponent } from './help-dialog/help-dialog.component';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material';
 import { HttpClientModule } from '@angular/common/http';
@@ -43,6 +43,7 @@ import { ToolParametersService } from './tool-parameters.service';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(appRoutes, { enableTracing: false }),
   ],

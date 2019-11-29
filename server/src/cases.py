@@ -45,7 +45,7 @@ def get_real_case_dirs(case_dirs):
     # convert to real path names
     real_dirs = []
     for directory in case_dirs:
-        res = globals.ssh.ssh_execute('readlink', ['-f', directory])
+        res = globals.ssh.ssh_execute('realpath', ['-e', directory])
         if (res['return_code']) == 0:
             real_dirs.append(res['stdout'].strip())
 

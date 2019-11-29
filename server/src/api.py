@@ -90,6 +90,14 @@ def list_cases(case_dirs):
     return cases.list_cases(case_dirs)
 
 
+@jsonrpc.method('App.add_new_case_path')
+def list_cases(new_path):
+    """
+    Adds new path to user case paths
+    """
+    return auth.add_new_case_path(new_path)
+
+
 # DEPRECATED
 # @jsonrpc.method('App.get_config')
 # def get_config(path_name):

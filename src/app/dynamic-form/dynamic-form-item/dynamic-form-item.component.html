@@ -12,9 +12,6 @@
             (click)="this.displayHelp.emit(item); $event.stopPropagation()">
       <mat-icon>help_outline</mat-icon>
     </button>
-    <mat-error *ngIf="form.get(item.key).hasError('pattern')">
-      Required positive integer
-    </mat-error>
   </mat-form-field>
 
   <div *ngSwitchCase="'checkbox'" style="float: left; margin-right: 50px; display: inline-block;">

@@ -1,3 +1,20 @@
+.case-dir {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
 .cases {
   padding-left: 20px;
 }
+
+.add-new-path {
+  display: flex;
+  align-items: baseline;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.add-new-path mat-form-field {
+  flex: 1;
+}
+

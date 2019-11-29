@@ -81,5 +81,21 @@ def login_user(username, password):
 
 def logout_user():
     global user
-    session.pop('user')
+    session.clear()
     user['username'] = ''
+
+
+def add_new_case_path(new_path):
+    user['case_dirs'] = cases.get_real_case_dirs(user['case_dirs'] + [new_path])
+    save_user_config()
+    return user['case_dirs']
+
+
+def save_user_config():
+    res_ssh = globals.ssh.ssh_execute('cat ~/.prepcase.json', [])
+    if res_ssh['return_code'] == 0:
+        config = json.loads(res_ssh['stdout'])
+        config['case_dirs'] = user['case_dirs']
+        globals.ssh.ssh_execute(
+            "echo >~/.prepcase.json '" + json.dumps(config, indent=2) + "' && chmod 600 ~/.prepcase.json", []
+        )

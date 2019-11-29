@@ -37,12 +37,12 @@ export class UserService {
     return this.userConfig !== null;
   }
 
-  logout() {
+  logout(): void {
     this.userConfig = null;
     this.jsonRpc.rpc(
       environment.jsonRpcUrl,
       'App.logout',
-    );
+    ).subscribe();
   }
 
   getCaseList(): Observable<RpcCaseListResponse>  {
@@ -51,11 +51,20 @@ export class UserService {
       'App.list_cases',
       [this.userConfig.case_dirs]
     );
+  }
 
+  addNewCasePath(path): Observable<RpcCaseListResponse>  {
+    return this.jsonRpc.rpc(
+      environment.jsonRpcUrl,
+      'App.add_new_case_path',
+      [path]
+    ).pipe(
+      tap(data => this.userConfig.case_dirs = data)
+    );
   }
 
   private validateUserConfig(config: Partial<UserConfig>): UserConfig {
-    if (!config.case_dirs || Array.isArray(config.case_dirs)) {
+    if (!config.case_dirs || !Array.isArray(config.case_dirs)) {
       config.case_dirs = [];
     }
     return config as UserConfig;

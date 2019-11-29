@@ -1,13 +1,33 @@
 <div *ngIf="!isLoaded">Loading...</div>
 <div *ngIf="isLoaded">
-  <mat-toolbar>Your cases</mat-toolbar>
-  <br>
+  <mat-toolbar>
+    Your cases
+    <span class="spacer-max"></span>
+    <button *ngIf="!newPathInputActive" mat-raised-button (click)="newPathInputActive = true">Add new path</button>
+  </mat-toolbar>
+
+  <!-- add new path form -->
+  <div *ngIf="newPathInputActive" class="add-new-path">
+    <mat-form-field>
+      <input matInput
+             type="text"
+             placeholder="Please enter new path to cases"
+             [(ngModel)]="newPath"
+      >
+      <mat-hint align="start">Path must exists, be absolute or relative to your home dir</mat-hint>
+    </mat-form-field>
+    <button mat-button (click)="addNewPath()">Add new path</button>
+  </div>
+
+  <!-- list of cases per dir -->
   <div *ngFor="let group of userCases | keyvalue">
-    <div class="mat-h2">{{group.key}}</div>
+    <h2 class="case-dir">{{group.key}}</h2>
     <div class="cases">
+      <div *ngIf="!group.value.length">No cases</div>
       <div class="mat-body-strong" *ngFor="let dir of group.value">
-        <a [routerLink]="['/case', dir.fullPath]">{{dir.dirName}}</a><br>
+        <button mat-button color="primary" [routerLink]="['/case', dir.fullPath]">{{dir.dirName}}</button><br>
       </div>
     </div>
   </div>
+
 </div>
