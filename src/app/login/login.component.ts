@@ -43,21 +43,12 @@ export class LoginComponent implements OnInit {
     ).subscribe(data => {
       this.pleaseWaitService.hide();
       if (data.error_code !== '') {
-        const texts: DialogTexts = [{ text: data.error, classes: 'error' }];
+        let texts: DialogTexts = [{ text: data.error, classes: 'error' }];
         if (['no_prepcase_file', 'invalid_prepcase_file'].includes(data.error_code) ) {
           texts.push({ text: '<br>', keepHtml: true });
-          texts.push(`Please create .prepcase.json file in your home directory on Athena:`);
-          texts.push({ text: 'echo >$HOME/.prepcase.json \'{ "password": "YOUR_PASSWORD_HERE", "cesm_path": "~/cesm" }\'', classes: 'monospace' });
-          texts.push('The password will be used to login to PrepCASE.');
-          texts.push('"cesm_path" should point to your CESM installation.');
-          texts.push('The file should be readable and writable only by your user:');
-          texts.push({ text: ' chmod 600 $HOME/.prepcase.json', classes: 'monospace' });
+          texts = texts.concat(this.getConfigFileHelp());
         }
-        this.dialog.open(HelpDialogComponent, {
-          data: {
-            texts
-          }
-        });
+        this.displayHelp(texts);
       } else {
         this.router.navigate(['/case-list']);
       }
@@ -66,5 +57,31 @@ export class LoginComponent implements OnInit {
 
   logout() {
     this.userService.logout();
+  }
+
+  displayHelp(texts?: DialogTexts): void {
+    if (!texts) {
+      texts = [];
+      texts.push(`You should use your Athena username and PrepCASE password (details below).`);
+      texts.push({ text: '<br>', keepHtml: true });
+      texts = texts.concat(this.getConfigFileHelp());
+    }
+    this.dialog.open(HelpDialogComponent, {
+      data: {
+        texts
+      }
+    });
+  }
+
+  private getConfigFileHelp(): DialogTexts {
+    const texts: DialogTexts = [];
+    texts.push(`To log in you have to create .prepcase.json file in your home directory on Athena:`);
+    texts.push({ text: 'echo >$HOME/.prepcase.json \'{ "password": "YOUR_PASSWORD_HERE", "cesm_path": "PATH_TO_CESM", "cesm_env_script": "PATH_TO_ENV_SCRIPT" }\'', classes: 'monospace' });
+    texts.push('"password" will be used to login to PrepCASE. It should be different than your password on Athena.');
+    texts.push('"cesm_path" should point to your CESM installation, for example "~/CESM".');
+    texts.push('"cesm_env_script" is path to optional script used to set up environment before executing CESM script. Leave empty if not needed.');
+    texts.push('The file should be readable and writable only by your user:');
+    texts.push({ text: ' chmod 600 $HOME/.prepcase.json', classes: 'monospace' });
+    return texts;
   }
 }

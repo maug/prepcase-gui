@@ -7,6 +7,7 @@ import cases
 user = {
     'username': '',
     'hostname': '',
+    'cesm_env_script': '',
     'cesm_path': '',
     'case_dirs': [],
 }
@@ -32,7 +33,7 @@ def login_user(username, password):
     Returns dict(
         error_code: '' | 'permission_denied' | 'no_prepcase_file' | 'invalid_prepcase_file' | 'error'
         error: Error description or empty string
-        config: If success, user config from .prepcase.json without password
+        config: If success, user config from .prepcase.json, without password
     )
     """
     global user
@@ -68,6 +69,7 @@ def login_user(username, password):
                 user['cesm_path'] = config.get('cesm_path')
                 if user['cesm_path'] is None:
                     raise ValueError
+                user['cesm_env_script'] = config.get('cesm_env_script', '')
                 user['case_dirs'] = cases.get_real_case_dirs(config.get('case_dirs', []))
                 session['user'] = user
                 # config for frontend

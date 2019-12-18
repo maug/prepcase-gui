@@ -27,7 +27,7 @@ export class UserService {
     return res.pipe(
       tap(data => {
         if (data.error_code === '') {
-          this.userConfig = this.validateUserConfig(data.config);
+          this.userConfig = data.config;
         }
       }),
     );
@@ -61,12 +61,5 @@ export class UserService {
     ).pipe(
       tap(data => this.userConfig.case_dirs = data)
     );
-  }
-
-  private validateUserConfig(config: Partial<UserConfig>): UserConfig {
-    if (!config.case_dirs || !Array.isArray(config.case_dirs)) {
-      config.case_dirs = [];
-    }
-    return config as UserConfig;
   }
 }

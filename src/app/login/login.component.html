@@ -14,8 +14,11 @@
         </mat-form-field>
       </div>
 
-      <button mat-raised-button type="submit" [disabled]="!mainForm.valid">Login</button>
-
+      <div style="display: flex;">
+        <button mat-raised-button type="submit" [disabled]="!mainForm.valid">Login</button>
+        <span class="spacer-max"></span>
+        <button mat-button type="button" (click)="displayHelp()">Help</button>
+      </div>
     </form>
   </mat-card-content>
 </mat-card>

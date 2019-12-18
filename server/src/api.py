@@ -68,8 +68,11 @@ def run_tool(tool, parameters):
     Run one of the supported command line tools.
     Parameters are accepted as array of strings.
     """
-    executable = safe_join(auth.user['cesm_path'], 'cime', "scripts", tool)
-    return globals.ssh.ssh_execute(executable, parameters)
+    executables = []
+    if auth.user['cesm_env_script']:
+        executables.append('source ' + auth.user['cesm_env_script'])
+    executables.append(safe_join(auth.user['cesm_path'], 'cime', "scripts", tool))
+    return globals.ssh.ssh_execute(' && '.join(executables), parameters)
 
 
 @jsonrpc.method('App.run_script_in_case')
@@ -78,8 +81,12 @@ def run_script_in_case(case_path, script, parameters):
     Run script in case directory.
     Parameters are accepted as array of strings.
     """
-    executable = safe_join(case_path, script)
-    return globals.ssh.ssh_execute("cd " + case_path + " && " + executable, parameters)
+    executables = []
+    if auth.user['cesm_env_script']:
+        executables.append('source ' + auth.user['cesm_env_script'])
+    executables.append('cd ' + case_path)
+    executables.append(safe_join(case_path, script))
+    return globals.ssh.ssh_execute(' && '.join(executables), parameters)
 
 
 @jsonrpc.method('App.list_cases')

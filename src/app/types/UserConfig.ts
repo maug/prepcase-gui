@@ -1,6 +1,7 @@
 export interface UserConfig {
   username: string;
   hostname: string;
-  cesm_path: string;
   case_dirs: string[];
+  cesm_env_script: string;
+  cesm_path: string;
 }
