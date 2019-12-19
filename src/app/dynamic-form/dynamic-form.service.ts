@@ -64,14 +64,14 @@ export class DynamicFormService {
       inputs.push(input);
       if (form) {
         let value: string | string[] = input.value;
-        if (input instanceof FormItemDropdown) {
+        if (input instanceof FormItemDropdown && input.multiple) {
           // multiselect - convert to array
           value = input.value.split(',').filter(Boolean);
         }
         form.addControl(input.key, new FormControl(value));
 
         // add reactive listener to mutually exclude noOptionsSymbol and other options
-        if (input instanceof FormItemDropdown) {
+        if (input instanceof FormItemDropdown && input.multiple) {
           const formInput = form.get(input.key);
           formInput.valueChanges
             .pipe(startWith(value), pairwise())
