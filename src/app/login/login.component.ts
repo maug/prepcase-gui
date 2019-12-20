@@ -79,7 +79,7 @@ export class LoginComponent implements OnInit {
     texts.push({ text: 'echo >$HOME/.prepcase.json \'{ "password": "YOUR_PASSWORD_HERE", "cesm_path": "PATH_TO_CESM", "cesm_env_script": "PATH_TO_ENV_SCRIPT" }\'', classes: 'monospace' });
     texts.push('"password" will be used to login to PrepCASE. It should be different than your password on Athena.');
     texts.push('"cesm_path" should point to your CESM installation, for example "~/CESM".');
-    texts.push('"cesm_env_script" is path to optional script used to set up environment before executing CESM script. Leave empty if not needed.');
+    texts.push('"cesm_env_script" is path to optional bash script used to set up environment before executing CESM script. Leave empty if not needed.');
     texts.push('The file should be readable and writable only by your user:');
     texts.push({ text: ' chmod 600 $HOME/.prepcase.json', classes: 'monospace' });
     return texts;
