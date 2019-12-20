@@ -1,5 +1,5 @@
 import { xml2js } from 'xml-js';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -8,6 +8,7 @@ import { GridData } from '../types/GridData';
 import { JsonRpcService } from '../json-rpc.service';
 import { environment } from '../../environments/environment';
 import { RpcExecuteCommandResponse } from '../types/RpcResponses';
+import { catchError, map } from 'rxjs/operators';
 
 export interface Compset {
   name: string;
@@ -40,12 +41,18 @@ export class CreateNewcaseService {
 
     const allLoaded = new Promise<void>((resolve, reject) => {
       forkJoin({
-        toolsParameters: this.jsonRpc.rpc(environment.jsonRpcUrl, 'App.tools_parameters'),
-        compsets: this.http.get('assets/config_compsets.json', {responseType: 'json'}),
+        compsets: this.queryConfig('compsets'),
         grids: this.http.get('assets/config_grids.xml', {responseType: 'text'}),
-      }).subscribe(data => {
-        this.data.compsets = this.parseCompsetsData(data.compsets);
-        this.data.gridData = this.parseGridData(data.grids);
+      }).pipe(
+        map(data => {
+          this.data.compsets = this.parseCompsetsData(data.compsets);
+          this.data.gridData = this.parseGridData(data.grids);
+        }),
+        catchError(err => {
+          reject(err.message);
+          return of([]);
+        }),
+      ).subscribe(data => {
         resolve();
       });
     });
@@ -57,17 +64,38 @@ export class CreateNewcaseService {
     return this.jsonRpc.rpc(environment.jsonRpcUrl, 'App.run_tool', ['create_newcase', params]);
   }
 
-  private parseCompsetsData(defs: any): CompsetsGroup[] {
-    // map compsets to modified structure
-    return defs.compsets.map(typeObject => {
-      return {
-        type: Object.keys(typeObject)[0],
-        items: (Object.values(typeObject)[0] as Array<any>).map(item => ({
-          name: item[0],
-          longName: item[1],
-        }))
-      };
+  private queryConfig(subject: 'compsets' | 'grids'): Observable<string> {
+    return (this.jsonRpc.rpc(
+      environment.jsonRpcUrl, 'App.run_tool', ['query_config', ['--' + subject, '--xml']]
+    ) as Observable<RpcExecuteCommandResponse>).pipe(
+      map(res => {
+        if (res.return_code !== 0) {
+          throw new Error(res.stderr);
+        }
+        return res.stdout;
+      })
+    );
+  }
+
+  private parseCompsetsData(compsetsXml: string): CompsetsGroup[] {
+    // compsets xml is lacking root element
+    compsetsXml = '<root>' + compsetsXml + '</root>';
+    const parsed: any = xml2js(compsetsXml, {
+      compact: true,
+      trim: true,
+      ignoreDeclaration: true,
+      ignoreInstruction: true,
     });
+
+    const types: string[] = parsed.root._text;
+
+    return [...types.keys()].map(index => ({
+      type: types[index],
+      items: parsed.root.compsets[index].compset.map(compset => ({
+        name: compset.alias._text,
+        longName: compset.lname._text,
+      })),
+    }));
   }
 
   private parseGridData(defsXML: string): GridData {

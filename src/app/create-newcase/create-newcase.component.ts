@@ -61,7 +61,18 @@ export class CreateNewcaseComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    await this.dataService.loadData();
+    try {
+      await this.dataService.loadData();
+    } catch (error) {
+      this.dialog.open(HelpDialogComponent, {
+        disableClose: true,
+        data: {
+          header: 'LOADING DATA ERROR',
+          texts: [error],
+        }
+      });
+      return; // fatal crash, stop app
+    }
     this.compsetGroups = this.dataService.data.compsets;
     this.grids = this.dataService.data.gridData.grids.model_grid;
     this.createNewcaseParameters = await this.toolParametersService.getToolParameters('create_newcase');
