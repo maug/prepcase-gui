@@ -39,10 +39,10 @@ export class CreateNewcaseService {
     }
     this.data = { compsets: null, gridData: null };
 
-    const allLoaded = new Promise<void>((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       forkJoin({
         compsets: this.queryConfig('compsets'),
-        grids: this.http.get('assets/config_grids.xml', {responseType: 'text'}),
+        grids: this.queryConfig('grids'),
       }).pipe(
         map(data => {
           this.data.compsets = this.parseCompsetsData(data.compsets);
@@ -56,8 +56,6 @@ export class CreateNewcaseService {
         resolve();
       });
     });
-
-    return allLoaded;
   }
 
   createNewcase(params: string[]): Observable<RpcExecuteCommandResponse> {
