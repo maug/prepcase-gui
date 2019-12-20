@@ -70,7 +70,7 @@ def run_tool(tool, parameters):
     """
     executables = []
     if auth.user['cesm_env_script']:
-        executables.append('source ' + auth.user['cesm_env_script'])
+        executables.append('source ' + auth.user['cesm_env_script'] + ' >/dev/null')
     executables.append(safe_join(auth.user['cesm_path'], 'cime', "scripts", tool))
     return globals.ssh.ssh_execute(' && '.join(executables), parameters)
 
@@ -83,7 +83,7 @@ def run_script_in_case(case_path, script, parameters):
     """
     executables = []
     if auth.user['cesm_env_script']:
-        executables.append('source ' + auth.user['cesm_env_script'])
+        executables.append('source ' + auth.user['cesm_env_script'] + ' >/dev/null')
     executables.append('cd ' + case_path)
     executables.append(safe_join(case_path, script))
     return globals.ssh.ssh_execute(' && '.join(executables), parameters)
