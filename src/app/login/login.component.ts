@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material';
 import { UserService } from '../user.service';
 import { Router } from '@angular/router';
 import { PleaseWaitOverlayService } from '../please-wait-overlay/please-wait-overlay.service';
+import { ServerConfigService } from '../server-config.service';
 
 @Component({
   selector: 'app-login',
@@ -13,18 +14,37 @@ import { PleaseWaitOverlayService } from '../please-wait-overlay/please-wait-ove
 })
 export class LoginComponent implements OnInit {
 
+  isLoaded = false;
   mainForm: FormGroup;
+  hosts: string[];
 
   constructor(
     public userService: UserService,
+    public serverConfigService: ServerConfigService,
     private pleaseWaitService: PleaseWaitOverlayService,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private router: Router,
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    try {
+      const config = await this.serverConfigService.getConfig();
+      this.hosts = config.map(entry => entry.host);
+      console.log('CONFIG', config, typeof config);
+    } catch (error) {
+      this.dialog.open(HelpDialogComponent, {
+        disableClose: true,
+        data: {
+          header: 'LOADING DATA ERROR',
+          texts: [error],
+        }
+      });
+      return; // fatal crash, stop app
+    }
+
     this.mainForm = this.formBuilder.group({
+      'host': [this.hosts[0], [Validators.required]],
       'username': ['', [Validators.required]],
       'password': ['', [Validators.required]],
     });
@@ -33,11 +53,14 @@ export class LoginComponent implements OnInit {
       this.mainForm.get('username').setValue('vagrant');
       this.mainForm.get('password').setValue('test');
     }
+
+    this.isLoaded = true;
   }
 
   onSubmit() {
     this.pleaseWaitService.show();
     this.userService.login(
+      this.mainForm.get('host').value,
       this.mainForm.get('username').value,
       this.mainForm.get('password').value
     ).subscribe(data => {

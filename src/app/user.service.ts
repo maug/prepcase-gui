@@ -17,11 +17,11 @@ export class UserService {
     private jsonRpc: JsonRpcService,
   ) { }
 
-  login(username, password): Observable<RpcLoginResponse> {
+  login(host, username, password): Observable<RpcLoginResponse> {
     const res = this.jsonRpc.rpc(
       environment.jsonRpcUrl,
       'App.login',
-      [username, password]
+      [host, username, password]
     ) as Observable<RpcLoginResponse>;
 
     return res.pipe(

@@ -1,7 +1,7 @@
 import { Injectable, Injector, NgZone } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 interface JsonRpcRequest {
@@ -48,7 +48,10 @@ export class JsonRpcService {
           }
         }),
         map(this.getResult),
-        catchError(err => { console.error(err); return []; }),
+        catchError(err => {
+          console.error(err);
+          return throwError(err);
+        }),
       );
   }
 

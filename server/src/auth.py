@@ -27,7 +27,7 @@ def check_user_logged():
     return user['username'] != ''
 
 
-def login_user(username, password):
+def login_user(host, username, password):
     """
     Tries to log in.
     Returns dict(
@@ -38,6 +38,7 @@ def login_user(username, password):
     """
     global user
 
+    globals.ssh.set_host(host)
     globals.ssh.set_user(username)
     res_ssh = globals.ssh.ssh_execute('cat ~/.prepcase.json', [])
 
@@ -45,7 +46,7 @@ def login_user(username, password):
 
     if res_ssh['return_code'] == 255:
         res['error_code'] = 'permission_denied'
-        res['error'] = 'Wrong username or no public key logging set'
+        res['error'] = 'Wrong username or no public key logging set (' + res_ssh['stderr'] + ')'
     elif res_ssh['return_code'] == 1:
         res['error_code'] = 'no_prepcase_file'
         res['error'] = 'No .prepcase.json file in home directory'
@@ -65,7 +66,7 @@ def login_user(username, password):
             else:
                 # config file ok and password matches
                 user['username'] = username
-                user['hostname'] = env.SSH_REMOTE_HOST
+                user['hostname'] = host
                 user['cesm_path'] = config.get('cesm_path')
                 if user['cesm_path'] is None:
                     raise ValueError

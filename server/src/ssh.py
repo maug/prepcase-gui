@@ -1,13 +1,19 @@
 import subprocess
 import logging
 
+import env
 
 class Ssh:
 
-    def __init__(self, hostname, options=''):
-        self.hostname = hostname
-        self.options = options
+    def __init__(self):
+        self.hostname = ''
+        self.options = ''
         self.username = ''
+
+    def set_host(self, host):
+        entry = [entry for entry in env.SSH_HOSTS if entry['host'] == host][0]
+        self.hostname = entry['host']
+        self.options = entry['options']
 
     def set_user(self, username):
         self.username = username
@@ -25,6 +31,7 @@ class Ssh:
 
         cmd = " ".join(command)
         ssh_command = ["ssh", self.options, self.username + "@" + self.hostname, cmd]
+        print ssh_command
 
         logging.info("EXECUTE {}".format(ssh_command))
         return execute(ssh_command)
