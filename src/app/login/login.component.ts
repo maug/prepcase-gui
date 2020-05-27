@@ -69,7 +69,7 @@ export class LoginComponent implements OnInit {
         let texts: DialogTexts = [{ text: data.error, classes: 'error' }];
         if (['no_prepcase_file', 'invalid_prepcase_file'].includes(data.error_code) ) {
           texts.push({ text: '<br>', keepHtml: true });
-          texts = texts.concat(this.getConfigFileHelp());
+          texts = texts.concat(this.getConfigFileHelp(this.mainForm.get('host').value));
         }
         this.displayHelp(texts);
       } else {
@@ -87,7 +87,7 @@ export class LoginComponent implements OnInit {
       texts = [];
       texts.push(`You should use your Athena username and PrepCASE password (details below).`);
       texts.push({ text: '<br>', keepHtml: true });
-      texts = texts.concat(this.getConfigFileHelp());
+      texts = texts.concat(this.getConfigFileHelp(this.mainForm.get('host').value));
     }
     this.dialog.open(HelpDialogComponent, {
       data: {
@@ -96,11 +96,11 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  private getConfigFileHelp(): DialogTexts {
+  private getConfigFileHelp(hostname: string): DialogTexts {
     const texts: DialogTexts = [];
-    texts.push(`To log in you have to create .prepcase.json file in your home directory on Athena:`);
+    texts.push(`To log in you have to create .prepcase.json file in your home directory on "${hostname}":`);
     texts.push({ text: 'echo >$HOME/.prepcase.json \'{ "password": "YOUR_PASSWORD_HERE", "cesm_path": "PATH_TO_CESM", "cesm_env_script": "PATH_TO_ENV_SCRIPT" }\'', classes: 'monospace' });
-    texts.push('"password" will be used to login to PrepCASE. It should be different than your password on Athena.');
+    texts.push(`"password" will be used to login to PrepCASE. It should be different than your password on "${hostname}".`);
     texts.push('"cesm_path" should point to your CESM installation, for example "~/CESM".');
     texts.push('"cesm_env_script" is path to optional bash script used to set up environment before executing CESM script. Leave empty if not needed.');
     texts.push('The file should be readable and writable only by your user:');
