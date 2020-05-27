@@ -58,7 +58,7 @@
           path: /etc/httpd/conf.d/welcome.conf
           state: absent
 
-      - name: Copy root ssh private key to apache .ssh diretory (to allow apache for ssh-ing to athena)
+      - name: Copy root ssh private key to apache .ssh diretory (to allow apache for ssh-ing to athena & zeus)
         shell: cp ~/.ssh/id_rsa /usr/share/httpd/.ssh/
 
       - name: Set apache as ssh private key owner
@@ -66,7 +66,7 @@
           path: /usr/share/httpd/.ssh/id_rsa
           owner: apache
 
-      - name: Copy root known_hosts to apache .ssh directory (to allow apache for ssh-ing to athena)
+      - name: Copy root known_hosts to apache .ssh directory (to allow apache for ssh-ing to athena & zeus)
         shell: cp ~/.ssh/known_hosts /usr/share/httpd/.ssh/
 
       - name: Apache add listen port {{ server_http_port }}
