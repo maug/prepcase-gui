@@ -40,8 +40,14 @@ export class CaseComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(async paramMap => {
       this.caseRoot = paramMap.get('caseRoot');
-      ({ desc: this.caseDescription, vars: this.caseVars } = await this.dataService.loadCaseData(this.caseRoot));
-      this.isLoaded = true;
+      try {
+        ({ desc: this.caseDescription, vars: this.caseVars } = await this.dataService.loadCaseData(this.caseRoot));
+        this.isLoaded = true;
+      } catch (e) {
+        const resp = e as RpcExecuteCommandResponse;
+        this.dialog.open(HelpDialogComponent, { data: { header: 'ERROR', texts: [{ text: JSON.stringify(resp, null, '\t'), classes: 'pre-wrap monospace error' }], } });
+        return;
+      }
     });
 
     this.mainForm = this.formBuilder.group({
@@ -81,7 +87,12 @@ export class CaseComponent implements OnInit {
           }
         });
       } else {
-        ({ desc: this.caseDescription, vars: this.caseVars } = await this.dataService.loadCaseData(this.caseRoot));
+        try {
+          ({ desc: this.caseDescription, vars: this.caseVars } = await this.dataService.loadCaseData(this.caseRoot));
+        } catch (e) {
+          const resp = e as RpcExecuteCommandResponse;
+          this.dialog.open(HelpDialogComponent, { data: { header: 'ERROR', texts: [{ text: JSON.stringify(resp, null, '\t'), classes: 'pre-wrap monospace error' }], } });
+        }
         this.pleaseWaitService.hide();
       }
     });

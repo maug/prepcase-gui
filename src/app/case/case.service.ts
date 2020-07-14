@@ -14,8 +14,12 @@ export class CaseService {
   ) { }
 
   loadCaseData(caseRoot: string): Promise<{desc: string, vars: { [key: string]: string }}> {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       this.xmlQuery(caseRoot, ['--listall']).subscribe(data => {
+        if (data.return_code !== 0) {
+          return reject(data);
+        }
+
         const result = {
           desc: data.stdout.trim(),
           vars: {},
