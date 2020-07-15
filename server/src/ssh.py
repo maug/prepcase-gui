@@ -29,7 +29,7 @@ class Ssh:
 
         command = [executable] + [str(p).strip() for p in parameters]
 
-        cmd = " ".join(command)
+        cmd = "source .bashrc; " + " ".join(command)
         ssh_command = ["ssh", self.options, self.username + "@" + self.hostname, cmd]
         print ssh_command
 
