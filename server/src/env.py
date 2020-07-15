@@ -16,19 +16,11 @@ if os.path.exists(os.path.join(os.path.dirname(__file__), '.development')):
 else:
     SSH_HOSTS = [
         {
-            'host': 'athena01.cmcc.scc',
-            'options': ''
-        },
-        {
-            'host': 'zeus01.cmcc.scc',
-            'options': ''
-        },
-        {
-            'host': 'zeus02.cmcc.scc',
-            'options': ''
-        },
-        {
             'host': 'zeus.cmcc.scc',
+            'options': ''
+        },
+        {
+            'host': 'athena01.cmcc.scc',
             'options': ''
         },
     ]
