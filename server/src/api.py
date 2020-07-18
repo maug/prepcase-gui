@@ -26,10 +26,21 @@ def before_request():
     session.permanent = env.SESSION_PERMANENT
     if not auth.check_user_logged():
         data = json.loads(request.data)
-        if data['method'] not in ['App.login', 'App.tools_parameters', 'App.get_server_config']:
+        if data['method'] not in ['App.check_logged', 'App.login', 'App.tools_parameters', 'App.get_server_config']:
             return make_response("__not_logged__")
     else:
         globals.ssh.set_user(auth.user['username'])
+
+
+@jsonrpc.method('App.check_logged')
+def check_logged():
+    """
+    Returns false if user is not logged in, otherwise user object.
+    """
+    if not auth.check_user_logged():
+        return False
+    else:
+        return auth.user
 
 
 @jsonrpc.method('App.get_server_config')

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import { JsonRpcService } from './json-rpc.service';
 import { UserConfig } from './types/UserConfig';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { RpcCaseListResponse, RpcLoginResponse } from './types/RpcResponses';
 
 @Injectable({
@@ -11,11 +11,19 @@ import { RpcCaseListResponse, RpcLoginResponse } from './types/RpcResponses';
 })
 export class UserService {
 
+  /**
+   * null - uninitialized
+   * false - not logged in
+   * UserConfig - logged in
+   */
   userConfig: UserConfig | null = null;
+  private logged: Promise<boolean> = Promise.resolve(false);
 
   constructor(
     private jsonRpc: JsonRpcService,
-  ) { }
+  ) {
+    this.checkIfLogged();
+  }
 
   login(host, username, password): Observable<RpcLoginResponse> {
     const res = this.jsonRpc.rpc(
@@ -28,17 +36,19 @@ export class UserService {
       tap(data => {
         if (data.error_code === '') {
           this.userConfig = data.config;
+          this.logged = Promise.resolve(true);
         }
       }),
     );
   }
 
-  isLogged(): boolean {
-    return this.userConfig !== null;
+  isLogged(): Promise<boolean> {
+    return this.logged;
   }
 
   logout(): void {
     this.userConfig = null;
+    this.logged = Promise.resolve(false);
     this.jsonRpc.rpc(
       environment.jsonRpcUrl,
       'App.logout',
@@ -61,5 +71,26 @@ export class UserService {
     ).pipe(
       tap(data => this.userConfig.case_dirs = data)
     );
+  }
+
+  private checkIfLogged(): void {
+    // check if user already logged in (page refresh)
+    const res = this.jsonRpc.rpc(
+      environment.jsonRpcUrl,
+      'App.check_logged',
+      []
+    ) as Observable<UserConfig | false>;
+
+    this.logged = res.pipe(
+      map(data => {
+        console.log('CHECK LOGGED', data);
+        if (data) {
+          this.userConfig = data;
+          return true;
+        } else {
+          return false;
+        }
+      }),
+    ).toPromise();
   }
 }

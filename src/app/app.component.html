@@ -1,7 +1,7 @@
 <mat-toolbar color="primary">
   PrepCASE
   <span class="spacer-max"></span>
-  <div *ngIf="userService.isLogged()">
+  <div *ngIf="userService.isLogged() | async">
     You are logged in as <i>{{userService.userConfig.username}}@{{userService.userConfig.hostname}}</i>
     <span class="spacer"></span>
     <span class="spacer"></span>
