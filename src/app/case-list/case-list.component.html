@@ -25,7 +25,11 @@
     <div class="cases">
       <div *ngIf="!group.value.length">No cases</div>
       <div class="mat-body-strong" *ngFor="let dir of group.value">
-        <button mat-button color="primary" [routerLink]="['/case', dir.fullPath]">{{dir.dirName}}</button><br>
+        <button mat-button color="primary" [routerLink]="['/case', dir.fullPath]" title="Go to case">{{dir.dirName}}</button>
+        <button mat-button color="primary" (click)="openCloneDialog(dir)" title="Copy case">
+          <i class="material-icons md-18">content_copy</i>
+        </button>
+        <br>
       </div>
     </div>
   </div>

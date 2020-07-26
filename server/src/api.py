@@ -30,6 +30,7 @@ def before_request():
             return make_response("__not_logged__")
     else:
         globals.ssh.set_user(auth.user['username'])
+        globals.ssh.set_host(auth.user['hostname'])
 
 
 @jsonrpc.method('App.check_logged')
@@ -122,6 +123,14 @@ def list_cases(new_path):
     Adds new path to user case paths
     """
     return auth.add_new_case_path(new_path)
+
+
+@jsonrpc.method('App.copy_case')
+def copy_case(src, dst):
+    """
+    Copies case from src to dst
+    """
+    return cases.copy_case(src, dst)
 
 
 # DEPRECATED

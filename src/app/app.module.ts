@@ -22,6 +22,7 @@ import { CaseListComponent } from './case-list/case-list.component';
 import { ScriptParametersDialogComponent } from './script-parameters-dialog/script-parameters-dialog.component';
 import { ToolParametersService } from './tool-parameters.service';
 import { PleaseWaitOverlayComponent } from './please-wait-overlay/please-wait-overlay.component';
+import { CopyCaseDialogComponent } from './copy-case-dialog/copy-case-dialog.component';
 
 @NgModule({
   declarations: [
@@ -35,8 +36,10 @@ import { PleaseWaitOverlayComponent } from './please-wait-overlay/please-wait-ov
     CaseListComponent,
     ScriptParametersDialogComponent,
     PleaseWaitOverlayComponent,
+    CopyCaseDialogComponent,
   ],
   entryComponents: [
+    CopyCaseDialogComponent,
     HelpDialogComponent,
     ScriptParametersDialogComponent,
     PleaseWaitOverlayComponent,

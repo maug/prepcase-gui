@@ -13,10 +13,9 @@ export class UserService {
 
   /**
    * null - uninitialized
-   * false - not logged in
    * UserConfig - logged in
    */
-  userConfig: UserConfig | null = null;
+  public userConfig: UserConfig | null = null;
   private logged: Promise<boolean> = Promise.resolve(false);
 
   constructor(
@@ -55,22 +54,8 @@ export class UserService {
     ).subscribe();
   }
 
-  getCaseList(): Observable<RpcCaseListResponse>  {
-    return this.jsonRpc.rpc(
-      environment.jsonRpcUrl,
-      'App.list_cases',
-      [this.userConfig.case_dirs]
-    );
-  }
-
-  addNewCasePath(path): Observable<RpcCaseListResponse>  {
-    return this.jsonRpc.rpc(
-      environment.jsonRpcUrl,
-      'App.add_new_case_path',
-      [path]
-    ).pipe(
-      tap(data => this.userConfig.case_dirs = data)
-    );
+  setCaseDirs(dirs: string[]): void {
+    this.userConfig.case_dirs = dirs;
   }
 
   private checkIfLogged(): void {

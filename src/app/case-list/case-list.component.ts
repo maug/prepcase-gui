@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
+import { MatDialog } from '@angular/material';
+import { CopyCaseDialogComponent } from '../copy-case-dialog/copy-case-dialog.component';
+import { CaseListService } from './case-list.service';
+import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 
 @Component({
   selector: 'app-case-list',
@@ -15,7 +19,9 @@ export class CaseListComponent implements OnInit {
   newPathInputActive: boolean = false;
 
   constructor(
+    private caseListService: CaseListService,
     private userService: UserService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -27,7 +33,8 @@ export class CaseListComponent implements OnInit {
     if (this.newPath !== '') {
       this.isLoaded = false;
       this.newPathInputActive = false;
-      this.userService.addNewCasePath(this.newPath).subscribe(data => {
+      this.caseListService.addNewCasePath(this.newPath).subscribe(res => {
+        this.userService.setCaseDirs(res.caseDirs);
         this.newPath = '';
         this.loadCases();
       });
@@ -36,7 +43,7 @@ export class CaseListComponent implements OnInit {
 
   private loadCases() {
     this.isLoaded = false;
-    this.userService.getCaseList().subscribe(data => {
+    this.caseListService.getCaseList().subscribe(data => {
       this.userCases = {};
       for (const [parent, dirs] of Object.entries(data)) {
         this.userCases[parent] = dirs
@@ -49,4 +56,25 @@ export class CaseListComponent implements OnInit {
     });
   }
 
+  openCloneDialog(data: { fullPath: string, dirName: string } ) {
+    this.dialog.open(CopyCaseDialogComponent, { minWidth: 600, disableClose: true, data })
+      .afterClosed()
+      .subscribe(formData => {
+        if (formData) {
+          this.caseListService.copyCase(formData.fullPath, formData.newPath)
+            .subscribe(res => {
+              if (res.return_code !== 0) {
+                this.dialog.open(HelpDialogComponent, {
+                  data: {
+                    header: 'ERROR',
+                    texts: [{ text: JSON.stringify(res.stderr, null, '\t'), classes: 'pre-wrap monospace error' }],
+                  }
+                });
+              } else {
+                this.loadCases();
+              }
+            });
+        }
+      });
+  }
 }

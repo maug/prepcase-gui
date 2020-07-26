@@ -17,3 +17,7 @@ export interface RpcLoginResponse {
 export interface RpcCaseListResponse {
   [parentDir: string]: string[];
 }
+
+export interface RpcAddNewCasePathResponse {
+  caseDirs: string[];
+}

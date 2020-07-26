@@ -1,4 +1,5 @@
 import os
+import os.path
 import globals
 
 
@@ -53,3 +54,15 @@ def get_real_case_dirs(case_dirs):
     real_dirs = sorted(list(set(real_dirs)))
 
     return real_dirs
+
+
+def copy_case(src, dst):
+    """
+    Copies case from src to dst
+    """
+    src = src.rstrip('/')
+    dst = dst.rstrip('/')
+    src_parent = os.path.dirname(src)
+    src_dir = os.path.basename(src)
+    res = globals.ssh.ssh_execute('cd ' + src_parent + ' && cp', ['-R', src_dir, dst])
+    return res
