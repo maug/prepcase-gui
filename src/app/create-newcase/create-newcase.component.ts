@@ -238,6 +238,8 @@ export class CreateNewcaseComponent implements OnInit {
 
   private compsetValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
+      // allow any value in compset
+      return null;
       const compsets = this.compsetGroups.flatMap(group => group.items);
       return compsets.find(compset => compset.name === control.value) ? null : { compsetInvalid: true };
     };
