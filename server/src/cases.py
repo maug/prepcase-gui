@@ -65,4 +65,8 @@ def copy_case(src, dst):
     src_parent = os.path.dirname(src)
     src_dir = os.path.basename(src)
     res = globals.ssh.ssh_execute('cd ' + src_parent + ' && cp', ['-R', src_dir, dst])
+    if (res['return_code']) == 0:
+        readlink_res = globals.ssh.ssh_execute('cd ' + src_parent + ' && readlink', ['-e', dst])
+        if (readlink_res['return_code']) == 0:
+            res['stdout'] = readlink_res['stdout'].strip()
     return res

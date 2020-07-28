@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { MatDialog } from '@angular/material';
 import { CopyCaseDialogComponent } from '../copy-case-dialog/copy-case-dialog.component';
 import { CaseListService } from './case-list.service';
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
+import { PleaseWaitOverlayService } from '../please-wait-overlay/please-wait-overlay.service';
 
 @Component({
   selector: 'app-case-list',
@@ -19,8 +21,10 @@ export class CaseListComponent implements OnInit {
   newPathInputActive: boolean = false;
 
   constructor(
+    private router: Router,
     private caseListService: CaseListService,
     private userService: UserService,
+    private pleaseWaitService: PleaseWaitOverlayService,
     private dialog: MatDialog
   ) { }
 
@@ -61,8 +65,10 @@ export class CaseListComponent implements OnInit {
       .afterClosed()
       .subscribe(formData => {
         if (formData) {
+          this.pleaseWaitService.show();
           this.caseListService.copyCase(formData.fullPath, formData.newPath)
             .subscribe(res => {
+              this.pleaseWaitService.hide();
               if (res.return_code !== 0) {
                 this.dialog.open(HelpDialogComponent, {
                   data: {
@@ -71,7 +77,11 @@ export class CaseListComponent implements OnInit {
                   }
                 });
               } else {
-                this.loadCases();
+                if (res.stdout) {
+                  this.router.navigate(['/case', res.stdout]);
+                } else {
+                  this.loadCases();
+                }
               }
             });
         }
