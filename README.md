@@ -1,4 +1,10 @@
-# PrepcaseGui
+# PrepCASE
+
+PrepCASE is a system developed for [CMCC](https://www.cmcc.it/)
+that provides a web based user interface
+for creating, configuring, and running [CESM](http://www.cesm.ucar.edu/models/cesm2/) climate models.
+
+# Developer's documentation
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.4.
 
