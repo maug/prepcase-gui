@@ -82,14 +82,47 @@ without changing the original, base case.
 
 ### Creating a new case
 
+After clicking the button "Create new case" on the main page,
+user is presented with a page where she can 
+set parameters for CIME script [`create\_newcase`](https://esmci.github.io/cime/versions/master/html/Tools_user/create_newcase.html).
+
+All parameters and flags of the script, both obligatory and optional, are supported.
+Documentation of each parameter and flag is available
+upon a click on the small icon with question mark on the left of each option.
+
+
 ### Case page
 
 After clicking a name of a case user will be presented with a page that:
 - lists all case variables and their values,
 - allows to modify case variables,
-- allows to execute scripts in the case (`case.setup`, `case.build`, `check_case`, `check_input_data`, `preview_namelists`, `preview_run`, `case.submit`).
+- allows to execute CIME scripts in the case directory.
 
+The scripts that can be executed from the case page are:
+- [`case.setup`](https://esmci.github.io/cime/versions/master/html/Tools_user/case.setup.html),
+- [`case.build`](https://esmci.github.io/cime/versions/master/html/Tools_user/case.build.html),
+- [`check_case`](https://esmci.github.io/cime/versions/master/html/Tools_user/check_case.html),
+- [`check_input_data`](https://esmci.github.io/cime/versions/master/html/Tools_user/check_input_data.html),
+- [`preview_namelists`](https://esmci.github.io/cime/versions/master/html/Tools_user/preview_namelists.html),
+- [`preview_run`](https://esmci.github.io/cime/versions/master/html/Tools_user/preview_run.html),
+- [`case.submit`](https://esmci.github.io/cime/versions/master/html/Tools_user/case.submit.html).
 
-# PrepCASE developer's documentation
+After clicking a button with a script name
+a dialog box appears
+where user can set all supported options.
+Documentation and default values of optional parameters 
+is available via a small icon with question mark on the right hand side of each parameter.
+
+After setting all required parameters
+user can execute the script by clicking "Run scripts".
+
+When the script terminates 
+its standard output, standard error output as well as an exit code
+are shown.
+
+Note, some of the CIME scripts can print warnings to standard error output
+and terminate successfully. 
+
+## PrepCASE developer's documentation
 
 See [DEVELOPMENT.md](DEVELOPMENT.md) for PrepCASE developer's documentation.
