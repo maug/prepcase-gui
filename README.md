@@ -123,6 +123,12 @@ are shown.
 Note, some of the CIME scripts can print warnings to standard error output
 and terminate successfully. 
 
+### Submitting case with CYLC
+
+The instructions how to set up VNC connection to CYLC virtual machine (cylc.cmcc.scc)
+are available [here](doc/CYLC7.8.4_@_CMCC_SCC_v.2.2.pdf).
+
+
 ## PrepCASE developer's documentation
 
 See [DEVELOPMENT.md](DEVELOPMENT.md) for PrepCASE developer's documentation.
