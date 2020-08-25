@@ -10,6 +10,7 @@ import { RpcExecuteCommandResponse } from '../types/RpcResponses';
 import { ToolParametersService } from '../tool-parameters.service';
 import { ScriptParametersDialogComponent } from '../script-parameters-dialog/script-parameters-dialog.component';
 import { PleaseWaitOverlayService } from '../please-wait-overlay/please-wait-overlay.service';
+import { SubmitWithCylcDialogComponent } from '../submit-with-cylc-dialog/submit-with-cylc-dialog.component';
 
 @Component({
   selector: 'app-case',
@@ -112,6 +113,22 @@ export class CaseComponent implements OnInit {
       console.log('dialog closed', cmd, result);
       if (result) {
         this.processCommand(cmd, this.dataService.runScript(this.caseRoot, cmd, result));
+      }
+    });
+  }
+
+  async submitWithCylc() {
+    const dialogRef = this.dialog.open(SubmitWithCylcDialogComponent, {
+      disableClose: true,
+      minWidth: 1000,
+      data: {
+        caseRoot: this.caseRoot,
+      }
+    });
+    dialogRef.afterClosed().subscribe((result: { suitePath: string, suiteContents: string } | false) => {
+      console.log('submit with cylc dialog closed', result);
+      if (result) {
+        this.processCommand('Submit with CYLC', this.dataService.submitWithCylc(result.suitePath, result.suiteContents, this.caseRoot));
       }
     });
   }

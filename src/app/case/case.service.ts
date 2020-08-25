@@ -56,4 +56,12 @@ export class CaseService {
       [caseRoot, script, params]
     );
   }
+
+  submitWithCylc(suitePath: string, suiteContents: string, caseDir: string): Observable<RpcExecuteCommandResponse> {
+    return this.jsonRpc.rpc(
+      environment.jsonRpcUrl,
+      'App.submit_with_cylc',
+      [suitePath, suiteContents, caseDir]
+    );
+  }
 }

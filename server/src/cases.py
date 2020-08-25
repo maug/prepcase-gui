@@ -70,3 +70,23 @@ def copy_case(src, dst):
         if (readlink_res['return_code']) == 0:
             res['stdout'] = readlink_res['stdout'].strip()
     return res
+
+
+def patch_env_batch_file(case_dir):
+    """
+    Patches env_batch.xml file, changing:
+        <entry id="BATCH_SYSTEM" value="lsf">
+    to:
+        <entry id="BATCH_SYSTEM" value="none">
+    Without this patch, CYLC suite doesn't submit correctly on LSF
+    Also, saves original env_batch.xml to env_batch.xml_org if doesn't exist
+    """
+    file_path = os.path.join(case_dir, 'env_batch.xml')
+    file_path_backup = os.path.join(case_dir, 'env_batch.xml_org')
+    res = globals.ssh.ssh_execute('cp', ['-n', file_path, file_path_backup])
+    if (res['return_code']) != 0:
+        return res
+    res = globals.ssh.ssh_execute(
+        'perl -p -i -e \'s/id="BATCH_SYSTEM" value="lsf"/id="BATCH_SYSTEM" value="none"/\' ' + file_path
+    , [])
+    return res

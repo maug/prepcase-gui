@@ -3,6 +3,8 @@ import logging
 
 import env
 
+import utils
+
 class Ssh:
 
     def __init__(self):
@@ -14,6 +16,9 @@ class Ssh:
         entry = [entry for entry in env.SSH_HOSTS if entry['host'] == host][0]
         self.hostname = entry['host']
         self.options = entry['options']
+
+    def set_hostname(self, hostname):
+        self.hostname = hostname
 
     def set_user(self, username):
         self.username = username
@@ -29,30 +34,9 @@ class Ssh:
 
         command = [executable] + [str(p).strip() for p in parameters]
 
-        cmd = "source .bashrc; " + " ".join(command)
+        cmd = " ".join(command)
         ssh_command = ["ssh", self.options, self.username + "@" + self.hostname, cmd]
         print ssh_command
 
         logging.info("EXECUTE {}".format(ssh_command))
-        return execute(ssh_command)
-
-
-def execute(command):
-    """
-    Execute a command.
-
-    :param command:  a list: executable name and parameters
-    """
-
-    # Popen doesn't work with empty parameters
-    command = filter(len, command)
-    p = subprocess.Popen(command, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-    stdout, stderr = p.communicate()
-
-    result = dict(return_code=p.returncode,
-                  stdout=stdout,
-                  stderr=stderr,
-                  command=" ".join(command))
-
-    print result  # log into /var/log/httpd/prepcase-error.log
-    return result
+        return utils.execute(ssh_command)

@@ -1,0 +1,34 @@
+<h1 mat-dialog-title>Submit with CYLC</h1>
+
+<div mat-dialog-content>
+  <form [formGroup]="mainForm">
+
+    <div>
+      <mat-form-field style="width: 100%">
+        <input matInput type="text"
+               placeholder="Suite path"
+               formControlName="suitePath"
+               spellcheck="false">
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field style="width: 100%;">
+        <textarea matInput type="text"
+                  placeholder="Suite contents"
+                  formControlName="suiteContents"
+                  style="height: 30em; white-space: nowrap; font-family: monospace;"
+                  spellcheck="false"
+        >
+        </textarea>
+      </mat-form-field>
+    </div>
+
+  </form>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!mainForm.valid">Submit with CYLC</button>
+  <span class="spacer-max"></span>
+  <button mat-raised-button (click)="onCancel()">Cancel</button>
+</div>

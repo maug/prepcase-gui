@@ -8,6 +8,8 @@ if os.path.exists(os.path.join(os.path.dirname(__file__), '.development')):
         },
     ]
 
+    CYLC_HOST = 'prepcase.test'
+
     # URL of GUI in the browser (to allow requests to server on different port)
     CORS_ORIGIN = 'http://localhost:4200'
 
@@ -24,5 +26,6 @@ else:
             'options': ''
         },
     ]
+    CYLC_HOST = 'cylc.cmcc.scc'
     CORS_ORIGIN = 'http://prepcase.cmcc.scc'
     SESSION_PERMANENT = False

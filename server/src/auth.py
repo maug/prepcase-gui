@@ -40,6 +40,8 @@ def login_user(host, username, password):
 
     globals.ssh.set_host(host)
     globals.ssh.set_user(username)
+    globals.ssh_cylc.set_hostname(env.CYLC_HOST)
+    globals.ssh_cylc.set_user(username)
     res_ssh = globals.ssh.ssh_execute('cat ~/.prepcase.json', [])
 
     res = dict(error_code='', error='', config='', hostname='')

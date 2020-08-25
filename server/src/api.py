@@ -12,6 +12,7 @@ import globals
 import env
 import auth
 import cases
+import cylc
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(64)
@@ -31,6 +32,8 @@ def before_request():
     else:
         globals.ssh.set_user(auth.user['username'])
         globals.ssh.set_host(auth.user['hostname'])
+        globals.ssh_cylc.set_user(auth.user['username'])
+        globals.ssh_cylc.set_hostname(env.CYLC_HOST)
 
 
 @jsonrpc.method('App.check_logged')
@@ -131,6 +134,24 @@ def copy_case(src, dst):
     Copies case from src to dst
     """
     return cases.copy_case(src, dst)
+
+
+@jsonrpc.method('App.submit_with_cylc')
+def submit_with_cylc(path, contents, case_dir):
+    """
+    Creates a CYLC suite with specified content.
+    Recursively creates directories if they don't exist.
+    Patches env_batch.xml file in case directory.
+    Executes cylc run on cylc server.
+    """
+    res = cylc.create_suite(path, contents)
+    if (res['return_code']) != 0:
+        return res
+    res = cases.patch_env_batch_file(case_dir)
+    if (res['return_code']) != 0:
+        return res
+    res = cylc.run_suite(path)
+    return res
 
 
 # DEPRECATED
