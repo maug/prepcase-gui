@@ -17,25 +17,11 @@ def list_cases(case_dirs):
     grouped_dirs = {}
     for directory in real_dirs:
         grouped_dirs[directory] = []
-        # list subdirectories
-        res = globals.ssh.ssh_execute('cd ' + directory + ' && ls -1d */', [])
+        res = globals.ssh.ssh_execute('find ' + directory + ' -maxdepth 2 -name README.case -exec dirname {} \\;', [])
         if (res['return_code']) == 0:
-            subdirs = filter(len, res['stdout'].strip().split('\n'))
-            for subdir in subdirs:
-                full_path = os.path.join(directory, subdir)
-                if is_case_directory(full_path):
-                    grouped_dirs[directory].append(full_path)
+            if res['stdout'].strip() != '':
+                grouped_dirs[directory].extend(sorted(res['stdout'].strip().split('\n')))
     return grouped_dirs
-
-
-def is_case_directory(directory):
-    """
-    Check if directory is a case
-    :param directory:
-    :return:
-    """
-    res = globals.ssh.ssh_execute('cd ' + directory + ' && test -f README.case && test -r README.case', [])
-    return res['return_code'] == 0
 
 
 def get_real_case_dirs(case_dirs):
