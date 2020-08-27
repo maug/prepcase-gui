@@ -238,7 +238,7 @@ export class CreateNewcaseComponent implements OnInit {
 
   private compsetValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      // allow any value in compset
+      // allow any value in compset (for unsupported compsets
       return null;
       const compsets = this.compsetGroups.flatMap(group => group.items);
       return compsets.find(compset => compset.name === control.value) ? null : { compsetInvalid: true };
@@ -257,6 +257,10 @@ export class CreateNewcaseComponent implements OnInit {
           return true;
         } else {
           const compset = this.compsetGroups.flatMap(group => group.items).find(c => c.name === ctrlCompset.value);
+          if (!compset) {
+            // unsupported compset, do not check grid compatibility
+            return true;
+          }
           return this.checkCompsetGridCompatibility(compset, grid) === null;
         }
       });
@@ -273,11 +277,15 @@ export class CreateNewcaseComponent implements OnInit {
   private compsetGridValidator(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       const ctrlCompset: AbstractControl = control.get('--compset');
-      const ctrlGrid: AbstractControl = control.get('--grid');
+      const ctrlGrid: AbstractControl = control.get('--res');
       if (!ctrlCompset || !ctrlGrid || ctrlCompset.errors || ctrlGrid.errors) {
         return null;
       }
       const compset = this.compsetGroups.flatMap(group => group.items).find(c => c.name === ctrlCompset.value);
+      if (!compset) {
+        // unsupported compset, do not check grid compatibility
+        return null;
+      }
       const grid = this.grids.find(g => g._attributes.alias === ctrlGrid.value);
       return this.checkCompsetGridCompatibility(compset, grid);
     };
