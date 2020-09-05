@@ -76,21 +76,23 @@ export class SubmitWithCylcDialogComponent implements OnInit {
              run<member> => st_archive<member>
              """
 [runtime]
-  [[root]]
-    [[[remote]]]
-      host = zeus03
-
   [[set_external_workflow<member>]]
     script = cd ${this.casePath}; \\
              ./xmlchange EXTERNAL_WORKFLOW=TRUE; \\
              cp env_batch.xml LockedFiles;
+    [[[remote]]]
+      host = zeus03
   [[st_archive<member>]]
     script = cd ${this.casePath}; \\
              ./case.submit --job case.st_archive; \\
              ./xmlchange CONTINUE_RUN=TRUE
+    [[[remote]]]
+      host = zeus03
 
   [[run<member>]]
     script = cd ${this.casePath}; ./case.submit
+    [[[remote]]]
+      host = zeus03
     [[[job]]]
       batch system = lsf
     [[[directives]]]
