@@ -4,6 +4,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 interface DialogData {
   caseRoot: string;
+  DATA_ASSIMILATION_CYCLES: string;
+  JOB_WALLCLOCK_TIME: string;
 }
 
 @Component({
@@ -51,7 +53,7 @@ export class SubmitWithCylcDialogComponent implements OnInit {
 
   private generateSuitePath(): string {
     const dateStr = (new Date()).toISOString().slice(0, 19).replace(/:/g, '');
-    return `${this.caseName}_${dateStr}`;
+    return `suites/${this.caseName}_${dateStr}`;
   }
 
   private generateSuiteContents(): string {
@@ -65,7 +67,7 @@ export class SubmitWithCylcDialogComponent implements OnInit {
 [scheduling]
   cycling mode = integer
   initial cycle point = 1
-  final cycle point = 2
+  final cycle point = ${this.data.DATA_ASSIMILATION_CYCLES}
 
   [[dependencies]]
     [[[R1]]]
@@ -98,7 +100,7 @@ export class SubmitWithCylcDialogComponent implements OnInit {
     [[[directives]]]
       -J=run.${this.caseName}
       -n=324
-      -W=02:00
+      -W=${this.data.JOB_WALLCLOCK_TIME}
       -o=cesm.stdout.%J
       -e=cesm.stderr.%J
       -R="span[ptile=36]"

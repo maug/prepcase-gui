@@ -123,6 +123,8 @@ export class CaseComponent implements OnInit {
       minWidth: 1000,
       data: {
         caseRoot: this.caseRoot,
+        DATA_ASSIMILATION_CYCLES: this.caseVars.DATA_ASSIMILATION_CYCLES,
+        JOB_WALLCLOCK_TIME: this.caseVars.JOB_WALLCLOCK_TIME,
       }
     });
     dialogRef.afterClosed().subscribe((result: { suitePath: string, suiteContents: string } | false) => {
