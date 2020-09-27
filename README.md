@@ -49,8 +49,9 @@ $ echo >$HOME/.prepcase.json '{ "password": "YOUR_PASSWORD_HERE", "cesm_path": "
 - "cesm\_path" should point to your CESM installation, for example "~/CESM".
 - "cesm\_env\_script" is a path to an optional bash script used to set up environment before executing CESM script. Leave empty if not needed.
 
-By default PrepCASE will show CESM cases in users home directory.
-This can be customized by adding entry `"case\_dirs"` to the JSON dictionary in `$HOME/.prepcase.json`
+By default, PrepCASE will show CESM cases in users home directory.
+Additional case directory can be added by clicking "Add new path" at "Your cases" screen.
+Also, it can be customized by editing entry in `"case\_dirs"` JSON dictionary in `$HOME/.prepcase.json`
 with value being a list of directories,
 for example:
 
@@ -73,6 +74,8 @@ After login to PrepCASE
 user is presented with a list of CASEs
 in his home directory as well as directories specfied as `"case_dirs"` in `$HOME/.prepcase.json`.
 
+![Screen "Your cases"](doc/screenshot_your_cases.jpg)
+
 Three main actions are available on the main page:
 - creating a new CESM case, by clicking "Create new case" button in the top right corner,
 - opening a page with details of a case ("Go to case"), by clicking its name on the list,
@@ -80,16 +83,19 @@ Three main actions are available on the main page:
 This will create a copy of an exiting case that can be later modified as needed,
 without changing the original, base case.
 
+You can also add a directory with cases by clicking "Add new path". 
+
 ### Creating a new case
 
 After clicking the button "Create new case" on the main page,
 user is presented with a page where she can 
-set parameters for CIME script [`create\_newcase`](https://esmci.github.io/cime/versions/master/html/Tools_user/create_newcase.html).
+set parameters for CIME script [`create_newcase`](https://esmci.github.io/cime/versions/master/html/Tools_user/create_newcase.html).
 
 All parameters and flags of the script, both obligatory and optional, are supported.
 Documentation of each parameter and flag is available
 upon a click on the small icon with question mark on the left of each option.
 
+![Screen "Create new case"](doc/screenshot_create_new_case.jpg)
 
 ### Case page
 
@@ -125,8 +131,40 @@ and terminate successfully.
 
 ### Submitting case with CYLC
 
-The instructions how to set up VNC connection to CYLC virtual machine (cylc.cmcc.scc)
+The instructions how to set up VNC connection to CMCC CYLC virtual machine (cylc.cmcc.scc)
 are available [here](doc/CYLC7.8.4_@_CMCC_SCC_v.2.2.pdf).
+
+To submit a case with CYLC, user can click "Submit with CYLC" button at the case page:
+
+![Screen "Submit with CYLC"](doc/screenshot_submit_with_cylc_button.jpg)
+
+A dialog will appear where path to CYLC suite can be changed (the default is `suites/<case_name>_<timestamp`),
+and the suite itself can be customized.
+
+![Dialog "Submit with CYLC"](doc/screenshot_submit_with_cylc.jpg)
+
+Clicking "Submit with CYLC" will result in registering the suite with CYLC and submitting it.
+ 
+![Result "Submit with CYLC"](doc/screenshot_submit_with_cylc_result.jpg)
+
+User can now login to CMCC CYLC virtual machine and open the CYLC GUI.
+To do that, execute the command:
+
+```
+$ cylc gui <suite_name>
+```
+
+where `<suit_name>` is the name of the suite specified earlier (in this example it's `jan2017_intel20_1_hy_parallel_peter`).
+If in doubt about the suite name, it can be checked by running `cylc scan` command:
+
+```
+$ cylc scan
+jan2017_intel20_1_hy_parallel_peter pk21219@zeus03:43040
+```
+
+The CYLC GUI should display the running suite:
+
+![CYLC GUI running](doc/screenshot_cylc_gui_running.jpg)
 
 
 ## PrepCASE developer's documentation
