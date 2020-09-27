@@ -49,6 +49,7 @@ export class CreateNewcaseService {
           this.data.gridData = this.parseGridData(data.grids);
         }),
         catchError(err => {
+          console.error('ERROR loading compsets or grids', err);
           reject(err.message);
           return of([]);
         }),
@@ -76,8 +77,6 @@ export class CreateNewcaseService {
   }
 
   private parseCompsetsData(compsetsXml: string): CompsetsGroup[] {
-    // compsets xml is lacking root element
-    compsetsXml = '<root>' + compsetsXml + '</root>';
     const parsed: any = xml2js(compsetsXml, {
       compact: true,
       trim: true,
@@ -85,14 +84,13 @@ export class CreateNewcaseService {
       ignoreInstruction: true,
     });
 
-    const types: string[] = parsed.root._text;
-
-    return [...types.keys()].map(index => ({
-      type: types[index],
-      items: parsed.root.compsets[index].compset.map(compset => ({
+    // Prop "type" is now empty because there are no descriptions of compset groups anymore
+    return Object.values(parsed.data.compsets).map((compsets: any) => ({
+      type: '',
+      items: compsets.compset.map(compset => ({
         name: compset.alias._text,
         longName: compset.lname._text,
-      })),
+      }))
     }));
   }
 
