@@ -49,11 +49,13 @@
         </mat-error>
 
         <mat-autocomplete class="high-autocomplete-panel" #autoCompsets="matAutocomplete">
-          <mat-optgroup *ngFor="let group of compsetsGroupsOptions | async" [label]="group.type">
+<!--          <mat-optgroup *ngFor="let group of compsetsGroupsOptions | async" [label]="group.type">-->
+          <ng-container *ngFor="let group of compsetsGroupsOptions | async">
             <mat-option class="small" *ngFor="let compset of group.items" [value]="compset.name">
               <div class="mat-small"><div class="compset-short-name">{{compset.name}}</div> {{compset.longName}}</div>
             </mat-option>
-          </mat-optgroup>
+          </ng-container>
+<!--          </mat-optgroup>-->
         </mat-autocomplete>
       </mat-form-field>
 
