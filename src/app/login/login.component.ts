@@ -1,7 +1,7 @@
 import { Component, isDevMode, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DialogTexts, HelpDialogComponent } from '../help-dialog/help-dialog.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { UserService } from '../user.service';
 import { Router } from '@angular/router';
 import { PleaseWaitOverlayService } from '../please-wait-overlay/please-wait-overlay.service';

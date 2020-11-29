@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { RpcExecuteCommandResponse } from '../types/RpcResponses';
 import { ToolParametersService } from '../tool-parameters.service';
 import { ScriptParametersDialogComponent } from '../script-parameters-dialog/script-parameters-dialog.component';

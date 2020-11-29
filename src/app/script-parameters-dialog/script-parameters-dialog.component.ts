@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToolParameter } from '../types/ToolsParameters';
 import { FormItemBase } from '../dynamic-form/FormItemBase';
 import { FormBuilder, FormGroup } from '@angular/forms';

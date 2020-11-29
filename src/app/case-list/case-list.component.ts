@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../user.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { CopyCaseDialogComponent } from '../copy-case-dialog/copy-case-dialog.component';
 import { CaseListService } from './case-list.service';
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';

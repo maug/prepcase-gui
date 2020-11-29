@@ -8,7 +8,7 @@ import { AppMaterialModule } from './app-material.module';
 import { CreateNewcaseService } from './create-newcase/create-newcase.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HelpDialogComponent } from './help-dialog/help-dialog.component';
-import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
 import { JsonRpcService } from './json-rpc.service';
 import { DynamicFormItemComponent } from './dynamic-form/dynamic-form-item/dynamic-form-item.component';

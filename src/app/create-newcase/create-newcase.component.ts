@@ -11,7 +11,8 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorStateMatcher } from '@angular/material/core';
 
 import { Observable } from 'rxjs';
