@@ -54,7 +54,7 @@ import { SubmitWithCylcDialogComponent } from './submit-with-cylc-dialog/submit-
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(appRoutes, { enableTracing: false }),
+    RouterModule.forRoot(appRoutes, { enableTracing: false, relativeLinkResolution: 'legacy' }),
   ],
   providers: [
     CreateNewcaseService,

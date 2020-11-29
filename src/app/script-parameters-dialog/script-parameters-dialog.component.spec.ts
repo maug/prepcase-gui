@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ScriptParametersDialogComponent } from './script-parameters-dialog.component';
 
@@ -6,7 +6,7 @@ describe('ScriptParametersDialogComponent', () => {
   let component: ScriptParametersDialogComponent;
   let fixture: ComponentFixture<ScriptParametersDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ScriptParametersDialogComponent ]
     })

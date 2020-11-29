@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PleaseWaitOverlayComponent } from './please-wait-overlay.component';
 
@@ -6,7 +6,7 @@ describe('PleaseWaitOverlayComponent', () => {
   let component: PleaseWaitOverlayComponent;
   let fixture: ComponentFixture<PleaseWaitOverlayComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PleaseWaitOverlayComponent ]
     })
