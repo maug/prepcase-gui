@@ -2399,7 +2399,7 @@ chokidar@^3.0.0:
   optionalDependencies:
     fsevents "~2.1.1"
 
-chokidar@^3.4.1:
+chokidar@^3.4.1, chokidar@^3.4.2:
   version "3.4.3"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.4.3.tgz#c1df38231448e45ca4ac588e6c79573ba6a57d5b"
   integrity sha512-DtM3g7juCXQxFVSNPNByEC2+NImtBuxQQvWlHunpJIS5Ocr0lG306cC7FCi7cEA0fzmybPUIl4txBIobk1gGOQ==
@@ -4011,7 +4011,7 @@ find-up@^4.0.0, find-up@^4.1.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-flatted@^2.0.1, flatted@^2.0.2:
+flatted@^2.0.1:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-2.0.2.tgz#4575b21e2bcee7434aa9be662f4b7b5f9c2b5138"
   integrity sha512-r5wGx7YeOwNWNlCA0wQ86zKyDLMQr+/RB8xy74M4hTphfmjlijTSSXGuH8rnvKZnfT9i+75zmd8jcKdMR4O6jA==
@@ -5193,10 +5193,10 @@ jasmine-core@~2.8.0:
   resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-2.8.0.tgz#bcc979ae1f9fd05701e45e52e65d3a5d63f1a24e"
   integrity sha1-vMl5rh+f0FcB5F5S5l06XWPxok4=
 
-jasmine-spec-reporter@~5.0.0:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/jasmine-spec-reporter/-/jasmine-spec-reporter-5.0.2.tgz#b61288ab074ad440dc2477c4d42840b0e74a6b95"
-  integrity sha512-6gP1LbVgJ+d7PKksQBc2H0oDGNRQI3gKUsWlswKaQ2fif9X5gzhQcgM5+kiJGCQVurOG09jqNhk7payggyp5+g==
+jasmine-spec-reporter@~6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/jasmine-spec-reporter/-/jasmine-spec-reporter-6.0.0.tgz#3b9c85689676a351f343ba8dd6d3957f11a4bf1d"
+  integrity sha512-MvTOVoMxDZAftQYBApIlSfKnGMzi9cj351nXeqtnZTuXffPlbONN31+Es7F+Ke4okUeQ2xISukt4U1npfzLVrQ==
   dependencies:
     colors "1.4.0"
 
@@ -5378,24 +5378,23 @@ karma-source-map-support@1.4.0:
   dependencies:
     source-map-support "^0.5.5"
 
-karma@~5.0.0:
-  version "5.0.9"
-  resolved "https://registry.yarnpkg.com/karma/-/karma-5.0.9.tgz#11a119b0c763a806fdc471b40c594a2240b5ca13"
-  integrity sha512-dUA5z7Lo7G4FRSe1ZAXqOINEEWxmCjDBbfRBmU/wYlSMwxUQJP/tEEP90yJt3Uqo03s9rCgVnxtlfq+uDhxSPg==
+karma@~5.2.3:
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/karma/-/karma-5.2.3.tgz#3264024219bad2728e92542e0058a2492d7a46e4"
+  integrity sha512-tHdyFADhVVPBorIKCX8A37iLHxc6RBRphkSoQ+MLKdAtFn1k97tD8WUGi1KlEtDZKL3hui0qhsY9HXUfSNDYPQ==
   dependencies:
     body-parser "^1.19.0"
     braces "^3.0.2"
-    chokidar "^3.0.0"
+    chokidar "^3.4.2"
     colors "^1.4.0"
     connect "^3.7.0"
     di "^0.0.1"
     dom-serialize "^2.2.1"
-    flatted "^2.0.2"
     glob "^7.1.6"
     graceful-fs "^4.2.4"
     http-proxy "^1.18.1"
     isbinaryfile "^4.0.6"
-    lodash "^4.17.15"
+    lodash "^4.17.19"
     log4js "^6.2.1"
     mime "^2.4.5"
     minimatch "^3.0.4"
@@ -5405,7 +5404,7 @@ karma@~5.0.0:
     socket.io "^2.3.0"
     source-map "^0.6.1"
     tmp "0.2.1"
-    ua-parser-js "0.7.21"
+    ua-parser-js "0.7.22"
     yargs "^15.3.1"
 
 killable@^1.0.1:
@@ -5543,7 +5542,7 @@ lodash.uniq@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15:
+lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
@@ -8986,10 +8985,10 @@ typescript@4.0.5, typescript@~4.0.5:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.0.5.tgz#ae9dddfd1069f1cb5beb3ef3b2170dd7c1332389"
   integrity sha512-ywmr/VrTVCmNTJ6iV2LwIrfG1P+lv6luD8sUJs+2eI9NLGigaN+nUQc13iHqisq7bra9lnmUSYqbJvegraBOPQ==
 
-ua-parser-js@0.7.21:
-  version "0.7.21"
-  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.21.tgz#853cf9ce93f642f67174273cc34565ae6f308777"
-  integrity sha512-+O8/qh/Qj8CgC6eYBVBykMrNtp5Gebn4dlGD/kKXVkJNDwyrAwSIqwz8CDf+tsAIWVycKcku6gIXJ0qwx/ZXaQ==
+ua-parser-js@0.7.22:
+  version "0.7.22"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.22.tgz#960df60a5f911ea8f1c818f3747b99c6e177eae3"
+  integrity sha512-YUxzMjJ5T71w6a8WWVcMGM6YWOTX27rCoIQgLXiWaxqXSx9D7DNjiGWn1aJIRSQ5qr0xuhra77bSIh6voR/46Q==
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
@@ -9637,7 +9636,14 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zone.js@~0.10.2, zone.js@~0.10.3:
+zone.js@~0.10.3:
   version "0.10.3"
   resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.10.3.tgz#3e5e4da03c607c9dcd92e37dd35687a14a140c16"
   integrity sha512-LXVLVEq0NNOqK/fLJo3d0kfzd4sxwn2/h67/02pjCjfKDxgx1i9QqpvtHD8CrBnSSwMw5+dy11O7FRX5mkO7Cg==
+
+zone.js@~0.11.3:
+  version "0.11.3"
+  resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.11.3.tgz#255a6313174731cc014d63233ef04fd9858da375"
+  integrity sha512-Y4hTHoh4VcxU5BDGAqEoOnOiyT254w6CiHtpQxAJUSMZPyVgdbKf+5R7Mwz6xsPhMIeBXk5rTopRZDpjssTCUg==
+  dependencies:
+    tslib "^2.0.0"
