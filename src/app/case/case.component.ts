@@ -19,7 +19,7 @@ import { SubmitWithCylcDialogComponent } from '../submit-with-cylc-dialog/submit
 })
 export class CaseComponent implements OnInit {
 
-  public isLoaded = false;
+  isLoaded = false;
 
   caseRoot: string;
 

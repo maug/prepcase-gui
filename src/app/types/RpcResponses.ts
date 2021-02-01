@@ -1,3 +1,4 @@
+import { NamelistsByComponent } from './namelists';
 
 export interface RpcExecuteCommandResponse {
   command: string;
@@ -20,4 +21,9 @@ export interface RpcCaseListResponse {
 
 export interface RpcAddNewCasePathResponse {
   caseDirs: string[];
+}
+
+export interface RpcNamelistsResponse {
+  error: string;
+  namelists: NamelistsByComponent;
 }

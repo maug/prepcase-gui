@@ -24,6 +24,7 @@ import { ToolParametersService } from './tool-parameters.service';
 import { PleaseWaitOverlayComponent } from './please-wait-overlay/please-wait-overlay.component';
 import { CopyCaseDialogComponent } from './copy-case-dialog/copy-case-dialog.component';
 import { SubmitWithCylcDialogComponent } from './submit-with-cylc-dialog/submit-with-cylc-dialog.component';
+import { NamelistsComponent } from './namelists/namelists.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { SubmitWithCylcDialogComponent } from './submit-with-cylc-dialog/submit-
     PleaseWaitOverlayComponent,
     CopyCaseDialogComponent,
     SubmitWithCylcDialogComponent,
+    NamelistsComponent,
   ],
   entryComponents: [
     CopyCaseDialogComponent,
