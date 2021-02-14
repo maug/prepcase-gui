@@ -13,6 +13,7 @@ import env
 import auth
 import cases
 import cylc
+import namelists
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(64)
@@ -151,6 +152,12 @@ def submit_with_cylc(path, contents, case_dir):
     if (res['return_code']) != 0:
         return res
     res = cylc.run_suite(path)
+    return res
+
+
+@jsonrpc.method('App.get_namelists')
+def get_namelists(path):
+    res = namelists.remote_read_namelists(path)
     return res
 
 

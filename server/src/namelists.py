@@ -1,6 +1,9 @@
 import os
+import os.path
 import cime_namelist
 import json
+import globals
+import utils
 
 # TODO: Need to check what's appropriate limit for a line length.
 ONE_LINE_LENGTH_LIMIT_FOR_SERIALIZED_LIST=50
@@ -66,6 +69,18 @@ def test_all():
     with open('namelists.json') as f:
         namelists = json.load(f)
         write_namelists('test', namelists)
+
+
+
+def remote_read_namelists(path):
+    res = globals.ssh.ssh_execute('rm -rf temporary_namelists_archive.tar', [])
+    res = globals.ssh.ssh_execute('tar cf temporary_namelists_archive.tar ' + path + '/user_nl_*', [])
+    res = utils.execute(['mkdir', '-p', 'temp_nl_dir'])
+    res = utils.execute(['rm', '-rf', 'temp_nl_dir/user_nl_*'])
+    res = utils.execute(['scp', globals.ssh.username + '@' + globals.ssh.hostname + ':temporary_namelists_archive.tar', 'temp_nl_dir/temporary_namelists_archive.tar'])
+    res = utils.execute(['tar', 'xf', 'temp_nl_dir/temporary_namelists_archive.tar', '-C', 'temp_nl_dir/'])
+    return read_namelists('temp_nl_dir')
+    
 
 
 if __name__ == '__main__':
