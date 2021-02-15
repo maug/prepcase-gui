@@ -36,7 +36,8 @@ def read_namelists(namelists_directory):
     try:
         return {'error': '', 'namelists': components(namelists_directory)}
     except Exception as e:
-        return {'error': str(e), 'namelists': {}}
+        tb = traceback.format_exc()
+        return {'error': str(e) + '\n' + tb, 'namelists': {}}
 
 
 def serialize_proper_list(l):
@@ -77,18 +78,14 @@ def test_all():
 
 
 def remote_read_namelists(path):
-    try:
-        temp_nl_dir = str(tempfile.mkdtemp())
-        res = globals.ssh.ssh_execute('rm -rf temporary_namelists_archive.tar', [])
-        res = globals.ssh.ssh_execute('tar cf temporary_namelists_archive.tar ' + path + '/user_nl_*', [])
-        res = utils.execute(['scp', globals.ssh.username + '@' + globals.ssh.hostname + ':temporary_namelists_archive.tar', temp_nl_dir + '/temporary_namelists_archive.tar'])
-        res = utils.execute(['tar', 'xf', temp_nl_dir + '/temporary_namelists_archive.tar', '-C', temp_nl_dir])
-        r = read_namelists(temp_nl_dir)
-        shutil.rmtree(temp_nl_dir)
-        return r
-    except Exception as e:
-        tb = traceback.format_exc()
-        raise Exception("remote_read_namelists:\n" + tb)
+    temp_nl_dir = str(tempfile.mkdtemp())
+    res = globals.ssh.ssh_execute('rm -rf temporary_namelists_archive.tar', [])
+    res = globals.ssh.ssh_execute('tar cf temporary_namelists_archive.tar ' + path + '/user_nl_*', [])
+    res = utils.execute(['scp', globals.ssh.username + '@' + globals.ssh.hostname + ':temporary_namelists_archive.tar', temp_nl_dir + '/temporary_namelists_archive.tar'])
+    res = utils.execute(['tar', 'xf', temp_nl_dir + '/temporary_namelists_archive.tar', '-C', temp_nl_dir])
+    r = read_namelists(temp_nl_dir)
+    shutil.rmtree(temp_nl_dir)
+    return r
 
 
 if __name__ == '__main__':
