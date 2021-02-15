@@ -1,8 +1,9 @@
+export type NamelistVarValue = string[];
 
 export interface Namelist {
   filename: string;
   parsed: {
-    [key: string]: string;
+    [key: string]: NamelistVarValue;
   };
 }
 

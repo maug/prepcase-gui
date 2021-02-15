@@ -3,14 +3,14 @@ import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { NamelistsService } from './namelists.service';
-import { NamelistsByComponent } from '../types/namelists';
+import { NamelistsByComponent, NamelistVarValue } from '../types/namelists';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface Var {
   key: string;
-  value: string;
+  value: NamelistVarValue;
 }
 
 @Component({
@@ -31,6 +31,7 @@ export class NamelistsComponent implements OnInit {
   displayedColumns = ['key', 'value'];
   readonly varInputKey = '___var$';
   readonly valueInputKey = '___value$';
+  readonly window = window;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -90,7 +91,7 @@ export class NamelistsComponent implements OnInit {
 
   getVar(component: string, row: Var) {
     this.forms[component].get(this.varInputKey).setValue(row.key);
-    this.forms[component].get(this.valueInputKey).setValue(row.value);
+    this.forms[component].get(this.valueInputKey).setValue(row.value.join('\n'));
   }
 
   setVar(component: string) {

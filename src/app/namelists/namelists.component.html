@@ -11,16 +11,17 @@
       <mat-tab *ngFor="let component of getComponents()" [label]="component.toUpperCase()">
 
         <form [formGroup]="forms[component]" style="overflow: hidden; padding: 1rem;">
-          <mat-form-field style="width: 40%">
+          <mat-form-field style="width: 25%">
             <input matInput
                    type="text"
                    placeholder="Namelist variable"
                    spellcheck="false"
                    formControlName="{{this.varInputKey}}"
                    required
+                   style="font-family: monospace;"
             >
           </mat-form-field>
-          <mat-form-field style="width: 60%">
+          <mat-form-field style="width: 75%">
             <textarea matInput
                       formControlName="{{this.valueInputKey}}"
                       placeholder="Value"
@@ -29,7 +30,10 @@
                       cdkTextareaAutosize
                       #autosize="cdkTextareaAutosize"
                       cdkAutosizeMinRows="1"
-                      cdkAutosizeMaxRows="5"></textarea>
+                      cdkAutosizeMaxRows="15"
+                      wrap="off"
+                      style="font-family: monospace; box-sizing: border-box;"
+            ></textarea>
           </mat-form-field>
           <button mat-flat-button color="primary" [disabled]="!isFormValid[component]" (click)="setVar(component)">Change in selected files</button>
 
@@ -57,10 +61,10 @@
                 </ng-container>
                 <ng-container matColumnDef="value">
                   <th mat-header-cell *matHeaderCellDef> Value </th>
-                  <td mat-cell *matCellDef="let element" style="white-space: pre-wrap; font-family: monospace;">{{element.value}}</td>
+                  <td mat-cell *matCellDef="let element" style="white-space: pre-wrap; font-family: monospace;">{{element.value.join('\n')}}</td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="getVar(component, row)"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="getVar(component, row); window.scrollTo(0,0)"></tr>
               </table>
               <div *ngIf="!fileVars[component]" class="mat-caption" style="text-align: center;">Click a filename to show its variables</div>
             </div>
