@@ -46,7 +46,12 @@ export class NamelistsComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(async paramMap => {
       this.caseRoot = paramMap.get('caseRoot');
-      this.namelistsService.getNamelists().subscribe(data => {
+      this.namelistsService.getNamelists(this.caseRoot).subscribe(data => {
+        if (data.error) {
+          this.displayError(data.error);
+          return;
+        }
+
         this.namelists = data.namelists;
 
         for (const [component, entries] of Object.entries(this.namelists)) {

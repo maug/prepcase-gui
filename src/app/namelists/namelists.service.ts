@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { RpcNamelistsResponse } from '../types/RpcResponses';
 import { JsonRpcService } from '../json-rpc.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,11 +10,17 @@ import { JsonRpcService } from '../json-rpc.service';
 export class NamelistsService {
 
   constructor(
-    private jsonRpcService: JsonRpcService,
+    private jsonRpc: JsonRpcService,
   ) { }
 
-  getNamelists(): Observable<RpcNamelistsResponse>  {
-    return of(staticNamelistResponse);
+  getNamelists(caseRoot: string): Observable<RpcNamelistsResponse>  {
+    const res = this.jsonRpc.rpc(
+      environment.jsonRpcUrl,
+      'App.get_namelists',
+      [caseRoot]
+    ) as Observable<RpcNamelistsResponse>;
+
+    return res;
   }
 
 }
