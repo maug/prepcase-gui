@@ -20,7 +20,7 @@ def parse_cime_namelist(file_name):
 
 
 def components(namelists_directory):
-    file_names = list(os.listdir(namelists_directory))
+    file_names = [fn for fn in list(os.listdir(namelists_directory)) if fn.startswith('user_nl_')]
     comps = set([file_name.split('_')[2] for file_name in file_names])
     return {comp: [{
                     'filename': file_name,
