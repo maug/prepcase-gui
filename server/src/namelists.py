@@ -78,11 +78,13 @@ def test_all():
 
 
 def remote_read_namelists(path):
+    NUMBER_OF_HOME_COMPONENTS=3 # TODO: probably 4 for zeus
+
     temp_nl_dir = str(tempfile.mkdtemp())
     res = globals.ssh.ssh_execute('rm -rf temporary_namelists_archive.tar', [])
     res = globals.ssh.ssh_execute('tar cf temporary_namelists_archive.tar ' + path + '/user_nl_*', [])
     res = utils.execute(['scp', globals.ssh.username + '@' + globals.ssh.hostname + ':temporary_namelists_archive.tar', temp_nl_dir + '/temporary_namelists_archive.tar'])
-    res = utils.execute(['tar', 'xf', temp_nl_dir + '/temporary_namelists_archive.tar', '-C', temp_nl_dir])
+    res = utils.execute(['tar',  'xf', temp_nl_dir + '/temporary_namelists_archive.tar', '--strip-components=' + str(NUMBER_OF_HOME_COMPONENTS), '-C', temp_nl_dir])
     r = read_namelists(temp_nl_dir)
     shutil.rmtree(temp_nl_dir)
     return r
