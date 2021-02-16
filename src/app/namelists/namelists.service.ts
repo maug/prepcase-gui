@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { RpcNamelistsResponse } from '../types/RpcResponses';
 import { JsonRpcService } from '../json-rpc.service';
 import { environment } from '../../environments/environment';
+import { NamelistsByComponent } from '../types/namelists';
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +15,19 @@ export class NamelistsService {
   ) { }
 
   getNamelists(caseRoot: string): Observable<RpcNamelistsResponse>  {
-    const res = this.jsonRpc.rpc(
+    return this.jsonRpc.rpc(
       environment.jsonRpcUrl,
       'App.get_namelists',
       [caseRoot]
-    ) as Observable<RpcNamelistsResponse>;
+    );
+  }
 
-    return res;
+  updateNamelists(caseRoot, namelists: NamelistsByComponent): Observable<RpcNamelistsResponse> {
+    return this.jsonRpc.rpc(
+      environment.jsonRpcUrl,
+      'App.update_namelists',
+      [caseRoot, namelists]
+    );
   }
 
 }

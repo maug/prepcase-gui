@@ -4,7 +4,14 @@
   <mat-toolbar>
     Namelists for case {{caseRoot}}
     <span class="spacer-max"></span>
-    <button mat-flat-button color="primary" [disabled]="!areNamelistsChanged">Save namelists</button>
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="!areNamelistsChanged"
+      (click)="saveNamelists()"
+    >
+      Save namelists
+    </button>
   </mat-toolbar>
   <div class="contents">
     <mat-tab-group animationDuration="0ms" style="user-select: none">

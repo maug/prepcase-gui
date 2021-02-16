@@ -7,6 +7,9 @@ import { NamelistsByComponent, NamelistVarValue } from '../types/namelists';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PleaseWaitOverlayService } from '../please-wait-overlay/please-wait-overlay.service';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 interface Var {
   key: string;
@@ -37,6 +40,7 @@ export class NamelistsComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
     private namelistsService: NamelistsService,
+    private pleaseWaitService: PleaseWaitOverlayService,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
   ) { }
@@ -46,27 +50,31 @@ export class NamelistsComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(async paramMap => {
       this.caseRoot = paramMap.get('caseRoot');
-      this.namelistsService.getNamelists(this.caseRoot).subscribe(data => {
-        if (data.error) {
-          this.displayError(data.error);
-          return;
-        }
+      this.namelistsService.getNamelists(this.caseRoot)
+        .pipe(
+          catchError(error => of({ error, namelists: {} }))
+        )
+        .subscribe(data => {
+          if (data.error) {
+            this.displayError(data.error);
+            return;
+          }
 
-        this.namelists = data.namelists;
+          this.namelists = data.namelists;
 
-        for (const [component, entries] of Object.entries(this.namelists)) {
-          const inputs = {
-            [this.varInputKey]: '',
-            [this.valueInputKey]: '',
-          };
-          entries.forEach(namelist => inputs[namelist.filename] = false);
-          this.forms[component] = this.formBuilder.group(inputs);
-        }
+          for (const [component, entries] of Object.entries(this.namelists)) {
+            const inputs = {
+              [this.varInputKey]: '',
+              [this.valueInputKey]: '',
+            };
+            entries.forEach(namelist => inputs[namelist.filename] = false);
+            this.forms[component] = this.formBuilder.group(inputs);
+          }
 
-        this.onChanges();
+          this.onChanges();
 
-        this.isLoaded = true;
-      });
+          this.isLoaded = true;
+        });
     });
   }
 
@@ -107,7 +115,7 @@ export class NamelistsComponent implements OnInit {
     selected.forEach(filename =>
       this.namelists[component]
         .filter(entry => entry.filename === filename)
-        .forEach(entry => entry.parsed[key] = value)
+        .forEach(entry => entry.parsed[key] = value.split('\n'))
     );
 
     if (this.currentFiles[component]) {
@@ -123,6 +131,22 @@ export class NamelistsComponent implements OnInit {
     const keys = this.getKeysForComponent(component);
     const allSelected = keys.map(key => this.forms[component].controls[key].value).every(Boolean);
     keys.forEach(key => this.forms[component].controls[key].setValue(!allSelected));
+  }
+
+  saveNamelists() {
+    this.pleaseWaitService.show();
+    this.namelistsService.updateNamelists(this.caseRoot, this.namelists)
+      .pipe(
+        catchError(error => of({ error }))
+      )
+      .subscribe(data => {
+        if (data.error) {
+          this.displayError(data.error);
+        } else {
+          this.snackBar.open(`Namelists updated`, '', { duration: 2000 });
+        }
+        this.pleaseWaitService.hide();
+      });
   }
 
   private getKeysForComponent(component: string): string[] {
