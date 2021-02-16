@@ -76,10 +76,10 @@ def test_all():
         write_namelists('test', namelists)
 
 
+NUMBER_OF_HOME_COMPONENTS=3 # TODO: probably 4 for zeus
+
 
 def remote_read_namelists(path):
-    NUMBER_OF_HOME_COMPONENTS=3 # TODO: probably 4 for zeus
-
     temp_nl_dir = str(tempfile.mkdtemp())
     res = globals.ssh.ssh_execute('rm -rf temporary_namelists_archive.tar', [])
     res = globals.ssh.ssh_execute('tar cf temporary_namelists_archive.tar ' + path + '/user_nl_*', [])
@@ -88,6 +88,19 @@ def remote_read_namelists(path):
     r = read_namelists(temp_nl_dir)
     shutil.rmtree(temp_nl_dir)
     return r
+
+
+def remote_update_namelists(path, namelists_):
+    temp_nl_dir = str(tempfile.mkdtemp())
+    write_namelists(temp_nl_dir, namelists_)
+    file_names = [fn for fn in list(os.listdir(temp_nl_dir)) if fn.startswith('user_nl_')]
+    for file_name in file_names:
+        res = utils.execute(['scp', temp_nl_dir + '/' + file_name, globals.ssh.username + '@' + globals.ssh.hostname + ':' + path + '/'])
+    #shutil.rmtree(temp_nl_dir)
+    res = { 'error': '', 'namelists': namelists_ }
+    with open('/tmp/remote_update_namelists.json', 'w') as f:
+        f.write(json.dumps(res, indent=4, sort_keys=True))
+    return res
 
 
 if __name__ == '__main__':

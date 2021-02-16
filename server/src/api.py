@@ -7,6 +7,8 @@ from flask_session import Session
 import glob
 import os
 import json
+import logging
+logger = logging.getLogger(__name__)
 
 import globals
 import env
@@ -158,6 +160,12 @@ def submit_with_cylc(path, contents, case_dir):
 @jsonrpc.method('App.get_namelists')
 def get_namelists(path):
     res = namelists.remote_read_namelists(path)
+    return res
+
+
+@jsonrpc.method('App.update_namelists')
+def update_namelists(caseroot, namelists_):
+    res = namelists.remote_update_namelists(caseroot, namelists_)
     return res
 
 
