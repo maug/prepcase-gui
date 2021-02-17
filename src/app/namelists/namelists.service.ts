@@ -30,6 +30,60 @@ export class NamelistsService {
     );
   }
 
+  getNamelistDefinitionLink(component: string): string | null {
+    switch (component) {
+      case 'cam': {
+        return 'https://www.cesm.ucar.edu/models/cesm2/settings/current/cam_nml.html';
+      }
+      case 'cice': {
+        return 'https://www.cesm.ucar.edu/models/cesm2/settings/current/cice_nml.html';
+      }
+      case 'cism': {
+        return 'https://www.cesm.ucar.edu/models/cesm2/settings/current/cism_nml.html';
+      }
+      case 'clm': {
+        return 'https://www.cesm.ucar.edu/models/cesm2/settings/current/clm5_0_nml.html';
+      }
+      case 'datm': {
+        return 'https://www.cesm.ucar.edu/models/cesm2/settings/current/datm_nml.html';
+      }
+      case 'desp': {
+        return 'https://www.cesm.ucar.edu/models/cesm2/settings/current/desp_nml.html';
+      }
+      case 'dice': {
+        return 'https://www.cesm.ucar.edu/models/cesm2/settings/current/dice_nml.html';
+      }
+      case 'dnld': {
+        return 'https://www.cesm.ucar.edu/models/cesm2/settings/current/dlnd_nml.html';
+      }
+      case 'docn': {
+        return 'https://www.cesm.ucar.edu/models/cesm2/settings/current/docn_nml.html';
+      }
+      case 'drof': {
+        return 'https://www.cesm.ucar.edu/models/cesm2/settings/current/drof_nml.html';
+      }
+      case 'dwav': {
+        return 'https://www.cesm.ucar.edu/models/cesm2/settings/current/dwav_nml.html';
+      }
+      case 'marbl': {
+        return 'https://www.cesm.ucar.edu/models/cesm2/settings/current/marbl_nml.html';
+      }
+      case 'mosart': {
+        return 'https://www.cesm.ucar.edu/models/cesm2/settings/current/mosart_nml.html';
+      }
+      case 'pop2': {
+        return 'https://www.cesm.ucar.edu/models/cesm2/settings/current/pop2_nml.html';
+      }
+      case 'rtm': {
+        return 'https://www.cesm.ucar.edu/models/cesm2/settings/current/rtm_nml.html';
+      }
+      case 'ww3': {
+        return 'https://www.cesm.ucar.edu/models/cesm2/settings/current/ww3_nml.html';
+      }
+      default: return null;
+    }
+  }
+
 }
 
 const staticNamelistResponse: RpcNamelistsResponse = {

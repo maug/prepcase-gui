@@ -153,6 +153,10 @@ export class NamelistsComponent implements OnInit {
     return a.filename.localeCompare(b.filename);
   }
 
+  getComponentHelp(component: string) {
+    return this.namelistsService.getNamelistDefinitionLink(component);
+  }
+
   private getKeysForComponent(component: string): string[] {
     return Object.keys(this.forms[component].controls).filter(key => !this.isInternalInputKey(key));
   }
