@@ -59,7 +59,7 @@ def serialize_namelist(parsed):
 
 
 def write_namelists(namelists_directory, namelists):
-    for (component, files) in namelists['namelists'].items():
+    for (component, files) in namelists.items():
         for file in files:
             filename, parsed = file['filename'], file['parsed']
             with open(os.path.join(namelists_directory, filename), 'w') as f:
@@ -73,7 +73,7 @@ def test_all():
         f.write(json_string)
     with open('namelists.json') as f:
         namelists = json.load(f)
-        write_namelists('test', namelists)
+        write_namelists('test', namelists['namelists'])
 
 
 NUMBER_OF_HOME_COMPONENTS=3 # TODO: probably 4 for zeus
