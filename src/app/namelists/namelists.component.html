@@ -47,7 +47,7 @@
           <div style="display: flex; margin-top: 1rem; flex: 1;">
             <div style="display: flex; flex-direction: column;">
               <button mat-button (click)="onSelectAll(component)">Select / deselect all</button>
-              <div *ngFor="let entry of namelists[component]">
+              <div *ngFor="let entry of namelists[component].sort(sortByFilename)">
                 <div style="display: flex; align-items: center;">
                   <mat-checkbox
                     [labelPosition]="'after'"

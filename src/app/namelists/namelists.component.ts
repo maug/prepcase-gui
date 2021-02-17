@@ -3,7 +3,7 @@ import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { NamelistsService } from './namelists.service';
-import { NamelistsByComponent, NamelistVarValue } from '../types/namelists';
+import { Namelist, NamelistsByComponent, NamelistVarValue } from '../types/namelists';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -148,6 +148,11 @@ export class NamelistsComponent implements OnInit {
         this.pleaseWaitService.hide();
       });
   }
+
+  sortByFilename(a: Namelist, b: Namelist): number {
+    return a.filename.localeCompare(b.filename);
+  }
+
 
   private getKeysForComponent(component: string): string[] {
     return Object.keys(this.forms[component].controls).filter(key => !this.isInternalInputKey(key));
