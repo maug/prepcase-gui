@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RpcAddNewCasePathResponse, RpcCaseListResponse, RpcExecuteCommandResponse } from '../types/RpcResponses';
 import { environment } from '../../environments/environment';
-import { tap } from 'rxjs/operators';
 import { JsonRpcService } from '../json-rpc.service';
 import { UserService } from '../user.service';
 

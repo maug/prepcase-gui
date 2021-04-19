@@ -16,6 +16,7 @@ import auth
 import cases
 import cylc
 import namelists
+import scripts
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(64)
@@ -166,6 +167,12 @@ def get_namelists(path):
 @jsonrpc.method('App.update_namelists')
 def update_namelists(caseroot, namelists_):
     res = namelists.remote_update_namelists(caseroot, namelists_)
+    return res
+
+
+@jsonrpc.method('App.run_user_script')
+def run_user_script(script):
+    res = scripts.run(script)
     return res
 
 

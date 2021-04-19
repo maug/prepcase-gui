@@ -2,9 +2,11 @@
   PrepCASE
   <span class="spacer-max"></span>
   <div *ngIf="userService.isLogged() | async">
-    You are logged in as <i>{{userService.userConfig.username}}@{{userService.userConfig.hostname}}</i>
+    You are logged in as <i><a routerLink="/login" style="color: white;">{{userService.userConfig.username}}@{{userService.userConfig.hostname}}</a></i>
     <span class="spacer"></span>
     <span class="spacer"></span>
+    <span class="spacer"></span>
+    <button mat-raised-button routerLink="/scripts">Your scripts</button>
     <span class="spacer"></span>
     <button mat-raised-button routerLink="/case-list">Your cases</button>
     <span class="spacer"></span>

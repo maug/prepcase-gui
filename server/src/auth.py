@@ -3,6 +3,7 @@ from flask import session
 import env
 import globals
 import cases
+import scripts
 
 user = {
     'username': '',
@@ -10,6 +11,8 @@ user = {
     'cesm_env_script': '',
     'cesm_path': '',
     'case_dirs': [],
+    'user_scripts_dir': '',
+    'user_scripts': None,
 }
 
 
@@ -74,6 +77,8 @@ def login_user(host, username, password):
                     raise ValueError
                 user['cesm_env_script'] = config.get('cesm_env_script', '')
                 user['case_dirs'] = cases.get_real_case_dirs(config.get('case_dirs', []))
+                user['user_scripts_dir'] = config.get('user_scripts_dir', '')
+                user['user_scripts'] = scripts.list_scripts(user['user_scripts_dir'])
                 session['user'] = user
                 # config for frontend
                 res['config'] = user

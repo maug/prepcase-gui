@@ -1,0 +1,21 @@
+<div *ngIf="!userScripts">Please define your scripts directory in .prepcase.json</div>
+<div *ngIf="userScripts">
+  <mat-toolbar>
+    Your scripts
+  </mat-toolbar>
+  <div *ngIf="userScripts.length === 0">
+    <div class="scripts">
+      Script directory is empty.
+    </div>
+  </div>
+  <div *ngIf="userScripts.length > 0">
+    <div class="scripts">
+      <div *ngFor="let script of userScripts">
+        <button mat-button color="primary" (click)="selectedScript = script; confirmDialog(script)" title="Run script">
+          {{script}}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

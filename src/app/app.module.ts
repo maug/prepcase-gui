@@ -25,6 +25,8 @@ import { PleaseWaitOverlayComponent } from './please-wait-overlay/please-wait-ov
 import { CopyCaseDialogComponent } from './copy-case-dialog/copy-case-dialog.component';
 import { SubmitWithCylcDialogComponent } from './submit-with-cylc-dialog/submit-with-cylc-dialog.component';
 import { NamelistsComponent } from './namelists/namelists.component';
+import { ScriptsComponent } from './scripts/scripts.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,8 @@ import { NamelistsComponent } from './namelists/namelists.component';
     CopyCaseDialogComponent,
     SubmitWithCylcDialogComponent,
     NamelistsComponent,
+    ScriptsComponent,
+    ConfirmDialogComponent,
   ],
   entryComponents: [
     CopyCaseDialogComponent,

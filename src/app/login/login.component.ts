@@ -99,10 +99,11 @@ export class LoginComponent implements OnInit {
   private getConfigFileHelp(hostname: string): DialogTexts {
     const texts: DialogTexts = [];
     texts.push(`To log in you have to create .prepcase.json file in your home directory on "${hostname}":`);
-    texts.push({ text: 'echo >$HOME/.prepcase.json \'{ "password": "YOUR_PASSWORD_HERE", "cesm_path": "PATH_TO_CESM", "cesm_env_script": "PATH_TO_ENV_SCRIPT" }\'', classes: 'monospace' });
+    texts.push({ text: 'echo >$HOME/.prepcase.json \'{ "password": "YOUR_PASSWORD_HERE", "cesm_path": "PATH_TO_CESM", "cesm_env_script": "PATH_TO_ENV_SCRIPT", "user_scripts_dir": "SCRIPTS_DIR" }\'', classes: 'monospace' });
     texts.push(`"password" will be used to login to PrepCASE. It should be different than your password on "${hostname}".`);
     texts.push('"cesm_path" should point to your CESM installation, for example "~/CESM".');
-    texts.push('"cesm_env_script" is path to optional bash script used to set up environment before executing CESM script. Leave empty if not needed.');
+    texts.push('"cesm_env_script" (optional) is path to bash script used to set up environment before executing CESM script. Leave empty if not needed.');
+    texts.push('"user_scripts_dir" (optional) is directory of your custom scripts. Scripts should be executable. Leave empty if not needed.');
     texts.push('The file should be readable and writable only by your user:');
     texts.push({ text: ' chmod 600 $HOME/.prepcase.json', classes: 'monospace' });
     return texts;

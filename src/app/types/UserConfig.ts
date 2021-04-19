@@ -4,4 +4,5 @@ export interface UserConfig {
   case_dirs: string[];
   cesm_env_script: string;
   cesm_path: string;
+  user_scripts?: string[];
 }
