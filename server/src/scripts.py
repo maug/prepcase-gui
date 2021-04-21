@@ -12,7 +12,7 @@ def list_scripts(scripts_dir):
     if scripts_dir == '':
         return []
 
-    res = globals.ssh.ssh_execute('find', [scripts_dir, '-maxdepth', '1', '-executable', '-type', 'f', '-printf', '%P\n'])
+    res = globals.ssh.ssh_execute('find', [scripts_dir, '-maxdepth', '1', '-executable', '-type', 'f', '-printf', "'%P\n'"])
     lines = res['stdout'].strip().split('\n')
     return filter(len, lines)
 
