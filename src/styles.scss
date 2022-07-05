@@ -1,16 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+@use '~@angular/material' as mat;
 
-@import '~@angular/material/theming';
 
 // Define a custom typography config that overrides the font-family as well as the
 // `headlines` and `body-1` levels.
-$custom-typography: mat-typography-config(
+$custom-typography: mat.define-typography-config(
   $font-family: 'Roboto, sans-serif',
   //$headline: mat-typography-level(32px, 48px, 700),
-  $body-1: mat-typography-level(15px, 24px, 400),
-  $body-2: mat-typography-level(15px, 24px, 500)
+  $body-1: mat.define-typography-level(15px, 24px, 400),
+  $body-2: mat.define-typography-level(15px, 24px, 500)
 );
-@include mat-core($custom-typography);
+@include mat.core($custom-typography);
 
 /* Rules for sizing the icon. */
 .material-icons.md-18 { font-size: 18px; }
