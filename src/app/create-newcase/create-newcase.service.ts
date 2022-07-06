@@ -77,7 +77,7 @@ export class CreateNewcaseService {
   }
 
   private parseCompsetsData(compsetsXml: string): CompsetsGroup[] {
-    const parsed: any = xml2js(compsetsXml, {
+    const parsed: any = xml2js(`<root>${compsetsXml}</root>`, {
       compact: true,
       trim: true,
       ignoreDeclaration: true,
@@ -85,7 +85,7 @@ export class CreateNewcaseService {
     });
 
     // Prop "type" is now empty because there are no descriptions of compset groups anymore
-    return Object.values(parsed.data.compsets).map((compsets: any) => ({
+    return Object.values(parsed.root.compsets).map((compsets: any) => ({
       type: '',
       items: compsets.compset.map(compset => ({
         name: compset.alias._text,
