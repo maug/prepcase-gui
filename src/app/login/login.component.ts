@@ -85,7 +85,7 @@ export class LoginComponent implements OnInit {
   displayHelp(texts?: DialogTexts): void {
     if (!texts) {
       texts = [];
-      texts.push(`You should use your Athena username and PrepCASE password (details below).`);
+      texts.push(`You should use your ${this.mainForm.get('host').value} username and PrepCASE password (details below).`);
       texts.push({ text: '<br>', keepHtml: true });
       texts = texts.concat(this.getConfigFileHelp(this.mainForm.get('host').value));
     }
