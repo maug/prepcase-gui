@@ -1,0 +1,6 @@
+{
+  "password": "test",
+  "cesm_path": "~/cesm",
+  "cesm_env_script": "",
+  "user_scripts_dir": ""
+}
