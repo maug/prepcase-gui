@@ -78,14 +78,15 @@
           - lsof
           - wget
           - vim
-          - python-pip
+          - python3
+          - python3-pip
           - yarn
           - gcc-c++
           - make
 
-    - name: Install pipenv
-      pip:
-        name: pipenv
+#    - name: Install pipenv
+#      pip:
+#        name: pipenv
 
     - name: Install chrony (datetime synchronization)
       yum: name=chrony state=present
@@ -103,7 +104,15 @@
         register: zsh_installed
         become: no
       - name: Install oh-my-zsh
-        git: repo=git://github.com/robbyrussell/oh-my-zsh.git dest=~/.oh-my-zsh accept_hostkey=yes
+        git: repo=https://github.com/ohmyzsh/ohmyzsh.git dest=~/.oh-my-zsh accept_hostkey=yes
+        when: (not zsh_installed.stdout)
+        become: no
+      - name: Install zsh-syntax-highlighting
+        shell: "git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting"
+        when: (not zsh_installed.stdout)
+        become: no
+      - name: Install zsh-autosuggestions
+        shell: "git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
         when: (not zsh_installed.stdout)
         become: no
       - name: Set zsh as default shell
@@ -142,25 +151,31 @@
     #   tags:
     #     - apache
 
+    - name: Copy .prepcase.json
+      copy: src=files/.prepcase.json dest=~ mode=0640 force=no
+      become: no
+
     - name: Clone CESM repo
       git:
         repo: https://github.com/ESCOMP/CESM.git
         dest: /home/vagrant/cesm
         update: no
+      become: no
       tags:
         - cesm
 
     - name: Checkout CESM externals
       shell: 'cd /home/vagrant/cesm && ./manage_externals/checkout_externals'
+      become: no
       tags:
         - cesm
 
     - name: Checkout CIME master branch
       shell: 'cd /home/vagrant/cesm/cime && git checkout master && git pull origin master'
+      become: no
       tags:
         - cesm
 
   # handlers:
   #   - name: restart apache
   #     action: service name=httpd state=restarted
-
