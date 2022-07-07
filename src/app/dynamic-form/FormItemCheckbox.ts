@@ -1,10 +1,10 @@
-import { FormItemBase } from './FormItemBase';
-import { FormItemBaseConfig } from './FormItemBaseConfig';
+import { FormItemBase } from './FormItemBase'
+import { FormItemBaseConfig } from './FormItemBaseConfig'
 
 export class FormItemCheckbox extends FormItemBase<boolean> {
-  controlType = 'checkbox';
+  controlType = 'checkbox'
 
   constructor(options: FormItemBaseConfig<boolean>) {
-    super(options);
+    super(options)
   }
 }

@@ -1,11 +1,11 @@
-import { Routes } from '@angular/router';
-import { CaseComponent } from './case/case.component';
-import { CaseListComponent } from './case-list/case-list.component';
-import { ScriptsComponent } from './scripts/scripts.component';
-import { CreateNewcaseComponent } from './create-newcase/create-newcase.component';
-import { LoginComponent } from './login/login.component';
-import { NamelistsComponent } from './namelists/namelists.component';
-import { AuthGuard } from './auth/auth.guard';
+import { Routes } from '@angular/router'
+import { CaseComponent } from './case/case.component'
+import { CaseListComponent } from './case-list/case-list.component'
+import { ScriptsComponent } from './scripts/scripts.component'
+import { CreateNewcaseComponent } from './create-newcase/create-newcase.component'
+import { LoginComponent } from './login/login.component'
+import { NamelistsComponent } from './namelists/namelists.component'
+import { AuthGuard } from './auth/auth.guard'
 
 export const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -15,5 +15,4 @@ export const appRoutes: Routes = [
   { path: 'case/:caseRoot', component: CaseComponent, canActivate: [AuthGuard] },
   { path: 'namelists/:caseRoot', component: NamelistsComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-];
-
+]

@@ -1,12 +1,12 @@
-export type NamelistVarValue = string[];
+export type NamelistVarValue = string[]
 
 export interface Namelist {
-  filename: string;
+  filename: string
   parsed: {
-    [key: string]: NamelistVarValue;
-  };
+    [key: string]: NamelistVarValue
+  }
 }
 
 export interface NamelistsByComponent {
-  [component: string]: Namelist[];
+  [component: string]: Namelist[]
 }

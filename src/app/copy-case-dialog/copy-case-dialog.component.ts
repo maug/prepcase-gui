@@ -1,6 +1,13 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core'
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms'
 
 @Component({
   selector: 'app-copy-case-dialog',
@@ -8,39 +15,37 @@ import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors
   styles: [],
 })
 export class CopyCaseDialogComponent implements OnInit {
-  public mainForm: UntypedFormGroup;
-  public readonly PATH_KEY = 'newPath';
+  public mainForm: UntypedFormGroup
+  public readonly PATH_KEY = 'newPath'
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: { fullPath: string, dirName: string },
+    @Inject(MAT_DIALOG_DATA) private data: { fullPath: string; dirName: string },
     public dialogRef: MatDialogRef<CopyCaseDialogComponent>,
-    private formBuilder: UntypedFormBuilder,
+    private formBuilder: UntypedFormBuilder
   ) {
-    console.log('DATA', data);
+    console.log('DATA', data)
     this.mainForm = this.formBuilder.group({
       [this.PATH_KEY]: ['', [Validators.required, this.caseNameValidator()]],
-    });
-    this.mainForm.get(this.PATH_KEY).setValue(data.dirName + '_' + (new Date()).toISOString().slice(0, 10));
-    this.mainForm.get(this.PATH_KEY).markAsTouched();
+    })
+    this.mainForm.get(this.PATH_KEY).setValue(data.dirName + '_' + new Date().toISOString().slice(0, 10))
+    this.mainForm.get(this.PATH_KEY).markAsTouched()
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   onSubmit() {
-    this.close({ ...this.data, ...this.mainForm.value });
+    this.close({ ...this.data, ...this.mainForm.value })
   }
 
   close(result = null) {
-    this.dialogRef.close(result);
+    this.dialogRef.close(result)
   }
 
   private caseNameValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       return control.value.toString().match(/^[a-zA-Z0-9\/._\-~]*$/)
         ? null
-        : { invalidName: 'Path can contain only letters, numbers, dots, slashes, underscores, dashes and tilde (~)' };
-    };
+        : { invalidName: 'Path can contain only letters, numbers, dots, slashes, underscores, dashes and tilde (~)' }
+    }
   }
-
 }

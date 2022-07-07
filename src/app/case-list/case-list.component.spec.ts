@@ -1,25 +1,24 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
 
-import { CaseListComponent } from './case-list.component';
+import { CaseListComponent } from './case-list.component'
 
 describe('CaseListComponent', () => {
-  let component: CaseListComponent;
-  let fixture: ComponentFixture<CaseListComponent>;
+  let component: CaseListComponent
+  let fixture: ComponentFixture<CaseListComponent>
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CaseListComponent ]
-    })
-    .compileComponents();
-  }));
+      declarations: [CaseListComponent],
+    }).compileComponents()
+  }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CaseListComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(CaseListComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

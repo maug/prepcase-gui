@@ -1,16 +1,16 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing'
 
-import { NamelistsService } from './namelists.service';
+import { NamelistsService } from './namelists.service'
 
 describe('NamelistsService', () => {
-  let service: NamelistsService;
+  let service: NamelistsService
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(NamelistsService);
-  });
+    TestBed.configureTestingModule({})
+    service = TestBed.inject(NamelistsService)
+  })
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+    expect(service).toBeTruthy()
+  })
+})

@@ -1,33 +1,32 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { CaseService } from './case.service';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
-import { RpcExecuteCommandResponse } from '../types/RpcResponses';
-import { ToolParametersService } from '../tool-parameters.service';
-import { ScriptParametersDialogComponent } from '../script-parameters-dialog/script-parameters-dialog.component';
-import { PleaseWaitOverlayService } from '../please-wait-overlay/please-wait-overlay.service';
-import { SubmitWithCylcDialogComponent } from '../submit-with-cylc-dialog/submit-with-cylc-dialog.component';
+import { Component, OnInit } from '@angular/core'
+import { ActivatedRoute } from '@angular/router'
+import { CaseService } from './case.service'
+import { Observable } from 'rxjs'
+import { map, startWith } from 'rxjs/operators'
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms'
+import { HelpDialogComponent } from '../help-dialog/help-dialog.component'
+import { MatDialog } from '@angular/material/dialog'
+import { RpcExecuteCommandResponse } from '../types/RpcResponses'
+import { ToolParametersService } from '../tool-parameters.service'
+import { ScriptParametersDialogComponent } from '../script-parameters-dialog/script-parameters-dialog.component'
+import { PleaseWaitOverlayService } from '../please-wait-overlay/please-wait-overlay.service'
+import { SubmitWithCylcDialogComponent } from '../submit-with-cylc-dialog/submit-with-cylc-dialog.component'
 
 @Component({
   selector: 'app-case',
   templateUrl: './case.component.html',
-  styleUrls: ['./case.component.scss']
+  styleUrls: ['./case.component.scss'],
 })
 export class CaseComponent implements OnInit {
+  isLoaded = false
 
-  isLoaded = false;
+  caseRoot: string
 
-  caseRoot: string;
+  caseDescription: string
+  caseVars: { [key: string]: string } = {}
+  caseVarsOptions: Observable<string[]>
 
-  caseDescription: string;
-  caseVars: { [key: string]: string } = {};
-  caseVarsOptions: Observable<string[]>;
-
-  mainForm: FormGroup<{xmlchange_key: FormControl<string>, xmlchange_value: FormControl<string>}>;
+  mainForm: FormGroup<{ xmlchange_key: FormControl<string>; xmlchange_value: FormControl<string> }>
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -35,86 +34,95 @@ export class CaseComponent implements OnInit {
     private toolParametersService: ToolParametersService,
     private pleaseWaitService: PleaseWaitOverlayService,
     private formBuilder: FormBuilder,
-    private dialog: MatDialog,
-  ) { }
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
-    this.activatedRoute.paramMap.subscribe(async paramMap => {
-      this.caseRoot = paramMap.get('caseRoot');
+    this.activatedRoute.paramMap.subscribe(async (paramMap) => {
+      this.caseRoot = paramMap.get('caseRoot')
       try {
-        ({ desc: this.caseDescription, vars: this.caseVars } = await this.dataService.loadCaseData(this.caseRoot));
-        this.isLoaded = true;
+        ;({ desc: this.caseDescription, vars: this.caseVars } = await this.dataService.loadCaseData(this.caseRoot))
+        this.isLoaded = true
       } catch (e) {
-        const resp = e as RpcExecuteCommandResponse;
-        this.dialog.open(HelpDialogComponent, { data: { header: 'ERROR', texts: [{ text: JSON.stringify(resp, null, '\t'), classes: 'pre-wrap monospace error' }], } });
-        return;
+        const resp = e as RpcExecuteCommandResponse
+        this.dialog.open(HelpDialogComponent, {
+          data: {
+            header: 'ERROR',
+            texts: [{ text: JSON.stringify(resp, null, '\t'), classes: 'pre-wrap monospace error' }],
+          },
+        })
+        return
       }
-    });
+    })
 
     this.mainForm = this.formBuilder.group({
       xmlchange_key: ['', [this.varNameValidator()]],
       xmlchange_value: ['', []],
-    });
+    })
 
     // options from autocomplete
-    this.caseVarsOptions = this.mainForm.get('xmlchange_key').valueChanges
-      .pipe(
-        startWith(''),
-        map((value: string) => Object.keys(this.caseVars).sort()
-          .filter(key => key.toLowerCase().includes(value.toLowerCase()))
-        )
-      );
+    this.caseVarsOptions = this.mainForm.get('xmlchange_key').valueChanges.pipe(
+      startWith(''),
+      map((value: string) =>
+        Object.keys(this.caseVars)
+          .sort()
+          .filter((key) => key.toLowerCase().includes(value.toLowerCase()))
+      )
+    )
 
     // fill var value when value selected
-    this.mainForm.get('xmlchange_key').valueChanges.subscribe(key => {
+    this.mainForm.get('xmlchange_key').valueChanges.subscribe((key) => {
       if (this.caseVars.hasOwnProperty(key)) {
-        this.mainForm.get('xmlchange_value').setValue(this.caseVars[key]);
+        this.mainForm.get('xmlchange_value').setValue(this.caseVars[key])
       }
-    });
+    })
   }
 
   onSubmit() {
-    this.pleaseWaitService.show();
-    this.dataService.xmlChange(
-      this.caseRoot,
-      this.mainForm.get('xmlchange_key').value,
-      this.mainForm.get('xmlchange_value').value
-    ).subscribe(async data => {
-      if (data.return_code !== 0) {
-        this.pleaseWaitService.hide();
-        this.dialog.open(HelpDialogComponent, {
-          data: {
-            texts: [{ text: data.stderr, classes: 'error' }],
+    this.pleaseWaitService.show()
+    this.dataService
+      .xmlChange(this.caseRoot, this.mainForm.get('xmlchange_key').value, this.mainForm.get('xmlchange_value').value)
+      .subscribe(async (data) => {
+        if (data.return_code !== 0) {
+          this.pleaseWaitService.hide()
+          this.dialog.open(HelpDialogComponent, {
+            data: {
+              texts: [{ text: data.stderr, classes: 'error' }],
+            },
+          })
+        } else {
+          try {
+            ;({ desc: this.caseDescription, vars: this.caseVars } = await this.dataService.loadCaseData(this.caseRoot))
+          } catch (e) {
+            const resp = e as RpcExecuteCommandResponse
+            this.dialog.open(HelpDialogComponent, {
+              data: {
+                header: 'ERROR',
+                texts: [{ text: JSON.stringify(resp, null, '\t'), classes: 'pre-wrap monospace error' }],
+              },
+            })
           }
-        });
-      } else {
-        try {
-          ({ desc: this.caseDescription, vars: this.caseVars } = await this.dataService.loadCaseData(this.caseRoot));
-        } catch (e) {
-          const resp = e as RpcExecuteCommandResponse;
-          this.dialog.open(HelpDialogComponent, { data: { header: 'ERROR', texts: [{ text: JSON.stringify(resp, null, '\t'), classes: 'pre-wrap monospace error' }], } });
+          this.pleaseWaitService.hide()
         }
-        this.pleaseWaitService.hide();
-      }
-    });
+      })
   }
 
   async runCommand(cmd: string) {
-    const scriptParams = await this.toolParametersService.getToolParameters(cmd);
+    const scriptParams = await this.toolParametersService.getToolParameters(cmd)
     const dialogRef = this.dialog.open(ScriptParametersDialogComponent, {
       disableClose: true,
       minWidth: 600,
       data: {
         header: cmd,
         scriptParams,
-      }
-    });
+      },
+    })
     dialogRef.afterClosed().subscribe((result: string[] | false) => {
-      console.log('dialog closed', cmd, result);
+      console.log('dialog closed', cmd, result)
       if (result) {
-        this.processCommand(cmd, this.dataService.runScript(this.caseRoot, cmd, result));
+        this.processCommand(cmd, this.dataService.runScript(this.caseRoot, cmd, result))
       }
-    });
+    })
   }
 
   async submitWithCylc() {
@@ -125,48 +133,50 @@ export class CaseComponent implements OnInit {
         caseRoot: this.caseRoot,
         DATA_ASSIMILATION_CYCLES: this.caseVars.DATA_ASSIMILATION_CYCLES,
         JOB_WALLCLOCK_TIME: this.caseVars.JOB_WALLCLOCK_TIME,
-      }
-    });
-    dialogRef.afterClosed().subscribe((result: { suitePath: string, suiteContents: string } | false) => {
-      console.log('submit with cylc dialog closed', result);
+      },
+    })
+    dialogRef.afterClosed().subscribe((result: { suitePath: string; suiteContents: string } | false) => {
+      console.log('submit with cylc dialog closed', result)
       if (result) {
-        this.processCommand('Submit with CYLC', this.dataService.submitWithCylc(result.suitePath, result.suiteContents, this.caseRoot));
+        this.processCommand(
+          'Submit with CYLC',
+          this.dataService.submitWithCylc(result.suitePath, result.suiteContents, this.caseRoot)
+        )
       }
-    });
+    })
   }
 
   private processCommand(name: string, cmd$: Observable<RpcExecuteCommandResponse>) {
-    this.pleaseWaitService.show();
-    cmd$.subscribe(data => {
+    this.pleaseWaitService.show()
+    cmd$.subscribe((data) => {
       const texts = [
         { text: 'COMMAND', classes: 'h1' },
         { text: data.command, classes: 'pre-wrap monospace' },
-      ];
+      ]
       if (data.return_code !== 0) {
-        texts.push({ text: 'RETURN CODE: ' + data.return_code, classes: 'h1 error' });
+        texts.push({ text: 'RETURN CODE: ' + data.return_code, classes: 'h1 error' })
       }
       if (data.stderr) {
-        texts.push({ text: 'STDERR', classes: 'h1 error' });
-        texts.push({ text: data.stderr, classes: 'pre-wrap monospace error' });
+        texts.push({ text: 'STDERR', classes: 'h1 error' })
+        texts.push({ text: data.stderr, classes: 'pre-wrap monospace error' })
       }
       if (data.stdout) {
-        texts.push({ text: 'STDOUT', classes: 'h1' });
-        texts.push({ text: data.stdout, classes: 'pre-wrap monospace' });
+        texts.push({ text: 'STDOUT', classes: 'h1' })
+        texts.push({ text: data.stdout, classes: 'pre-wrap monospace' })
       }
-      this.pleaseWaitService.hide();
+      this.pleaseWaitService.hide()
       this.dialog.open(HelpDialogComponent, {
         data: {
           header: name,
           texts,
-        }
-      });
-    });
+        },
+      })
+    })
   }
 
   private varNameValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      return Object.keys(this.caseVars).find(key => key === control.value) ? null : { invalidCaseVar: true };
-    };
+      return Object.keys(this.caseVars).find((key) => key === control.value) ? null : { invalidCaseVar: true }
+    }
   }
-
 }

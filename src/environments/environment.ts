@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   jsonRpcUrl: 'http://localhost:5000',
-};
+}
 
 /*
  * For easier debugging in development mode, you can import the following file

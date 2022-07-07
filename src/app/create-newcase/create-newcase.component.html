@@ -5,18 +5,19 @@
     <h3>Set parameters for CIME script <code>create_newcase</code></h3>
 
     <form [formGroup]="mainForm" (ngSubmit)="onSubmit()">
-
       <!-- CASENAME -->
 
       <mat-form-field style="width: 100%">
-        <input matInput
-               type="text"
-               placeholder="Case name"
-               spellcheck="false"
-               formControlName="--case"
-               required
+        <input matInput type="text" placeholder="Case name" spellcheck="false" formControlName="--case" required />
+        <button
+          type="button"
+          mat-button
+          matSuffix
+          mat-icon-button
+          aria-label="Help"
+          tabindex="-1"
+          (click)="openHelp('--case'); $event.stopPropagation()"
         >
-        <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openHelp('--case'); $event.stopPropagation()">
           <mat-icon>help_outline</mat-icon>
         </button>
         <mat-error *ngIf="mainForm.get('--case').hasError('hasWhitespace')">
@@ -30,18 +31,31 @@
       <!-- COMPSET -->
 
       <mat-form-field style="width: 100%">
-        <input matInput
-               type="text"
-               placeholder="Select compset"
-               spellcheck="false"
-               formControlName="--compset"
-               [matAutocomplete]="autoCompsets"
-               required
+        <input
+          matInput
+          type="text"
+          placeholder="Select compset"
+          spellcheck="false"
+          formControlName="--compset"
+          [matAutocomplete]="autoCompsets"
+          required
+        />
+        <button
+          type="button"
+          mat-button
+          matSuffix
+          mat-icon-button
+          aria-label="Help"
+          tabindex="-1"
+          (click)="openHelp('--compset'); $event.stopPropagation()"
         >
-        <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openHelp('--compset'); $event.stopPropagation()">
           <mat-icon>help_outline</mat-icon>
         </button>
-        <mat-error *ngIf="mainForm.get('--compset').hasError('compsetInvalid') && !mainForm.get('--compset').hasError('required')">
+        <mat-error
+          *ngIf="
+            mainForm.get('--compset').hasError('compsetInvalid') && !mainForm.get('--compset').hasError('required')
+          "
+        >
           Compset name is invalid
         </mat-error>
         <mat-error *ngIf="mainForm.get('--compset').hasError('required')">
@@ -49,47 +63,57 @@
         </mat-error>
 
         <mat-autocomplete class="high-autocomplete-panel" #autoCompsets="matAutocomplete">
-<!--          <mat-optgroup *ngFor="let group of compsetsGroupsOptions | async" [label]="group.type">-->
+          <!--          <mat-optgroup *ngFor="let group of compsetsGroupsOptions | async" [label]="group.type">-->
           <ng-container *ngFor="let group of compsetsGroupsOptions | async">
             <mat-option class="small" *ngFor="let compset of group.items" [value]="compset.name">
-              <div class="mat-small"><div class="compset-short-name">{{compset.name}}</div> {{compset.longName}}</div>
+              <div class="mat-small">
+                <div class="compset-short-name">{{ compset.name }}</div>
+                {{ compset.longName }}
+              </div>
             </mat-option>
           </ng-container>
-<!--          </mat-optgroup>-->
+          <!--          </mat-optgroup>-->
         </mat-autocomplete>
       </mat-form-field>
 
       <!-- GRID -->
 
       <mat-form-field style="width: 100%">
-        <input matInput
-               type="text"
-               placeholder="Select grid resolution"
-               spellcheck="false"
-               formControlName="--res"
-               [matAutocomplete]="autoGrids"
-               [errorStateMatcher]="gridErrorMatcher"
-               required
+        <input
+          matInput
+          type="text"
+          placeholder="Select grid resolution"
+          spellcheck="false"
+          formControlName="--res"
+          [matAutocomplete]="autoGrids"
+          [errorStateMatcher]="gridErrorMatcher"
+          required
+        />
+        <button
+          type="button"
+          mat-button
+          matSuffix
+          mat-icon-button
+          aria-label="Help"
+          tabindex="-1"
+          (click)="openHelp('--res'); $event.stopPropagation()"
         >
-        <button type="button" mat-button matSuffix mat-icon-button aria-label="Help" tabindex="-1" (click)="openHelp('--res'); $event.stopPropagation()">
           <mat-icon>help_outline</mat-icon>
         </button>
         <mat-error *ngIf="mainForm.get('--res').hasError('gridInvalid') && !mainForm.get('--res').hasError('required')">
           Grid resolution name is invalid
         </mat-error>
-        <mat-error *ngIf="mainForm.get('--res').hasError('required')">
-          Grid is <strong>required</strong>
-        </mat-error>
+        <mat-error *ngIf="mainForm.get('--res').hasError('required')"> Grid is <strong>required</strong> </mat-error>
         <mat-error *ngIf="mainForm.hasError('gridIncompatible')">
-          {{mainForm.getError('gridIncompatible')}}
+          {{ mainForm.getError('gridIncompatible') }}
         </mat-error>
 
         <mat-autocomplete class="high-autocomplete-panel" #autoGrids="matAutocomplete">
           <mat-option class="small" *ngFor="let grid of gridOptions | async" [value]="grid._attributes.alias">
             <div class="mat-small">
-              <div class="grid-short-name">{{grid._attributes.alias}}</div>
-              <div class="grid-compset">{{grid._attributes.compset}}</div>
-              <div class="grid-not-compset">{{grid._attributes.not_compset}}</div>
+              <div class="grid-short-name">{{ grid._attributes.alias }}</div>
+              <div class="grid-compset">{{ grid._attributes.compset }}</div>
+              <div class="grid-not-compset">{{ grid._attributes.not_compset }}</div>
             </div>
           </mat-option>
         </mat-autocomplete>
@@ -97,7 +121,7 @@
 
       <!-- NINST -->
 
-  <!--
+      <!--
       <mat-form-field style="width: 100%">
         <input matInput
                type="text"
@@ -113,14 +137,15 @@
       </mat-form-field>
   -->
 
-
       <div *ngFor="let input of dynamicInputs">
-        <app-dynamic-form-item [item]="input" [form]="mainForm" (displayHelp)="openHelp($event)"></app-dynamic-form-item>
+        <app-dynamic-form-item
+          [item]="input"
+          [form]="mainForm"
+          (displayHelp)="openHelp($event)"
+        ></app-dynamic-form-item>
       </div>
 
       <button mat-flat-button color="primary" type="submit" [disabled]="!mainForm.valid">Create new case</button>
-
     </form>
-
   </div>
 </div>

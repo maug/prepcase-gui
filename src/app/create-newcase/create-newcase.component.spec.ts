@@ -1,25 +1,24 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
 
-import { CreateNewcaseComponent } from './create-newcase.component';
+import { CreateNewcaseComponent } from './create-newcase.component'
 
 describe('CreateNewcaseComponent', () => {
-  let component: CreateNewcaseComponent;
-  let fixture: ComponentFixture<CreateNewcaseComponent>;
+  let component: CreateNewcaseComponent
+  let fixture: ComponentFixture<CreateNewcaseComponent>
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateNewcaseComponent ]
-    })
-    .compileComponents();
-  }));
+      declarations: [CreateNewcaseComponent],
+    }).compileComponents()
+  }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreateNewcaseComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(CreateNewcaseComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

@@ -3,13 +3,7 @@
   <form [formGroup]="mainForm" (ngSubmit)="onSubmit()">
     <mat-form-field style="width: 100%">
       <mat-label>Enter a name or a path for the copy of the case</mat-label>
-      <input matInput
-             formControlName="{{PATH_KEY}}"
-             type="text"
-             spellcheck="false"
-             autocomplete="off"
-             required
-      >
+      <input matInput formControlName="{{ PATH_KEY }}" type="text" spellcheck="false" autocomplete="off" required />
       <mat-error *ngIf="mainForm.get(PATH_KEY).hasError('invalidName')">
         {{ mainForm.get(PATH_KEY).getError('invalidName') }}
       </mat-error>
@@ -20,5 +14,5 @@
       <button mat-raised-button type="button" (click)="this.close()">Cancel</button>
     </div>
   </form>
-  <br/>
+  <br />
 </div>

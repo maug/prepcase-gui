@@ -95,7 +95,7 @@
     "no-output-rename": true,
     "semicolon": {
       "options": [
-        "always"
+        "never"
       ]
     },
     "space-before-function-paren": {

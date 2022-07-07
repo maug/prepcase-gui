@@ -1,12 +1,12 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing'
 
-import { CaseListService } from './case-list.service';
+import { CaseListService } from './case-list.service'
 
 describe('CaseListService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  beforeEach(() => TestBed.configureTestingModule({}))
 
   it('should be created', () => {
-    const service: CaseListService = TestBed.get(CaseListService);
-    expect(service).toBeTruthy();
-  });
-});
+    const service: CaseListService = TestBed.get(CaseListService)
+    expect(service).toBeTruthy()
+  })
+})
