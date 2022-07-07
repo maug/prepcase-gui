@@ -2,28 +2,25 @@
 
 <div mat-dialog-content>
   <form [formGroup]="mainForm">
-
     <div>
       <mat-form-field style="width: 100%">
-        <input matInput type="text"
-               placeholder="Suite path"
-               formControlName="suitePath"
-               spellcheck="false">
+        <input matInput type="text" placeholder="Suite path" formControlName="suitePath" spellcheck="false" />
       </mat-form-field>
     </div>
 
     <div>
-      <mat-form-field style="width: 100%;">
-        <textarea matInput type="text"
-                  placeholder="Suite contents"
-                  formControlName="suiteContents"
-                  style="height: 30em; white-space: nowrap; font-family: monospace;"
-                  spellcheck="false"
+      <mat-form-field style="width: 100%">
+        <textarea
+          matInput
+          type="text"
+          placeholder="Suite contents"
+          formControlName="suiteContents"
+          style="height: 30em; white-space: nowrap; font-family: monospace"
+          spellcheck="false"
         >
         </textarea>
       </mat-form-field>
     </div>
-
   </form>
 </div>
 

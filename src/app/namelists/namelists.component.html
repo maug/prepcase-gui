@@ -1,90 +1,109 @@
 <div *ngIf="!isLoaded">Loading...</div>
 <div *ngIf="isLoaded">
-
   <mat-toolbar>
     Namelists for case&nbsp;&nbsp;
-    <button mat-button color="primary" [routerLink]="['/case', caseRoot]" title="Go to case">{{caseRoot}}</button>
+    <button mat-button color="primary" [routerLink]="['/case', caseRoot]" title="Go to case">{{ caseRoot }}</button>
     <span class="spacer-max"></span>
-    <button
-      mat-flat-button
-      color="primary"
-      [disabled]="!areNamelistsChanged"
-      (click)="saveNamelists()"
-    >
+    <button mat-flat-button color="primary" [disabled]="!areNamelistsChanged" (click)="saveNamelists()">
       Save namelists
     </button>
   </mat-toolbar>
   <div class="contents">
     <mat-tab-group animationDuration="0ms" style="user-select: none">
       <mat-tab *ngFor="let component of getComponents()" [label]="component.toUpperCase()">
-
-        <form [formGroup]="forms[component]" style="overflow: hidden; padding: 1rem;">
+        <form [formGroup]="forms[component]" style="overflow: hidden; padding: 1rem">
           <mat-form-field style="width: 25%">
-            <input matInput
-                   type="text"
-                   placeholder="Namelist variable"
-                   spellcheck="false"
-                   formControlName="{{this.varInputKey}}"
-                   required
-                   style="font-family: monospace;"
-            >
+            <input
+              matInput
+              type="text"
+              placeholder="Namelist variable"
+              spellcheck="false"
+              formControlName="{{ this.varInputKey }}"
+              required
+              style="font-family: monospace"
+            />
           </mat-form-field>
           <mat-form-field style="width: 75%">
-            <textarea matInput
-                      formControlName="{{this.valueInputKey}}"
-                      placeholder="Value"
-                      spellcheck="false"
-                      required
-                      cdkTextareaAutosize
-                      #autosize="cdkTextareaAutosize"
-                      cdkAutosizeMinRows="1"
-                      cdkAutosizeMaxRows="15"
-                      wrap="off"
-                      style="font-family: monospace; box-sizing: border-box;"
+            <textarea
+              matInput
+              formControlName="{{ this.valueInputKey }}"
+              placeholder="Value"
+              spellcheck="false"
+              required
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="15"
+              wrap="off"
+              style="font-family: monospace; box-sizing: border-box"
             ></textarea>
           </mat-form-field>
-          <button mat-flat-button color="primary" [disabled]="!isFormValid[component]" (click)="setVar(component)">Change in selected files</button>
-          <button *ngIf="getComponentHelp(component)" type="button" mat-button matSuffix mat-icon-button aria-label="Help"
-                  (click)="window.open(getComponentHelp(component), '_blank');">
+          <button mat-flat-button color="primary" [disabled]="!isFormValid[component]" (click)="setVar(component)">
+            Change in selected files
+          </button>
+          <button
+            *ngIf="getComponentHelp(component)"
+            type="button"
+            mat-button
+            matSuffix
+            mat-icon-button
+            aria-label="Help"
+            (click)="window.open(getComponentHelp(component), '_blank')"
+          >
             <mat-icon>help_outline</mat-icon>
           </button>
 
-          <div style="display: flex; margin-top: 1rem; flex: 1;">
-            <div style="display: flex; flex-direction: column;">
+          <div style="display: flex; margin-top: 1rem; flex: 1">
+            <div style="display: flex; flex-direction: column">
               <button mat-button (click)="onSelectAll(component)">Select / deselect all</button>
               <div *ngFor="let entry of namelists[component].sort(sortByFilename)">
-                <div style="display: flex; align-items: center;">
+                <div style="display: flex; align-items: center">
                   <mat-checkbox
                     [labelPosition]="'after'"
                     [formControlName]="entry.filename"
                     [checked]="false"
                     style=""
                   ></mat-checkbox>
-                  <button mat-button (click)="onShowFile(component, entry.filename)" style="margin-left: 1rem;">{{entry.filename}}</button>
+                  <button mat-button (click)="onShowFile(component, entry.filename)" style="margin-left: 1rem">
+                    {{ entry.filename }}
+                  </button>
                 </div>
               </div>
-
             </div>
-            <div style="padding-left: 1rem; width: 100%;">
-              <table *ngIf="fileVars[component]" mat-table [dataSource]="fileVars[component]" style="width: 100%;">
+            <div style="padding-left: 1rem; width: 100%">
+              <table *ngIf="fileVars[component]" mat-table [dataSource]="fileVars[component]" style="width: 100%">
                 <ng-container matColumnDef="key">
-                  <th mat-header-cell *matHeaderCellDef style="white-space: nowrap; padding-right: 1rem; width: 10%;">Variable in <i>{{currentFiles[component]}}</i></th>
-                  <td mat-cell *matCellDef="let element" style="white-space: nowrap; padding-right: 1rem; font-family: monospace;">{{element.key}}</td>
+                  <th mat-header-cell *matHeaderCellDef style="white-space: nowrap; padding-right: 1rem; width: 10%">
+                    Variable in <i>{{ currentFiles[component] }}</i>
+                  </th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    style="white-space: nowrap; padding-right: 1rem; font-family: monospace"
+                  >
+                    {{ element.key }}
+                  </td>
                 </ng-container>
                 <ng-container matColumnDef="value">
-                  <th mat-header-cell *matHeaderCellDef> Value </th>
-                  <td mat-cell *matCellDef="let element" style="white-space: pre-wrap; font-family: monospace;">{{element.value.join('\n')}}</td>
+                  <th mat-header-cell *matHeaderCellDef>Value</th>
+                  <td mat-cell *matCellDef="let element" style="white-space: pre-wrap; font-family: monospace">
+                    {{ element.value.join('\n') }}
+                  </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="getVar(component, row); window.scrollTo(0,0)"></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                  (click)="getVar(component, row); window.scrollTo(0, 0)"
+                ></tr>
               </table>
-              <div *ngIf="!fileVars[component]" class="mat-caption" style="text-align: center;">Click a filename to show its variables</div>
+              <div *ngIf="!fileVars[component]" class="mat-caption" style="text-align: center">
+                Click a filename to show its variables
+              </div>
             </div>
           </div>
         </form>
-
       </mat-tab>
     </mat-tab-group>
   </div>
-
 </div>

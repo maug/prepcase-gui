@@ -1,12 +1,12 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing'
 
-import { CreateNewcaseService } from './create-newcase/create-newcase.service';
+import { CreateNewcaseService } from './create-newcase/create-newcase.service'
 
 describe('CreateNewcaseService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  beforeEach(() => TestBed.configureTestingModule({}))
 
   it('should be created', () => {
-    const service: CreateNewcaseService = TestBed.get(CreateNewcaseService);
-    expect(service).toBeTruthy();
-  });
-});
+    const service: CreateNewcaseService = TestBed.get(CreateNewcaseService)
+    expect(service).toBeTruthy()
+  })
+})

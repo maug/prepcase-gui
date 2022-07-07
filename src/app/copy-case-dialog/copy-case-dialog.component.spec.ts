@@ -1,25 +1,24 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
 
-import { CopyCaseDialogComponent } from './copy-case-dialog.component';
+import { CopyCaseDialogComponent } from './copy-case-dialog.component'
 
 describe('CloneCaseDialogComponent', () => {
-  let component: CopyCaseDialogComponent;
-  let fixture: ComponentFixture<CopyCaseDialogComponent>;
+  let component: CopyCaseDialogComponent
+  let fixture: ComponentFixture<CopyCaseDialogComponent>
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CopyCaseDialogComponent ]
-    })
-    .compileComponents();
-  }));
+      declarations: [CopyCaseDialogComponent],
+    }).compileComponents()
+  }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CopyCaseDialogComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(CopyCaseDialogComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

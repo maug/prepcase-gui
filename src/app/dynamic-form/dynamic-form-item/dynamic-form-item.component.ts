@@ -1,22 +1,20 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { UntypedFormGroup } from '@angular/forms'
 
-import { FormItemBase } from '../FormItemBase';
+import { FormItemBase } from '../FormItemBase'
 
 @Component({
   selector: 'app-dynamic-form-item',
   templateUrl: './dynamic-form-item.component.html',
-  styleUrls: ['./dynamic-form-item.component.scss']
+  styleUrls: ['./dynamic-form-item.component.scss'],
 })
 export class DynamicFormItemComponent implements OnInit {
-  @Input() item: FormItemBase<any>;
-  @Input() form: FormGroup;
+  @Input() item: FormItemBase<any>
+  @Input() form: UntypedFormGroup
 
-  @Output() displayHelp = new EventEmitter<FormItemBase<any>>();
+  @Output() displayHelp = new EventEmitter<FormItemBase<any>>()
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

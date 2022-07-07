@@ -1,12 +1,12 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing'
 
-import { JsonRpcService } from './json-rpc.service';
+import { JsonRpcService } from './json-rpc.service'
 
 describe('JsonRpcService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  beforeEach(() => TestBed.configureTestingModule({}))
 
   it('should be created', () => {
-    const service: JsonRpcService = TestBed.get(JsonRpcService);
-    expect(service).toBeTruthy();
-  });
-});
+    const service: JsonRpcService = TestBed.get(JsonRpcService)
+    expect(service).toBeTruthy()
+  })
+})

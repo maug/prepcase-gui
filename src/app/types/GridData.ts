@@ -3,91 +3,91 @@
  */
 export interface GridData {
   _attributes: {
-    version: string; // current 2.0
-  };
-  help: TextNode;
-  grids: Grids;
-  _comment: string[];
-  domains: Domains;
-  required_gridmaps: RequiredGridmaps;
-  gridmaps: Gridmaps;
+    version: string // current 2.0
+  }
+  help: TextNode
+  grids: Grids
+  _comment: string[]
+  domains: Domains
+  required_gridmaps: RequiredGridmaps
+  gridmaps: Gridmaps
 }
 
 export interface TextNode {
-  _text: string;
+  _text: string
 }
 
 export interface Domains {
-  domain: Domain[];
-  _comment: string[];
+  domain: Domain[]
+  _comment: string[]
 }
 
 export interface Domain {
-  _attributes: DomainAttributes;
-  _comment?: string[] | string;
-  nx: TextNode;
-  ny: TextNode;
-  file?: FileElement[] | FileElement;
-  desc: TextNode;
-  support?: TextNode;
+  _attributes: DomainAttributes
+  _comment?: string[] | string
+  nx: TextNode
+  ny: TextNode
+  file?: FileElement[] | FileElement
+  desc: TextNode
+  support?: TextNode
 }
 
 export interface DomainAttributes {
-  name: string;
+  name: string
 }
 
 export interface FileElement {
-  _text: string;
-  _attributes?: FileAttributes;
+  _text: string
+  _attributes?: FileAttributes
 }
 
 export interface FileAttributes {
-  grid?: string; // current 'atm|lnd' | 'ocnice'
-  mask?: string;
+  grid?: string // current 'atm|lnd' | 'ocnice'
+  mask?: string
 }
 
 export interface Gridmaps {
-  _comment: string[];
-  gridmap: Gridmap[];
+  _comment: string[]
+  gridmap: Gridmap[]
 }
 
 export interface Gridmap {
-  _attributes: GridmapAttributes;
-  map: MapElement[] | MapElement;
-  _comment?: string;
+  _attributes: GridmapAttributes
+  map: MapElement[] | MapElement
+  _comment?: string
 }
 
 export interface GridmapAttributes {
-  atm_grid?: string;
-  ocn_grid?: string;
-  lnd_grid?: string;
-  wav_grid?: string;
-  rof_grid?: string;
-  glc_grid?: string;
+  atm_grid?: string
+  ocn_grid?: string
+  lnd_grid?: string
+  wav_grid?: string
+  rof_grid?: string
+  glc_grid?: string
 }
 
 export interface MapElement {
-  _attributes: DomainAttributes;
-  _text: string;
+  _attributes: DomainAttributes
+  _text: string
 }
 
 export interface Grids {
-  model_grid_defaults: ModelGridDefaults;
-  model_grid: ModelGrid[];
-  _comment: string[];
+  model_grid_defaults: ModelGridDefaults
+  model_grid: ModelGrid[]
+  _comment: string[]
 }
 
 export interface ModelGrid {
-  _attributes: ModelGridAttributes;
-  grid: MapElement[] | MapElement;
-  support?: TextNode;
-  mask?: TextNode;
+  _attributes: ModelGridAttributes
+  grid: MapElement[] | MapElement
+  support?: TextNode
+  mask?: TextNode
 }
 
 export interface ModelGridAttributes {
-  alias: string;
-  compset?: Compset;
-  not_compset?: NotCompset;
+  alias: string
+  compset?: Compset
+  not_compset?: NotCompset
 }
 
 export enum Compset {
@@ -106,32 +106,32 @@ export enum NotCompset {
 }
 
 export interface ModelGridDefaults {
-  grid: GridElement[];
+  grid: GridElement[]
 }
 
 export interface GridElement {
-  _attributes: PurpleAttributes;
-  _text: string;
+  _attributes: PurpleAttributes
+  _text: string
 }
 
 export interface PurpleAttributes {
-  name: string;
-  compset: string;
+  name: string
+  compset: string
 }
 
 export interface RequiredGridmaps {
-  required_gridmap: RequiredGridmap[];
-  _comment: string[];
+  required_gridmap: RequiredGridmap[]
+  _comment: string[]
 }
 
 export interface RequiredGridmap {
-  _attributes: RequiredGridmapAttributes;
-  _text: string;
+  _attributes: RequiredGridmapAttributes
+  _text: string
 }
 
 export interface RequiredGridmapAttributes {
-  grid1: Grid1;
-  grid2: string;
+  grid1: Grid1
+  grid2: string
 }
 
 export enum Grid1 {
