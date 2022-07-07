@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CaseService } from './case.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RpcExecuteCommandResponse } from '../types/RpcResponses';
@@ -27,14 +27,14 @@ export class CaseComponent implements OnInit {
   caseVars: { [key: string]: string } = {};
   caseVarsOptions: Observable<string[]>;
 
-  mainForm: UntypedFormGroup;
+  mainForm: FormGroup<{xmlchange_key: FormControl<string>, xmlchange_value: FormControl<string>}>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private dataService: CaseService,
     private toolParametersService: ToolParametersService,
     private pleaseWaitService: PleaseWaitOverlayService,
-    private formBuilder: UntypedFormBuilder,
+    private formBuilder: FormBuilder,
     private dialog: MatDialog,
   ) { }
 
@@ -52,8 +52,8 @@ export class CaseComponent implements OnInit {
     });
 
     this.mainForm = this.formBuilder.group({
-      'xmlchange_key': ['', [this.varNameValidator()]],
-      'xmlchange_value': ['', []],
+      xmlchange_key: ['', [this.varNameValidator()]],
+      xmlchange_value: ['', []],
     });
 
     // options from autocomplete
