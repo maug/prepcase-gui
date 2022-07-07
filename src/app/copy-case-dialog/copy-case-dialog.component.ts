@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-copy-case-dialog',
@@ -8,13 +8,13 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn,
   styles: [],
 })
 export class CopyCaseDialogComponent implements OnInit {
-  public mainForm: FormGroup;
+  public mainForm: UntypedFormGroup;
   public readonly PATH_KEY = 'newPath';
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: { fullPath: string, dirName: string },
     public dialogRef: MatDialogRef<CopyCaseDialogComponent>,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
   ) {
     console.log('DATA', data);
     this.mainForm = this.formBuilder.group({

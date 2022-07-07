@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CaseService } from './case.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RpcExecuteCommandResponse } from '../types/RpcResponses';
@@ -27,14 +27,14 @@ export class CaseComponent implements OnInit {
   caseVars: { [key: string]: string } = {};
   caseVarsOptions: Observable<string[]>;
 
-  mainForm: FormGroup;
+  mainForm: UntypedFormGroup;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private dataService: CaseService,
     private toolParametersService: ToolParametersService,
     private pleaseWaitService: PleaseWaitOverlayService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private dialog: MatDialog,
   ) { }
 

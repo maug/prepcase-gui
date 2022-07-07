@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { NamelistsService } from './namelists.service';
 import { Namelist, NamelistsByComponent, NamelistVarValue } from '../types/namelists';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PleaseWaitOverlayService } from '../please-wait-overlay/please-wait-overlay.service';
@@ -27,7 +27,7 @@ export class NamelistsComponent implements OnInit {
   defs: {[component: string]: any} = {};
   namelists: NamelistsByComponent;
   areNamelistsChanged = false;
-  forms: { [component: string]: FormGroup } = {};
+  forms: { [component: string]: UntypedFormGroup } = {};
   isFormValid: { [component: string]: boolean } = {};
   fileVars: { [component: string]: Var[] } = {};
   currentFiles: { [component: string]: string } = {};
@@ -41,7 +41,7 @@ export class NamelistsComponent implements OnInit {
     private dialog: MatDialog,
     private namelistsService: NamelistsService,
     private pleaseWaitService: PleaseWaitOverlayService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private snackBar: MatSnackBar,
   ) { }
 

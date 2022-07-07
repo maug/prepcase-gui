@@ -1,5 +1,5 @@
 import { Component, isDevMode, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { DialogTexts, HelpDialogComponent } from '../help-dialog/help-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserService } from '../user.service';
@@ -15,14 +15,14 @@ import { ServerConfigService } from '../server-config.service';
 export class LoginComponent implements OnInit {
 
   isLoaded = false;
-  mainForm: FormGroup;
+  mainForm: UntypedFormGroup;
   hosts: string[];
 
   constructor(
     public userService: UserService,
     public serverConfigService: ServerConfigService,
     private pleaseWaitService: PleaseWaitOverlayService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private dialog: MatDialog,
     private router: Router,
   ) { }

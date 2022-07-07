@@ -2,9 +2,9 @@ import { Component, isDevMode, OnInit } from '@angular/core';
 import { Compset, CompsetsGroup, CreateNewcaseService } from './create-newcase.service';
 import {
   AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   FormGroupDirective,
   NgForm,
   ValidationErrors,
@@ -42,7 +42,7 @@ export class CreateNewcaseComponent implements OnInit {
   grids: ModelGrid[];
   gridOptions: Observable<ModelGrid[]>;
 
-  mainForm: FormGroup;
+  mainForm: UntypedFormGroup;
 
   dynamicInputs: FormItemBase<any>[] = [];
 
@@ -56,7 +56,7 @@ export class CreateNewcaseComponent implements OnInit {
     private toolParametersService: ToolParametersService,
     private dynamicFormService: DynamicFormService,
     private pleaseWaitService: PleaseWaitOverlayService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
   ) {}
@@ -276,7 +276,7 @@ export class CreateNewcaseComponent implements OnInit {
   // --- form validators
 
   private compsetGridValidator(): ValidatorFn {
-    return (control: FormGroup): ValidationErrors | null => {
+    return (control: UntypedFormGroup): ValidationErrors | null => {
       const ctrlCompset: AbstractControl = control.get('--compset');
       const ctrlGrid: AbstractControl = control.get('--res');
       if (!ctrlCompset || !ctrlGrid || ctrlCompset.errors || ctrlGrid.errors) {
@@ -311,7 +311,7 @@ class FormErrorStateMatcher implements ErrorStateMatcher {
 
   constructor(private formError: string) {}
 
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     return control.dirty && (control.invalid || form.hasError(this.formError));
   }
 }

@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToolParameter } from '../types/ToolsParameters';
 import { FormItemBase } from '../dynamic-form/FormItemBase';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { DynamicFormService } from '../dynamic-form/dynamic-form.service';
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 
@@ -18,7 +18,7 @@ interface DialogData {
 })
 export class ScriptParametersDialogComponent implements OnInit {
 
-  mainForm: FormGroup;
+  mainForm: UntypedFormGroup;
   dynamicInputs: FormItemBase<any>[] = [];
 
   constructor(
@@ -26,7 +26,7 @@ export class ScriptParametersDialogComponent implements OnInit {
     private selfRef: MatDialogRef<ScriptParametersDialogComponent>,
     private dialog: MatDialog,
     private dynamicFormService: DynamicFormService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
   ) {
   }
   ngOnInit() {

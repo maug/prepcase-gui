@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 interface DialogData {
@@ -15,7 +15,7 @@ interface DialogData {
 })
 export class SubmitWithCylcDialogComponent implements OnInit {
 
-  mainForm: FormGroup;
+  mainForm: UntypedFormGroup;
 
   private casePath: string;
   private caseName: string;
@@ -23,7 +23,7 @@ export class SubmitWithCylcDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private selfRef: MatDialogRef<SubmitWithCylcDialogComponent>,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
   ) {
     // trim trailing slash
     this.casePath = this.data.caseRoot.replace(/\/$/, '');

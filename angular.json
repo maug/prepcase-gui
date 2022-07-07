@@ -122,7 +122,6 @@
       }
     }
   },
-  "defaultProject": "prepcase-gui",
   "cli": {
     "packageManager": "yarn"
   }

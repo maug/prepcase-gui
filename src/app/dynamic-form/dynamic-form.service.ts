@@ -4,7 +4,7 @@ import { Action, ToolParameter } from '../types/ToolsParameters';
 import { FormItemCheckbox } from './FormItemCheckbox';
 import { FormItemDropdown } from './FormItemDropdown';
 import { FormItemText } from './FormItemText';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { FormItemDropdownConfig } from './FormItemDropdownConfig';
 import { pairwise, startWith } from 'rxjs/operators';
 
@@ -17,7 +17,7 @@ export class DynamicFormService {
 
   constructor() { }
 
-  createInputs(formParams: ToolParameter[], skipParams: string[] = [], form?: FormGroup): FormItemBase<any>[] {
+  createInputs(formParams: ToolParameter[], skipParams: string[] = [], form?: UntypedFormGroup): FormItemBase<any>[] {
     const inputs: FormItemBase<any>[] = [];
     for (const entry of formParams) {
       if (skipParams.includes(entry.parameter_name)) {
@@ -68,7 +68,7 @@ export class DynamicFormService {
           // multiselect - convert to array
           value = input.value.split(',').filter(Boolean);
         }
-        form.addControl(input.key, new FormControl(value));
+        form.addControl(input.key, new UntypedFormControl(value));
 
         // add reactive listener to mutually exclude noOptionsSymbol and other options
         if (input instanceof FormItemDropdown && input.multiple) {
@@ -93,7 +93,7 @@ export class DynamicFormService {
     return inputs;
   }
 
-  readInputs(formParams: ToolParameter[], form: FormGroup) {
+  readInputs(formParams: ToolParameter[], form: UntypedFormGroup) {
     return formParams.map(item => {
       const control = form.get(item.parameter_name);
       if (!control) {
