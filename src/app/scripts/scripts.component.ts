@@ -48,7 +48,7 @@ export class ScriptsComponent implements OnInit {
     })
   }
 
-  // todo: exctract this method as component and refactor uses
+  // todo: extract this method as component and refactor uses
   private processCommand(name: string, cmd$: Observable<RpcExecuteCommandResponse>) {
     this.pleaseWaitService.show()
     cmd$.subscribe((data) => {

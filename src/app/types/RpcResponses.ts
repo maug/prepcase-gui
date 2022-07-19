@@ -27,3 +27,7 @@ export interface RpcNamelistsResponse {
   error: string
   namelists: NamelistsByComponent
 }
+
+export interface RpcSuiteListResponse {
+  [parentDir: string]: string[]
+}

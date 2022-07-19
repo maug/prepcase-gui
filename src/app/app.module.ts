@@ -1,7 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser'
-import { APP_INITIALIZER, NgModule } from '@angular/core'
+import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core'
 
 import { AppComponent } from './app.component'
+import { GlobalErrorHandler } from './errors/global-error-handler'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { CreateNewcaseComponent } from './create-newcase/create-newcase.component'
 import { AppMaterialModule } from './app-material.module'
@@ -27,6 +28,9 @@ import { SubmitWithCylcDialogComponent } from './submit-with-cylc-dialog/submit-
 import { NamelistsComponent } from './namelists/namelists.component'
 import { ScriptsComponent } from './scripts/scripts.component'
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component'
+import { SuitesComponent } from './suites/suites.component'
+import { ErrorDialogService } from './errors/error-dialog.service'
+import { ErrorDialogComponent } from './errors/error-dialog/error-dialog.component'
 
 @NgModule({
   declarations: [
@@ -36,6 +40,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     DynamicFormItemComponent,
     HelpDialogComponent,
     EscapeHtmlPipe,
+    ErrorDialogComponent,
     LoginComponent,
     CaseListComponent,
     ScriptParametersDialogComponent,
@@ -45,6 +50,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     NamelistsComponent,
     ScriptsComponent,
     ConfirmDialogComponent,
+    SuitesComponent,
   ],
   imports: [
     AppMaterialModule,
@@ -56,6 +62,8 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     RouterModule.forRoot(appRoutes, { enableTracing: false, relativeLinkResolution: 'legacy' }),
   ],
   providers: [
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    ErrorDialogService,
     CreateNewcaseService,
     JsonRpcService,
     UserService,
