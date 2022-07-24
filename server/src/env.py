@@ -3,12 +3,12 @@ import os
 if os.path.exists(os.path.join(os.path.dirname(__file__), '.development')):
     SSH_HOSTS = [
         {
-            'host': 'prepcase.test',  # Host to execute ssh commands
+            'host': 'localhost',  # Host to execute ssh commands
             'options': ''  # Options for ssh
         },
     ]
 
-    CYLC_HOST = 'prepcase.test'
+    CYLC_HOST = 'localhost'
 
     # URL of GUI in the browser (to allow requests to server on different port)
     CORS_ORIGIN = 'http://localhost:4200'

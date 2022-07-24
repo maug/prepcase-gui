@@ -188,6 +188,14 @@ def list_suites():
         ],
         '/somewhere/else': []
     }
+    # suites = [{"path": "", "configuration": ""}]
+    # return suites
+
+
+@jsonrpc.method('App.run_suite_script')
+def run_suite_script(path, script_path, environment_params):
+    # TODO: Run the script in the background
+    return 
 
 
 # DEPRECATED
