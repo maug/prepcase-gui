@@ -176,6 +176,20 @@ def run_user_script(script):
     return res
 
 
+@jsonrpc.method('App.list_suites')
+def list_suites():
+    """
+    Returns list of user suites grouped by directory
+    """
+    return {
+        '~': [
+            '/users/maug/suite1',
+            '/users/maug/suite2',
+        ],
+        '/somewhere/else': []
+    }
+
+
 # DEPRECATED
 # @jsonrpc.method('App.get_config')
 # def get_config(path_name):

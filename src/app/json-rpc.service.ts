@@ -49,7 +49,6 @@ export class JsonRpcService {
         }),
         map(this.getResult),
         catchError((err) => {
-          console.error(err)
           return throwError(err)
         })
       )
