@@ -18,34 +18,34 @@
 #
 #===========================================================
 # Experiment name
-case_name="testwf"
+case_name=${case_name:-"testwf"}
 
 # Where to copy the clones (Use a clear name for the experiment. The dir name must
 # not appears in the case.template.original)
-export clonesroot="/users_home/csp/${USER}/${CESMEXP}/testwf"
+export clonesroot=${clonesroot:-"/users_home/csp/${USER}/${CESMEXP}/testwf"}
 
 # Number of clones
-nens=3
+nens=${nens:-3}
 
 # DART directory
-export dartroot="/users_home/csp/${USER}/DART"
+export dartroot=${dartroot:-"/users_home/csp/${USER}/DART"}
 
 # DA working dir
-tmpdir="/work/csp/${USER}/CESM2/TMPWF"
+tmpdir=${tmpdir:-"/work/csp/${USER}/CESM2/TMPWF"}
 
 # Archive (to remove previous files)
-archdir="/work/csp/${USER}/CESM2/archive"
+archdir=${archdir:-"/work/csp/${USER}/CESM2/archive"}
 
 # Use radiances
-RAD="TRUE"
+RAD=${RAD:-"TRUE"}
 
 
 # WACCM
-WACCM="TRUE"
+WACCM=${WACCM:-"TRUE"}
 
 
 # Where is RTTOV
-rttovdir="/users_home/csp/${USER}/rttov123"
+rttovdir={rttovdir=:-"/users_home/csp/${USER}/rttov123"}
 
 
 
