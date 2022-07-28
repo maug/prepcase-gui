@@ -190,6 +190,29 @@ def list_suites():
     }
 
 
+@jsonrpc.method('App.get_suite')
+def get_suite(path):
+    """
+    TODO: This is just a prototype to get Marek going with GUI
+    """
+    import os
+    import json
+
+    file_path = os.path.realpath(__file__)
+
+    p = os.path.join(os.path.dirname(file_path), 'suite_assimilation-atmo-CMCC-master', 'prepcase_suite.json')
+    with open(p) as f:
+        prepcase_suite_configuration = json.load(f)
+        suite = {"path": path, "configuration": prepcase_suite_configuration}
+        return suite
+
+
+@jsonrpc.method('App.run_suite_script')
+def run_suite_script(path, script_path, environment_params):
+    # TODO: Run the script in the background
+    return 
+
+
 # DEPRECATED
 # @jsonrpc.method('App.get_config')
 # def get_config(path_name):
