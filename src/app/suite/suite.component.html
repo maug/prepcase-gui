@@ -1,0 +1,13 @@
+<div *ngIf="isLoaded; else loading">
+  <mat-toolbar>Suite "{{ suiteRoot }}"</mat-toolbar>
+  <div class="suites">
+    <div *ngIf="config.scripts.length > 0; else noScripts">
+      <div class="mat-body-strong" *ngFor="let script of config.scripts">
+        {{ script.path }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>Loading...</ng-template>
+<ng-template #noScripts>No executable scripts defined in the suite</ng-template>

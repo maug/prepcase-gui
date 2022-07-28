@@ -1,4 +1,5 @@
 import { NamelistsByComponent } from './namelists'
+import { SuiteConfiguration } from './suites'
 
 export interface RpcExecuteCommandResponse {
   command: string
@@ -30,4 +31,9 @@ export interface RpcNamelistsResponse {
 
 export interface RpcSuiteListResponse {
   [parentDir: string]: string[]
+}
+
+export interface RpcGetSuiteResponse {
+  path: string
+  configuration: SuiteConfiguration
 }

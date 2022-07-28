@@ -202,7 +202,10 @@ def get_suite(path):
 
     p = os.path.join(os.path.dirname(file_path), 'suite_assimilation-atmo-CMCC-master', 'prepcase_suite.json')
     with open(p) as f:
-        prepcase_suite_configuration = json.load(f)
+        try:
+            prepcase_suite_configuration = json.load(f)
+        except BaseException as err:
+            raise RuntimeError('Error parsing suite configuration JSON file\nFile: ' + p + '\n' + err.message)
         suite = {"path": path, "configuration": prepcase_suite_configuration}
         return suite
 
@@ -210,7 +213,7 @@ def get_suite(path):
 @jsonrpc.method('App.run_suite_script')
 def run_suite_script(path, script_path, environment_params):
     # TODO: Run the script in the background
-    return 
+    return
 
 
 # DEPRECATED
