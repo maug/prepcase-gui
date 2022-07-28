@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/SuiteConfiguration",
+  "definitions": {
+    "SuiteConfiguration": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scripts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Script"
+          }
+        }
+      },
+      "required": [
+        "scripts"
+      ],
+      "title": "SuiteConfiguration"
+    },
+    "Script": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "environment_parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EnvironmentParameter"
+          }
+        }
+      },
+      "required": [
+        "environment_parameters",
+        "path"
+      ],
+      "title": "Script"
+    },
+    "EnvironmentParameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/Type"
+        },
+        "default": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OptionElement"
+          }
+        }
+      },
+      "required": [
+        "label",
+        "name",
+        "type"
+      ],
+      "title": "EnvironmentParameter"
+    },
+    "OptionClass": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "title": "OptionClass"
+    },
+    "OptionElement": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/OptionClass"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "title": "OptionElement"
+    },
+    "Type": {
+      "type": "string",
+      "enum": [
+        "string",
+        "select"
+      ],
+      "title": "Type"
+    }
+  }
+}

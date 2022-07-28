@@ -26,7 +26,7 @@ export class JsonRpcService {
 
   constructor(private http: HttpClient, private injector: Injector) {}
 
-  public rpc(endpoint: string, method: string, params: object = []): Observable<any> {
+  public rpc<T = any>(endpoint: string, method: string, params: object = []): Observable<T> {
     const headers = new HttpHeaders({
       'Content-Type': 'text/plain', // 'application/json' triggers preflight OPTION request which crashes flask_jsonrpc
       Accept: 'application/json',

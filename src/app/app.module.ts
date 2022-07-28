@@ -30,7 +30,8 @@ import { ScriptsComponent } from './scripts/scripts.component'
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component'
 import { SuitesComponent } from './suites/suites.component'
 import { ErrorDialogService } from './errors/error-dialog.service'
-import { ErrorDialogComponent } from './errors/error-dialog/error-dialog.component'
+import { ErrorDialogComponent } from './errors/error-dialog/error-dialog.component';
+import { SuiteComponent } from './suite/suite.component'
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { ErrorDialogComponent } from './errors/error-dialog/error-dialog.compone
     ScriptsComponent,
     ConfirmDialogComponent,
     SuitesComponent,
+    SuiteComponent,
   ],
   imports: [
     AppMaterialModule,
