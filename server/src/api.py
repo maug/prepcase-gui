@@ -34,6 +34,7 @@ def before_request():
         if data['method'] not in ['App.check_logged', 'App.login', 'App.tools_parameters', 'App.get_server_config']:
             return make_response("__not_logged__")
     else:
+        # return  # TODO: cli testing
         globals.ssh.set_user(auth.user['username'])
         globals.ssh.set_host(auth.user['hostname'])
         globals.ssh_cylc.set_user(auth.user['username'])
@@ -45,6 +46,7 @@ def check_logged():
     """
     Returns false if user is not logged in, otherwise user object.
     """
+    # return True  # TODO: cli testing
     if not auth.check_user_logged():
         return False
     else:
@@ -101,6 +103,7 @@ def run_tool(tool, parameters):
     executables.append(safe_join(auth.user['cesm_path'], 'cime', "scripts", tool))
     return globals.ssh.ssh_execute(' && '.join(executables), parameters)
 
+# TODO: Add API for reading output of running processes
 
 @jsonrpc.method('App.run_script_in_case')
 def run_script_in_case(case_path, script, parameters):
@@ -114,6 +117,79 @@ def run_script_in_case(case_path, script, parameters):
     executables.append('cd ' + case_path)
     executables.append(safe_join(case_path, script))
     return globals.ssh.ssh_execute(' && '.join(executables), parameters)
+
+
+SCRIPT_TO_START_SCRIPT="""
+PROCESS_INFO_DIR={suite_path}/.running_scripts/
+mkdir -p $PROCESS_INFO_DIR
+
+cd {suite_path}
+PROCESS_DIR=$(mktemp -d)
+OUTPUT_FILE=$PROCESS_DIR/output.txt
+
+PROCESS_PID=$((nohup {script_path} > $OUTPUT_FILE 2>&1) & echo $1)
+echo PROCESS_PID=$PROCESS_PID
+
+mv $PROCESS_DIR PROCESS_INFO_DIR/$PROCESS_PID
+"""
+
+def script_to_start_script(suite_path, script_path, parameters):
+    env = "\n".join(i'export ' + e['name']  + '=' + '"' + e['value'] + '"' for e in parameters['environment_parameters'])
+    return "\n".join((cesm_env, env, SCRIPT_TO_START_SCRIPT.format(case_path=case_path, script_path=script_path)))
+
+
+@jsonrpc.method('App.run_script_in_suite_with_environment_parameters')
+def run_script_in_suite_with_environment_parameters(suite_path, script, parameters):
+    """
+    Run script in case directory.
+    Parameters are accepted as array of strings.
+
+    Returns PID
+    """
+    # Run with nohup
+    # Save output to a file
+    # Save PID of the process (parse output of nohup)
+    # Save a file with info on
+    # - script
+    # - PID
+    # - parameters
+    # - output file
+    executables = []
+    if auth.user['cesm_env_script']:
+        executables.append('source ' + auth.user['cesm_env_script'] + ' >/dev/null')
+    executables.append('cd ' + case_path)
+    script = safe_join(case_path, script)
+    output_file = "output.txt"
+    nohup = '(nohup ' + script + ' >' + output_file + ' 2>&1) & echo $!'
+    executables.append(nohup)
+    command = ' && '.join(executables)
+    env = " ".join(e['name']  + "=" + '"' + e['value'] + '"' for e in parameters['environment_parameters'])
+    result = globals.ssh.ssh_execute(env + " " + command)
+    return result
+
+
+
+@jsonrpc.method('App.show_script_executions_for_suite')
+def show_script_executions_for_suite(suite_path):
+    """
+    Returns, for each process, PID, script, start date, current date, status (running or not), exit code
+    """
+    pass
+
+
+@jsonrpc.method('App.show_script_execution_details_for_suite')
+def show_script_execution_details_for_suite(suite_path, pid, output_start_line, max_lines):
+    """
+    Returns, for each process:
+        PID,
+        script,
+        start date,
+        current date,
+        status (running or not),
+        exit code,
+        output_lines
+    """
+    pass
 
 
 @jsonrpc.method('App.list_cases')
@@ -180,6 +256,8 @@ def run_user_script(script):
 def list_suites():
     """
     Returns list of user suites grouped by directory
+
+    TODO: return list of suites read from $HOME/.prepcase.json (user_suites_dir)
     """
     return {
         '~': [
