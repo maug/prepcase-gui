@@ -59,7 +59,7 @@ Vagrant.configure("2") do |config|
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
   # config.vm.synced_folder("./shared", "/vagrant", type: "nfs")
-  config.vm.synced_folder("../", "/home/vagrant/prepcase-gui", type: "nfs")
+  config.vm.synced_folder("./shared", "/home/vagrant/shared", type: "nfs")
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
