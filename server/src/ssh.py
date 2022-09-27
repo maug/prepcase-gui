@@ -23,7 +23,7 @@ class Ssh:
     def set_user(self, username):
         self.username = username
 
-    def ssh_execute(self, executable, parameters):
+    def ssh_execute(self, executable, parameters=[]):
         """
         Execute command on remote host via ssh.
 
@@ -40,3 +40,13 @@ class Ssh:
 
         logging.info("EXECUTE {}".format(ssh_command))
         return utils.execute(ssh_command)
+
+    def scp(self, source_file, target_file):
+        """
+        Copy file to remote host.
+        """
+        if not self.username:
+            raise Exception('Username not set')
+        scp_command = ["scp", self.options, source_file, self.username + "@" + self.hostname + ':' + target_file]
+        logging.info("EXECUTE {}".format(scp_command))
+        return utils.execute(scp_command)

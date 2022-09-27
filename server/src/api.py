@@ -7,6 +7,7 @@ from flask_session import Session
 import glob
 import os
 import json
+import tempfile
 import logging
 logger = logging.getLogger(__name__)
 
@@ -119,6 +120,10 @@ def run_script_in_case(case_path, script, parameters):
     return globals.ssh.ssh_execute(' && '.join(executables), parameters)
 
 
+def quote(s):
+    # TODO: make sure 's are quoted, etc.
+    return '"' + s + '"'
+
 SCRIPT_TO_START_SCRIPT="""
 PROCESS_INFO_DIR={suite_path}/.running_scripts/
 mkdir -p $PROCESS_INFO_DIR
@@ -127,19 +132,30 @@ cd {suite_path}
 PROCESS_DIR=$(mktemp -d)
 OUTPUT_FILE=$PROCESS_DIR/output.txt
 
-PROCESS_PID=$((nohup {script_path} > $OUTPUT_FILE 2>&1) & echo $1)
+nohup {suite_path}/{script_path} > $OUTPUT_FILE 2>&1 &
+PROCESS_PID=$!
 echo PROCESS_PID=$PROCESS_PID
 
-mv $PROCESS_DIR PROCESS_INFO_DIR/$PROCESS_PID
+mv $PROCESS_DIR $PROCESS_INFO_DIR/$PROCESS_PID
 """
 
 def script_to_start_script(suite_path, script_path, parameters):
-    env = "\n".join(i'export ' + e['name']  + '=' + '"' + e['value'] + '"' for e in parameters['environment_parameters'])
-    return "\n".join((cesm_env, env, SCRIPT_TO_START_SCRIPT.format(case_path=case_path, script_path=script_path)))
+    env = '\n'.join('export ' + e['name']  + '=' + quote(e['value']) for e in parameters['environment_parameters'])
+    return '\n'.join((env, SCRIPT_TO_START_SCRIPT.format(suite_path=suite_path, script_path=script_path)))
+
+
+def save_to_remote_file(s, remote_path):
+    fd, temp_path = tempfile.mkstemp()
+    with os.fdopen(fd, 'w') as f:
+        f.write(s)
+    result = globals.ssh.scp(temp_path, remote_path)
+    if result['return_code']:
+        raise Exception(result)
+    os.remove(temp_path)
 
 
 @jsonrpc.method('App.run_script_in_suite_with_environment_parameters')
-def run_script_in_suite_with_environment_parameters(suite_path, script, parameters):
+def run_script_in_suite_with_environment_parameters(suite_path, script_path, parameters):
     """
     Run script in case directory.
     Parameters are accepted as array of strings.
@@ -154,18 +170,15 @@ def run_script_in_suite_with_environment_parameters(suite_path, script, paramete
     # - PID
     # - parameters
     # - output file
-    executables = []
-    if auth.user['cesm_env_script']:
-        executables.append('source ' + auth.user['cesm_env_script'] + ' >/dev/null')
-    executables.append('cd ' + case_path)
-    script = safe_join(case_path, script)
-    output_file = "output.txt"
-    nohup = '(nohup ' + script + ' >' + output_file + ' 2>&1) & echo $!'
-    executables.append(nohup)
-    command = ' && '.join(executables)
-    env = " ".join(e['name']  + "=" + '"' + e['value'] + '"' for e in parameters['environment_parameters'])
-    result = globals.ssh.ssh_execute(env + " " + command)
-    return result
+    starter_script = script_to_start_script(suite_path, script_path, parameters)
+    target_starter_path = "/tmp/prepcase_starter.sh"
+    save_to_remote_file(starter_script, target_starter_path)
+    result = globals.ssh.ssh_execute('sh ' + target_starter_path)
+    pid = int(result['stdout'].split('=')[1])
+    process_info_path = '{suite_path}/.running_scripts/{pid}/process.json'.format(suite_path=suite_path, pid=pid)
+    process_info = dict(script_path=script_path, pid=pid, parameters=parameters)
+    save_to_remote_file(json.dumps(process_info), process_info_path)
+    return pid
 
 
 
