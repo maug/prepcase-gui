@@ -155,7 +155,7 @@ def save_to_remote_file(s, remote_path):
             f.write(s)
         result = globals.ssh.scp_to_remote(temp_path, remote_path)
         if result['return_code']:
-            raise Exception(result)
+            raise RemoteIOError(result)
     finally:
         os.remove(temp_path)
 
@@ -216,6 +216,8 @@ def process_info(process_info_dir, pid):
         info = json.loads(s)
         info['pid'] = pid
         info['exit_code'] = 0  # TODO
+        info['start_time'] = 0  # TODO
+        info['current_time'] = 0  # TODO
         info['status'] = process_status(pid)
     except RemoteIOError:
         pass
@@ -252,7 +254,12 @@ def show_script_execution_details_for_suite(suite_path, pid, output_start_line, 
         exit code,
         output_lines
     """
-    pass
+    process_info_dir = '{suite_path}/.running_scripts/{pid}/'.format(suite_path=suite_path, pid=pid)
+    pi = process_info(process_info_dir, int(pid))
+    output = read_remote_file(process_info_dir + '/output.txt')
+    output_chunk = '\n'.join(output.split('\n')[output_start_line: output_start_line + max_lines])
+    pi['output_lines'] = output_chunk
+    return pi
 
 
 @jsonrpc.method('App.list_cases')
