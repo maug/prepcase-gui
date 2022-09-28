@@ -109,7 +109,6 @@ def run_tool(tool, parameters):
     executables.append(safe_join(auth.user['cesm_path'], 'cime', "scripts", tool))
     return globals.ssh.ssh_execute(' && '.join(executables), parameters)
 
-# TODO: Add API for reading output of running processes
 
 @jsonrpc.method('App.run_script_in_case')
 def run_script_in_case(case_path, script, parameters):
@@ -201,6 +200,14 @@ def is_int(s):
         return False
 
 
+def process_status(pid):
+    result = globals.ssh.ssh_execute('ps', [str(pid)])
+    if result['return_code']:
+        return 'COMPLETE'
+    else:
+        return result['stdout'].split('\n')[1].split()[2]
+
+
 def process_info(process_info_dir, pid):
     process_info_path = process_info_dir + '/' + str(pid) + '/process.json'
     info = {'pid': pid}
@@ -208,6 +215,8 @@ def process_info(process_info_dir, pid):
         s = read_remote_file(process_info_path)
         info = json.loads(s)
         info['pid'] = pid
+        info['exit_code'] = 0  # TODO
+        info['status'] = process_status(pid)
     except RemoteIOError:
         pass
     return info
