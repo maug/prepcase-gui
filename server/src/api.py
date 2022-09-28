@@ -27,6 +27,11 @@ Session(app)
 CORS(app, supports_credentials=True, origins=env.CORS_ORIGIN) # CORS on different ports
 jsonrpc = JSONRPC(app, '/', enable_web_browsable_api=True)
 
+
+class RemoteIOError(Exception):
+    pass
+
+
 @app.before_request
 def before_request():
     session.permanent = env.SESSION_PERMANENT
@@ -145,13 +150,28 @@ def script_to_start_script(suite_path, script_path, parameters):
 
 
 def save_to_remote_file(s, remote_path):
-    fd, temp_path = tempfile.mkstemp()
-    with os.fdopen(fd, 'w') as f:
-        f.write(s)
-    result = globals.ssh.scp(temp_path, remote_path)
-    if result['return_code']:
-        raise Exception(result)
-    os.remove(temp_path)
+    try:
+        fd, temp_path = tempfile.mkstemp()
+        with os.fdopen(fd, 'w') as f:
+            f.write(s)
+        result = globals.ssh.scp_to_remote(temp_path, remote_path)
+        if result['return_code']:
+            raise Exception(result)
+    finally:
+        os.remove(temp_path)
+
+
+def read_remote_file(remote_path):
+    try:
+        fd, temp_path = tempfile.mkstemp()
+        result = globals.ssh.scp_from_remote(remote_path, temp_path)
+        if result['return_code']:
+            raise RemoteIOError(result)
+        with open(temp_path) as f:
+            return f.read()
+    finally:
+        os.remove(temp_path)
+
 
 
 @jsonrpc.method('App.run_script_in_suite_with_environment_parameters')
@@ -162,14 +182,6 @@ def run_script_in_suite_with_environment_parameters(suite_path, script_path, par
 
     Returns PID
     """
-    # Run with nohup
-    # Save output to a file
-    # Save PID of the process (parse output of nohup)
-    # Save a file with info on
-    # - script
-    # - PID
-    # - parameters
-    # - output file
     starter_script = script_to_start_script(suite_path, script_path, parameters)
     target_starter_path = "/tmp/prepcase_starter.sh"
     save_to_remote_file(starter_script, target_starter_path)
@@ -181,13 +193,42 @@ def run_script_in_suite_with_environment_parameters(suite_path, script_path, par
     return pid
 
 
+def is_int(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+
+def process_info(process_info_dir, pid):
+    process_info_path = process_info_dir + '/' + str(pid) + '/process.json'
+    info = {'pid': pid}
+    try:
+        s = read_remote_file(process_info_path)
+        info = json.loads(s)
+        info['pid'] = pid
+    except RemoteIOError:
+        pass
+    return info
+
+
+def suite_processes(process_info_dir):
+    result = globals.ssh.ssh_execute('ls', [process_info_dir])
+    if result['return_code']:
+        raise Exception(result)
+    output = result['stdout']
+    pids = [int(w) for w in output.split() if is_int(w)]
+    return pids
+
 
 @jsonrpc.method('App.show_script_executions_for_suite')
 def show_script_executions_for_suite(suite_path):
     """
     Returns, for each process, PID, script, start date, current date, status (running or not), exit code
     """
-    pass
+    process_info_dir = '{suite_path}/.running_scripts/'.format(suite_path=suite_path)
+    return [process_info(process_info_dir, int(d)) for d in suite_processes(process_info_dir)]
 
 
 @jsonrpc.method('App.show_script_execution_details_for_suite')
