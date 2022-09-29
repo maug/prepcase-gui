@@ -41,12 +41,23 @@ class Ssh:
         logging.info("EXECUTE {}".format(ssh_command))
         return utils.execute(ssh_command)
 
-    def scp(self, source_file, target_file):
+    def scp_to_remote(self, local_file, remote_file):
         """
         Copy file to remote host.
         """
         if not self.username:
             raise Exception('Username not set')
-        scp_command = ["scp", self.options, source_file, self.username + "@" + self.hostname + ':' + target_file]
+        scp_command = ["scp", self.options, local_file, self.username + "@" + self.hostname + ':' + remote_file]
         logging.info("EXECUTE {}".format(scp_command))
         return utils.execute(scp_command)
+
+    def scp_from_remote(self, remote_file, local_file):
+        """
+        Copy file from remote host.
+        """
+        if not self.username:
+            raise Exception('Username not set')
+        scp_command = ["scp", self.options, self.username + "@" + self.hostname + ':' + remote_file, local_file]
+        logging.info("EXECUTE {}".format(scp_command))
+        return utils.execute(scp_command)
+
