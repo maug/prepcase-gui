@@ -325,37 +325,20 @@ def run_user_script(script):
 @jsonrpc.method('App.list_suites')
 def list_suites():
     """
-    Returns list of user suites grouped by directory
-
-    TODO: return list of suites read from $HOME/.prepcase.json (user_suites_dir)
+    Returns list of suites read from $HOME/.prepcase.json ("suites_roots"])
     """
-    return {
-        '~': [
-            '/users/maug/suite1',
-            '/users/maug/suite2',
-        ],
-        '/somewhere/else': []
-    }
+    cfg = json.loads(read_remote_file('$HOME/.prepcase.json'))
+    return cfg["suites_roots"]
 
 
 @jsonrpc.method('App.get_suite')
 def get_suite(path):
     """
-    TODO: This is just a prototype to get Marek going with GUI
+    Get suite configuration read from .prepcase_suite.json
     """
-    import os
-    import json
-
-    file_path = os.path.realpath(__file__)
-
-    p = os.path.join(os.path.dirname(file_path), 'suite_assimilation-atmo-CMCC-master', 'prepcase_suite.json')
-    with open(p) as f:
-        try:
-            prepcase_suite_configuration = json.load(f)
-        except BaseException as err:
-            raise RuntimeError('Error parsing suite configuration JSON file\nFile: ' + p + '\n' + err.message)
-        suite = {"path": path, "configuration": prepcase_suite_configuration}
-        return suite
+    cfg = json.loads(read_remote_file(path + '/.prepcase_suite.json'))
+    suite = {"path": path, "configuration": cfg}
+    return suite
 
 
 @jsonrpc.method('App.run_suite_script')
