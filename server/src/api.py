@@ -40,7 +40,7 @@ def before_request():
         if data['method'] not in ['App.check_logged', 'App.login', 'App.tools_parameters', 'App.get_server_config']:
             return make_response("__not_logged__")
     else:
-        # return  # TODO: cli testing
+        if os.getenv('USER') == 'piotr': return  # TODO: cli testing
         globals.ssh.set_user(auth.user['username'])
         globals.ssh.set_host(auth.user['hostname'])
         globals.ssh_cylc.set_user(auth.user['username'])
@@ -52,7 +52,7 @@ def check_logged():
     """
     Returns false if user is not logged in, otherwise user object.
     """
-    # return True  # TODO: cli testing
+    if os.getenv('USER') == 'piotr': return True  # TODO: cli testing
     if not auth.check_user_logged():
         return False
     else:
@@ -328,7 +328,10 @@ def list_suites():
     Returns list of suites read from $HOME/.prepcase.json ("suites_roots"])
     """
     cfg = json.loads(read_remote_file('$HOME/.prepcase.json'))
-    return cfg["suites_roots"]
+    suites_roots = cfg["suites_roots"]
+    result = globals.ssh.ssh_execute('find ' + ' '.join(suites_roots) + ' -maxdepth 2 -name .prepcase_suite.json')
+    suites_paths = [p[:-len('/.prepcase_suite.json')] for p in result['stdout'].split()]
+    return suites_paths
 
 
 @jsonrpc.method('App.get_suite')
