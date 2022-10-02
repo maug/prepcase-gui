@@ -329,7 +329,7 @@ def list_suites():
     """
     cfg = json.loads(read_remote_file('$HOME/.prepcase.json'))
     suites_roots = cfg["suites_roots"]
-    result = globals.ssh.ssh_execute('find ' + ' '.join(suites_roots) + '  -name .prepcase_suite.json')
+    result = globals.ssh.ssh_execute('find ' + ' '.join(suites_roots) + ' -maxdepth 2 -name .prepcase_suite.json')
     suites_paths = [p[:-len('/.prepcase_suite.json')] for p in result['stdout'].split()]
     return suites_paths
 
