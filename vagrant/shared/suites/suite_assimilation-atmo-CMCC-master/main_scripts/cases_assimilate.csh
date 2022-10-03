@@ -1,10 +1,10 @@
-#!/bin/csh 
+#!/bin/csh
 #BSUB -n 360
 #BSUB -R "span[ptile=36]"
 #BSUB -q p_short
 #BSUB -W 1:00
 #BSUB -P R000
-#BSUB -x 
+#BSUB -x
 ##BSUB -u giovanni.conti83@gmail.com
 #BSUB -J cases_assimilate
 ##BSUB -o assimilate.out
@@ -21,7 +21,7 @@ setenv  XIOS_PATH /work/csp/cmip01/csm/xios
 # check if 0
 setenv I_MPI_EXTRA_FILESYSTEM 1
 # check for comment
-setenv I_MPI_EXTRA_FILESYSTEM_FORCE gpfs  
+setenv I_MPI_EXTRA_FILESYSTEM_FORCE gpfs
 setenv MPI_COMM_MAX 16383
 setenv I_MPI_DEBUG 60
 #setenv GPFSMPIO_TUNEBLOCKING=0
@@ -32,11 +32,11 @@ setenv I_MPI_SHM skx_avx512
 setenv I_MPI_HYDRA_BOOTSTRAP lsf
 #setenv I_MPI_LSF_USE_COLLECTIVE_LAUNCH 0
 setenv I_MPI_HYDRA_COLLECTIVE_LAUNCH 1
-setenv I_MPI_HYDRA_BRANCH_COUNT 10 # it must be equal to the number of nodes!!!!!!!!! 
+setenv I_MPI_HYDRA_BRANCH_COUNT 10 # it must be equal to the number of nodes!!!!!!!!!
 # PAY ATTENTION TO LAUNCHCMD BELOW !!!!
 
 # We need more modules to use correctly this script
-# for ncks load nco 
+# for ncks load nco
 #module load intel19.5/nco/4.8.1
 module load intel20.1/nco/4.9.3
 module load intel20.1/magics/3.3.1
@@ -137,7 +137,7 @@ setenv LAUNCHCMD "mpirun -np $nproc_used -bind-to none"
 #   echo " "
 #
 #else if ($?LSB_HOSTS) then
-    
+
 #    echo "LSB"
 
 #   # LSF environment variables:
@@ -210,7 +210,7 @@ set radmode=`echo $radmode | sed -e 's/"//g'`
 set radmode=$radmode[2]
 echo " radmode= $radmode"
 
-set CASEROOT0001="$CLONESROOT/${case_name}_0001" 
+set CASEROOT0001="$CLONESROOT/${case_name}_0001"
 echo " CASEROOT0001= $CASEROOT0001"
 
 cd ${CASEROOT0001}
@@ -251,14 +251,14 @@ set CASESRUNROOT=`echo $RUNDIR | sed -e "s/\/${case_name}_0001\/run//g" `
 echo " CASESRUNROOT= $CASESRUNROOT"
 #set scomp="cam"
 #set CASE="dart_hybrid_2017_v3"
-#set ensemble_size="3"        
-#set CAM_DYCORE="fv"            
+#set ensemble_size="3"
+#set CAM_DYCORE="fv"
 #set EXEROOT="/work/csp/gc02720/CESM2/dart_hybrid_2017_v3/bld"
-#set RUNDIR="/work/csp/gc02720/CESM2/dart_hybrid_2017_v3/run"        
-#set archive="/work/csp/gc02720/CESM2/archive"   
+#set RUNDIR="/work/csp/gc02720/CESM2/dart_hybrid_2017_v3/run"
+#set archive="/work/csp/gc02720/CESM2/archive"
 #set TOTALPES="324"
 #set CONT_RUN="FALSE"
-#set CHECK_TIMING="FALSE"    
+#set CHECK_TIMING="FALSE"
 #set DATA_ASSIMILATION_CYCLES="1"
 
 #setenv ORIGINALDIR $LS_SUBCWD
@@ -350,14 +350,14 @@ else
   if ( -d .HIDE_${case_name} ) then
     echo " Found HIDE dir ..."
     set c=`ls -a .HIDE_${case_name} | wc | awk '{print $1}'`
-    if ( "${c}" == 2 ) then 
+    if ( "${c}" == 2 ) then
        echo " Empty directory"
        echo " No old inflation files found."
     else
        ${MOVE} .HIDE_${case_name}/* .
        # Get the date of this inflation restart file so you can remove it at the end
        set inf_prev_date_files = `ls -rt1 *dart.rh.cam_*inf_mean*`
-       set inf_prev_date_files = `echo $inf_prev_date_files[1] | cut -d'.' -f5` 
+       set inf_prev_date_files = `echo $inf_prev_date_files[1] | cut -d'.' -f5`
        echo " Old inflation date in hide = $inf_prev_date_files "
     endif
   else
@@ -579,11 +579,11 @@ if ( $radmode == TRUE ) then
      ncks -A -C -v TS $ftoassh $ftoass
      ncks -A -C -v TREFHT $ftoassh $ftoass
      ncap2 -A -s "QVMR=Q/(1-Q)" -v $ftoass $ftoass
-     rm tmp.nc       
+     rm tmp.nc
      ncap2 -s 'where(LANDFRAC>OCNFRAC) LANDFRAC=0; elsewhere LANDFRAC=1' -v $ftoassh tmp.nc
      ncks -A -C -v ICEFRAC $ftoassh tmp.nc
      ncap2 -A -s 'where(ICEFRAC>0.5) LANDFRAC=2' -v  tmp.nc $ftoass
-     rm tmp.nc       
+     rm tmp.nc
 
      @ inst++
   end
@@ -699,7 +699,7 @@ if ($USING_PRIOR_INFLATION == true) then
 
          set latest_mean = `head -n 1 latestfile`
          set latest_sd   = `tail -n 1 latestfile`
-         
+
          echo "latest_mean = $latest_mean"
          echo "latest_sd = $latest_sd"
          # Need to COPY instead of link because of short-term archiver and disk management.
@@ -715,31 +715,31 @@ if ($USING_PRIOR_INFLATION == true) then
            #ncap2 -O -s 'where(TREFHT<500) TREFHT=0' input_priorinf_sd.nc input_priorinf_sd.nc
            #ncap2 -O -s 'where(QVMR<500) QVMR=1' input_priorinf_mean.nc input_priorinf_mean.nc
            #ncap2 -O -s 'where(QVMR<500) QVMR=0' input_priorinf_sd.nc input_priorinf_sd.nc
-  
-           
-                echo "add TS TREFHT LANDFRAC QVMR to the inflation files" 
+
+
+                echo "add TS TREFHT LANDFRAC QVMR to the inflation files"
                 ncks -C -v TS $CASESRUNROOT/${case_name}_0001/run/${case_name}_0001.cam.i.${ATM_DATE_EXT}.nc tmp_TS.nc
                 ncap2 -O -s "TS=TS*0+1" tmp_TS.nc tmp_m_TS.nc
                 ncap2 -O -s "TS=TS*0" tmp_TS.nc tmp_s_TS.nc
-                ncks -A -v TS tmp_m_TS.nc input_priorinf_mean.nc 
-                ncks -A -v TS tmp_s_TS.nc input_priorinf_sd.nc 
+                ncks -A -v TS tmp_m_TS.nc input_priorinf_mean.nc
+                ncks -A -v TS tmp_s_TS.nc input_priorinf_sd.nc
                 ncks -C -v TREFHT $CASESRUNROOT/${case_name}_0001/run/${case_name}_0001.cam.i.${ATM_DATE_EXT}.nc tmp_TREFHT.nc
                 ncap2 -O -s "TREFHT=TREFHT*0+1" tmp_TREFHT.nc tmp_m_TREFHT.nc
                 ncap2 -O -s "TREFHT=TREFHT*0" tmp_TREFHT.nc tmp_s_TREFHT.nc
-                ncks -A -v TREFHT tmp_m_TREFHT.nc input_priorinf_mean.nc 
-                ncks -A -v TREFHT tmp_s_TREFHT.nc input_priorinf_sd.nc 
+                ncks -A -v TREFHT tmp_m_TREFHT.nc input_priorinf_mean.nc
+                ncks -A -v TREFHT tmp_s_TREFHT.nc input_priorinf_sd.nc
                 ncks -C -v LANDFRAC $CASESRUNROOT/${case_name}_0001/run/${case_name}_0001.cam.i.${ATM_DATE_EXT}.nc tmp_LANDFRAC.nc
                 ncap2 -O -s "LANDFRAC=LANDFRAC*0+1" tmp_LANDFRAC.nc tmp_m_LANDFRAC.nc
                 ncap2 -O -s "LANDFRAC=LANDFRAC*0" tmp_LANDFRAC.nc tmp_s_LANDFRAC.nc
-                ncks -A -v LANDFRAC tmp_m_LANDFRAC.nc input_priorinf_mean.nc 
-                ncks -A -v LANDFRAC tmp_s_LANDFRAC.nc input_priorinf_sd.nc 
+                ncks -A -v LANDFRAC tmp_m_LANDFRAC.nc input_priorinf_mean.nc
+                ncks -A -v LANDFRAC tmp_s_LANDFRAC.nc input_priorinf_sd.nc
                 ncks -C -v QVMR $CASESRUNROOT/${case_name}_0001/run/${case_name}_0001.cam.i.${ATM_DATE_EXT}.nc tmp_QVMR.nc
                 ncap2 -O -s "QVMR=QVMR*0+1" tmp_QVMR.nc tmp_m_QVMR.nc
                 ncap2 -O -s "QVMR=QVMR*0" tmp_QVMR.nc tmp_s_QVMR.nc
-                ncks -A -v QVMR tmp_m_QVMR.nc input_priorinf_mean.nc 
-                ncks -A -v QVMR tmp_s_QVMR.nc input_priorinf_sd.nc 
+                ncks -A -v QVMR tmp_m_QVMR.nc input_priorinf_mean.nc
+                ncks -A -v QVMR tmp_s_QVMR.nc input_priorinf_sd.nc
                 rm tmp_*.nc
-          
+
          endif
 
       else if ($CONT_RUN == FALSE) then
@@ -752,7 +752,7 @@ if ($USING_PRIOR_INFLATION == true) then
          if (-x fill_inflation_restart) then
 
             ./fill_inflation_restart
-         
+
             if ( $radmode == TRUE ) then
               # ncap2 -O -s 'where(LANDFRAC<500) LANDFRAC=1'   input_priorinf_mean.nc input_priorinf_mean.nc
               # ncap2 -O -s 'where(LANDFRAC<500) LANDFRAC=0.'  input_priorinf_sd.nc input_priorinf_sd.nc
@@ -762,28 +762,28 @@ if ($USING_PRIOR_INFLATION == true) then
               # ncap2 -O -s 'where(TREFHT<500) TREFHT=0' input_priorinf_sd.nc input_priorinf_sd.nc
               # ncap2 -O -s 'where(QVMR<500) QVMR=1' input_priorinf_mean.nc input_priorinf_mean.nc
               # ncap2 -O -s 'where(QVMR<500) QVMR=0' input_priorinf_sd.nc input_priorinf_sd.nc
-         
-                echo "add TS TREFHT LANDFRAC QVMR to the inflation files" 
+
+                echo "add TS TREFHT LANDFRAC QVMR to the inflation files"
                 ncks -C -v TS $CASESRUNROOT/${case_name}_0001/run/${case_name}_0001.cam.i.${ATM_DATE_EXT}.nc tmp_TS.nc
                 ncap2 -O -s "TS=TS*0+1" tmp_TS.nc tmp_m_TS.nc
                 ncap2 -O -s "TS=TS*0" tmp_TS.nc tmp_s_TS.nc
-                ncks -A -v TS tmp_m_TS.nc input_priorinf_mean.nc 
-                ncks -A -v TS tmp_s_TS.nc input_priorinf_sd.nc 
+                ncks -A -v TS tmp_m_TS.nc input_priorinf_mean.nc
+                ncks -A -v TS tmp_s_TS.nc input_priorinf_sd.nc
                 ncks -C -v TREFHT $CASESRUNROOT/${case_name}_0001/run/${case_name}_0001.cam.i.${ATM_DATE_EXT}.nc tmp_TREFHT.nc
                 ncap2 -O -s "TREFHT=TREFHT*0+1" tmp_TREFHT.nc tmp_m_TREFHT.nc
                 ncap2 -O -s "TREFHT=TREFHT*0" tmp_TREFHT.nc tmp_s_TREFHT.nc
-                ncks -A -v TREFHT tmp_m_TREFHT.nc input_priorinf_mean.nc 
-                ncks -A -v TREFHT tmp_s_TREFHT.nc input_priorinf_sd.nc 
+                ncks -A -v TREFHT tmp_m_TREFHT.nc input_priorinf_mean.nc
+                ncks -A -v TREFHT tmp_s_TREFHT.nc input_priorinf_sd.nc
                 ncks -C -v LANDFRAC $CASESRUNROOT/${case_name}_0001/run/${case_name}_0001.cam.i.${ATM_DATE_EXT}.nc tmp_LANDFRAC.nc
                 ncap2 -O -s "LANDFRAC=LANDFRAC*0+1" tmp_LANDFRAC.nc tmp_m_LANDFRAC.nc
                 ncap2 -O -s "LANDFRAC=LANDFRAC*0" tmp_LANDFRAC.nc tmp_s_LANDFRAC.nc
-                ncks -A -v LANDFRAC tmp_m_LANDFRAC.nc input_priorinf_mean.nc 
-                ncks -A -v LANDFRAC tmp_s_LANDFRAC.nc input_priorinf_sd.nc 
+                ncks -A -v LANDFRAC tmp_m_LANDFRAC.nc input_priorinf_mean.nc
+                ncks -A -v LANDFRAC tmp_s_LANDFRAC.nc input_priorinf_sd.nc
                 ncks -C -v QVMR $CASESRUNROOT/${case_name}_0001/run/${case_name}_0001.cam.i.${ATM_DATE_EXT}.nc tmp_QVMR.nc
                 ncap2 -O -s "QVMR=QVMR*0+1" tmp_QVMR.nc tmp_m_QVMR.nc
                 ncap2 -O -s "QVMR=QVMR*0" tmp_QVMR.nc tmp_s_QVMR.nc
-                ncks -A -v QVMR tmp_m_QVMR.nc input_priorinf_mean.nc 
-                ncks -A -v QVMR tmp_s_QVMR.nc input_priorinf_sd.nc 
+                ncks -A -v QVMR tmp_m_QVMR.nc input_priorinf_mean.nc
+                ncks -A -v QVMR tmp_s_QVMR.nc input_priorinf_sd.nc
                 rm tmp_*.nc
             endif
 
@@ -947,7 +947,7 @@ end
 
 #${LIST} -1 ${CASE}.cam_[0-9][0-9][0-9][0-9].i.${ATM_DATE_EXT}.nc >! $input_file_list_name
 
-#setenv FI_PROVIDER "verbs;ofi_rxm" 
+#setenv FI_PROVIDER "verbs;ofi_rxm"
 
 echo "`date` -- BEGIN FILTER"
 ${LAUNCHCMD} ./filter || exit 140
@@ -967,7 +967,7 @@ echo "`date` -- END FILTER"
 # LIST will expand the variables and wildcards, only existing files will be
 # in the foreach loop. (If the input.nml has num_output_state_members = 0,
 # there will be no output_member_xxxx.nc even though the 'output' stage
-# may be requested - for the mean and sd) 
+# may be requested - for the mean and sd)
 #
 # Handle files with instance numbers first.
 #    split off the .nc
@@ -979,7 +979,7 @@ echo "`date` -- BEGIN FILE RENAMING"
 
 # The short-term archiver archives files depending on pieces of their names.
 # '_####.i.' files are CESM initial files.
-# '.dart.i.' files are ensemble statistics (mean, sd) of just the state variables 
+# '.dart.i.' files are ensemble statistics (mean, sd) of just the state variables
 #            in the initial files.
 # '.e.'      designates a file as something from the 'external system processing ESP', e.g. DART.
 
@@ -1004,7 +1004,7 @@ end
 # Files without instance numbers need to have the scomp part of their names = "dart".
 # This is because in st_archive, all files with  scomp = "cam"
 # (= compname in env_archive.xml) will be st_archived using a pattern
-# which has the instance number added onto it.  {mean,sd} files don't have 
+# which has the instance number added onto it.  {mean,sd} files don't have
 # instance numbers, so they need to be archived by the "dart" section of env_archive.xml.
 # But they still need to be different for each component, so include $scomp in the
 # ".dart_file" part of the file name.  Somewhat awkward and inconsistent, but effective.
@@ -1149,11 +1149,11 @@ echo "`date` -- END   FILE RENAMING"
 #   cd ${RUNDIR}
 
    # Create a netCDF file which contains the names of DART inflation restart files.
-   # This is needed in order to use the CESM st_archive mechanisms for keeping, 
+   # This is needed in order to use the CESM st_archive mechanisms for keeping,
    # in $RUNDIR, history files which are needed for restarts.
    # These special files must be labeled with '.rh.'.
    # St_archive looks in a .r. restart file for the names of these 'restart history' files.
-   # DART's inflation files fit the definition of restart history files, so we put .rh. 
+   # DART's inflation files fit the definition of restart history files, so we put .rh.
    # in their names.  Those file names must be found in a dart.r. file, which is created here.
    # Inflation restart file names for all components will be in this one restart file,
    # since the inflation restart files have the component names in them.
@@ -1188,7 +1188,7 @@ echo "`date` -- END   FILE RENAMING"
 echo ""
 echo "`date` -- START   ANALYSIS ARCHIVING"
 
-cd ${TMPROOT}   
+cd ${TMPROOT}
 set adir = "${archive}/${case_name}/${case_name}-${ATM_DATE_EXT}"
 mkdir -p $adir
 ${MOVE} *.{e,i}*${ATM_DATE_EXT}*  $adir
@@ -1286,4 +1286,3 @@ exit 0
 # $URL$
 # $Revision$
 # $Date$
-

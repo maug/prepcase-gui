@@ -81,8 +81,8 @@ while (( $ncyc <= NCYCLES ))
  do
 
    echo -e " cycle number $ncyc"
-   
-   if [ $ACTIVATE_ASSI = FALSE ] 
+
+   if [ $ACTIVATE_ASSI = FALSE ]
     then
       echo " No assimilation required, proceed with forecast!"
    else
@@ -112,27 +112,27 @@ while (( $ncyc <= NCYCLES ))
             if [ $statA -eq 0 ]
               then
                 #sh cases_restart_management.sh ${case_name} ${nens} "hide"
-                break 
-            fi  
+                break
+            fi
          done
-      
+
          grep "0" check_assi.flag
          statA=$?
          if [ $statA -eq 0 ]
           then
            echo -e "\n No assimilation attempt worked!\n"
            exit 130
-         fi        
- 
+         fi
+
       fi
    fi
 
-   
 
-    
+
+
    # Before the case.submit we could need to restore the restart files
    #sh cases_restart_management.sh ${case_name} ${nens} "retrieve"
-   
+
    string_id=""
    inst=1
    while (( $inst <= $nens ))
@@ -143,28 +143,28 @@ while (( $ncyc <= NCYCLES ))
        echo " Enter in: `pwd`"
 
        # Clean
-       rm cesm.std* 
- 
+       rm cesm.std*
+
        if [ $CONT_RUN = "FALSE" ]
           then
-           ./xmlchange CONTINUE_RUN=FALSE 
+           ./xmlchange CONTINUE_RUN=FALSE
        else
-           ./xmlchange CONTINUE_RUN=TRUE  
+           ./xmlchange CONTINUE_RUN=TRUE
        fi
 
 
        if [ $ACTIVATE_ASSI = TRUE ]
          then
            echo " Activate assimilation for member ${inst}"
-           ./xmlchange DATA_ASSIMILATION_ATM=TRUE 
+           ./xmlchange DATA_ASSIMILATION_ATM=TRUE
        else
-           echo " Deactivate assimilation for member ${inst}" 
+           echo " Deactivate assimilation for member ${inst}"
            ./xmlchange DATA_ASSIMILATION_ATM=FALSE
        fi
 
        jobid=$(take_id ./case.submit)
        echo " Started with $jobid"
-  
+
        if [ $inst -eq 1 ]
          then
           string_id=$string_id" done($jobid)"
@@ -181,11 +181,11 @@ while (( $ncyc <= NCYCLES ))
    echo " string_id = $string_id"
    if [ $ACTIVATE_ASSI = FALSE ]
     then
-      bsub -w "$string_id" < cases_no_assimilate.sh 
+      bsub -w "$string_id" < cases_no_assimilate.sh
    else
-      bsub -w "$string_id" < cases_assimilate.csh 
+      bsub -w "$string_id" < cases_assimilate.csh
    fi
-   
+
    # Manage the restart files
    #sh cases_restart_management.sh ${case_name} ${nens} "hide"
 
