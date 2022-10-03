@@ -144,7 +144,7 @@ mv $PROCESS_DIR $PROCESS_INFO_DIR/$PROCESS_PID
 """
 
 def script_to_start_script(suite_path, script_path, parameters):
-    env = '\n'.join('export ' + e['name']  + '=' + quote(e['value']) for e in parameters['environment_parameters'])
+    env = '\n'.join('export ' + e['name']  + '=' + quote(e['value']) for e in parameters)
     return '\n'.join((env, SCRIPT_TO_START_SCRIPT.format(suite_path=suite_path, script_path=script_path)))
 
 
@@ -177,7 +177,7 @@ def read_remote_file(remote_path):
 def run_script_in_suite_with_environment_parameters(suite_path, script_path, parameters):
     """
     Run script in case directory.
-    Parameters are accepted as array of strings.
+    Parameters are accepted as array of objects with props "name" and "value".
 
     Returns PID
     """
