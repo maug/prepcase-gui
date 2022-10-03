@@ -39,13 +39,14 @@ export interface ToolsParameters {
 
 export interface ToolParameter {
   action?: Action
-  choices?: string[]
+  choices?: Array<{ value: string; label: string } | string>
   default?: boolean | number | null | string
   dest?: string
   help: string
   metavar?: string
   nargs?: '?' | '*' | '+' // ? - positional optional argument, * zero or more options, + one or more options
   parameter_name: string
+  parameter_label?: string
   required?: boolean
   type?: string
 }

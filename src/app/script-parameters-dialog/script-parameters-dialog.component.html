@@ -9,7 +9,7 @@
   </form>
 </div>
 <div mat-dialog-actions>
-  <button mat-raised-button color="primary" (click)="onRun()">Run script</button>
+  <button mat-raised-button color="primary" (click)="onRun()" [disabled]="!mainForm.valid">Run script</button>
   <span class="spacer-max"></span>
   <button mat-raised-button (click)="onCancel()">Cancel</button>
 </div>

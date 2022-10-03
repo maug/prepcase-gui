@@ -21,7 +21,3 @@ echo -e "\n Starting the next evolution cycles\n"
 
 
 # Restart management
-
-
-
-

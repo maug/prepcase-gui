@@ -59,7 +59,7 @@ while (( $inst <= $nens ))
    cd $CLONESROOT/$case_name$inst_string
    echo " Enter in: `pwd`"
 
-   grep "MODEL EXECUTION HAS FINISHED" cesm.stdout* 
+   grep "MODEL EXECUTION HAS FINISHED" cesm.stdout*
    # store exit status of grep
    # if found grep will return 0 exit stauts
    # if not found, grep will return a nonzero exit stauts
@@ -70,7 +70,7 @@ while (( $inst <= $nens ))
    else
       echo " job unfinished"
       ((unfinished_job++))
-   fi 
+   fi
 
   ((inst++))
 done

@@ -3,7 +3,9 @@
   <div class="suites">
     <div *ngIf="config.scripts.length > 0; else noScripts">
       <div class="mat-body-strong" *ngFor="let script of config.scripts">
-        {{ script.path }}
+        <button mat-button color="primary" (click)="runScript(script)" title="Run script">
+          {{ script.path }}
+        </button>
       </div>
     </div>
   </div>

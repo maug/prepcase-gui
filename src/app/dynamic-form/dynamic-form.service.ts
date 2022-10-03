@@ -4,7 +4,7 @@ import { Action, ToolParameter } from '../types/ToolsParameters'
 import { FormItemCheckbox } from './FormItemCheckbox'
 import { FormItemDropdown } from './FormItemDropdown'
 import { FormItemText } from './FormItemText'
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms'
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms'
 import { FormItemDropdownConfig } from './FormItemDropdownConfig'
 import { pairwise, startWith } from 'rxjs/operators'
 
@@ -23,8 +23,6 @@ export class DynamicFormService {
         // skip parameter
         continue
       }
-      // mytodo: required item
-      // mytodo: validations
       let input: FormItemBase<any>
       if (entry.action === Action.StoreTrue) {
         input = new FormItemCheckbox({
@@ -37,9 +35,11 @@ export class DynamicFormService {
         const config: FormItemDropdownConfig = {
           help: entry.help,
           key: entry.parameter_name,
-          label: entry.parameter_name,
+          label: entry.parameter_label || entry.parameter_name,
           value: entry.default ? String(entry.default) : '',
-          options: entry.choices.map((o) => ({ key: o, value: o })),
+          options: entry.choices.map((o) =>
+            typeof o === 'string' ? { key: o, value: o } : { key: o.value, value: o.label }
+          ),
           multiple: ['*', '+'].includes(entry.nargs),
         }
         if (config.multiple) {
@@ -55,9 +55,9 @@ export class DynamicFormService {
         input = new FormItemText({
           help: entry.help,
           key: entry.parameter_name,
-          label: entry.parameter_name,
+          label: entry.parameter_label || entry.parameter_name,
           type: 'text',
-          value: '',
+          value: entry.default ? String(entry.default) : '',
         })
       }
       inputs.push(input)
@@ -67,7 +67,7 @@ export class DynamicFormService {
           // multiselect - convert to array
           value = input.value.split(',').filter(Boolean)
         }
-        form.addControl(input.key, new UntypedFormControl(value))
+        form.addControl(input.key, new UntypedFormControl(value, entry.required ? [Validators.required] : []))
 
         // add reactive listener to mutually exclude noOptionsSymbol and other options
         if (input instanceof FormItemDropdown && input.multiple) {
@@ -90,7 +90,7 @@ export class DynamicFormService {
     return inputs
   }
 
-  readInputs(formParams: ToolParameter[], form: UntypedFormGroup) {
+  readInputs(formParams: ToolParameter[], form: UntypedFormGroup): string[] {
     return formParams
       .map((item) => {
         const control = form.get(item.parameter_name)

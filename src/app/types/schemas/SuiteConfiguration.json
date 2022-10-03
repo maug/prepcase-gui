@@ -62,6 +62,9 @@
           "items": {
             "$ref": "#/definitions/OptionElement"
           }
+        },
+        "required": {
+          "type": "boolean"
         }
       },
       "required": [
