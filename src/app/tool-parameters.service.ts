@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http'
 import { environment } from '../environments/environment'
 import { JsonRpcService } from './json-rpc.service'
 import { Action, ToolParameter, ToolsParameters } from './types/ToolsParameters'
+import { EnvironmentParameter } from './types/suites'
 
 @Injectable({
   providedIn: 'root',
@@ -21,8 +22,34 @@ export class ToolParametersService {
     return new Promise((resolve) => {
       this.jsonRpc.rpc(environment.jsonRpcUrl, 'App.tools_parameters').subscribe((data) => {
         this.data = this.parseToolParametersData(data)
+        console.log(this.data)
         resolve(this.data[tool])
       })
+    })
+  }
+
+  convertEnvironmentParametersToToolParameters(envParams: EnvironmentParameter[]): ToolParameter[] {
+    return envParams.map((param) => {
+      if (param.type === 'string') {
+        return {
+          default: param.default,
+          help: param.description,
+          parameter_label: param.label,
+          parameter_name: param.name,
+          required: param.required,
+        }
+      } else if (param.type === 'select') {
+        return {
+          default: param.default,
+          help: param.description,
+          parameter_label: param.label,
+          parameter_name: param.name,
+          required: param.required,
+          choices: param.options,
+        }
+      } else {
+        throw new Error(`Unknown parameter type: ${param.type}`)
+      }
     })
   }
 

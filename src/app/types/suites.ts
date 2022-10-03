@@ -1,18 +1,21 @@
 interface SuiteConfiguration {
-  scripts: Script[]
+  scripts: SuiteScriptConfiguration[]
 }
 
-interface Script {
+interface SuiteScriptConfiguration {
   path: string
   environment_parameters: EnvironmentParameter[]
 }
+
+type SuiteScriptParams = Array<{ name: string; value: string }>
 
 interface EnvironmentParameter {
   name: string
   label: string
   description?: string
   type: 'string' | 'select'
-  default: string
+  default?: string
+  required?: boolean
   options?: Array<OptionClass | string>
 }
 
@@ -21,4 +24,4 @@ interface OptionClass {
   label: string
 }
 
-export { SuiteConfiguration }
+export { EnvironmentParameter, SuiteConfiguration, SuiteScriptConfiguration, SuiteScriptParams }

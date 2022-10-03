@@ -37,9 +37,11 @@ export class DynamicFormService {
         const config: FormItemDropdownConfig = {
           help: entry.help,
           key: entry.parameter_name,
-          label: entry.parameter_name,
+          label: entry.parameter_label || entry.parameter_name,
           value: entry.default ? String(entry.default) : '',
-          options: entry.choices.map((o) => ({ key: o, value: o })),
+          options: entry.choices.map((o) =>
+            typeof o === 'string' ? { key: o, value: o } : { key: o.value, value: o.label }
+          ),
           multiple: ['*', '+'].includes(entry.nargs),
         }
         if (config.multiple) {
@@ -55,9 +57,9 @@ export class DynamicFormService {
         input = new FormItemText({
           help: entry.help,
           key: entry.parameter_name,
-          label: entry.parameter_name,
+          label: entry.parameter_label || entry.parameter_name,
           type: 'text',
-          value: '',
+          value: entry.default ? String(entry.default) : '',
         })
       }
       inputs.push(input)
@@ -90,7 +92,7 @@ export class DynamicFormService {
     return inputs
   }
 
-  readInputs(formParams: ToolParameter[], form: UntypedFormGroup) {
+  readInputs(formParams: ToolParameter[], form: UntypedFormGroup): string[] {
     return formParams
       .map((item) => {
         const control = form.get(item.parameter_name)
