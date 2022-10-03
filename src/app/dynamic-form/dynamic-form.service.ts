@@ -4,7 +4,7 @@ import { Action, ToolParameter } from '../types/ToolsParameters'
 import { FormItemCheckbox } from './FormItemCheckbox'
 import { FormItemDropdown } from './FormItemDropdown'
 import { FormItemText } from './FormItemText'
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms'
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms'
 import { FormItemDropdownConfig } from './FormItemDropdownConfig'
 import { pairwise, startWith } from 'rxjs/operators'
 
@@ -23,8 +23,6 @@ export class DynamicFormService {
         // skip parameter
         continue
       }
-      // mytodo: required item
-      // mytodo: validations
       let input: FormItemBase<any>
       if (entry.action === Action.StoreTrue) {
         input = new FormItemCheckbox({
@@ -69,7 +67,7 @@ export class DynamicFormService {
           // multiselect - convert to array
           value = input.value.split(',').filter(Boolean)
         }
-        form.addControl(input.key, new UntypedFormControl(value))
+        form.addControl(input.key, new UntypedFormControl(value, entry.required ? [Validators.required] : []))
 
         // add reactive listener to mutually exclude noOptionsSymbol and other options
         if (input instanceof FormItemDropdown && input.multiple) {
