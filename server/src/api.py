@@ -188,7 +188,7 @@ def read_remote_file(remote_path):
 def run_script_in_suite_with_environment_parameters(suite_path, script_path, parameters):
     """
     Run script in case directory.
-    Parameters are accepted as array of objects with props "name" and "value".
+    Parameters should have property environment_parameters which is an array of objects with props "name" and "value".
 
     Returns PID
     """
