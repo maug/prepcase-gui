@@ -229,11 +229,13 @@ def process_info(process_info_dir, pid):
         s = read_remote_file(process_info_path)
         info = json.loads(s)
         info['pid'] = pid
-        info['exit_code'] = ''
+        info['exit_code'] = 'unknown'
         info['status'] = process_status(pid)
         if info['status'] == 'COMPLETE':
-            info['exit_code'] = int(read_remote_file(process_info_dir + '/' + str(pid) + '/exit_code.txt'))
-
+            try:
+                info['exit_code'] = int(read_remote_file(process_info_dir + '/' + str(pid) + '/exit_code.txt'))
+            except RemoteIOError:
+                pass
 
         start_time = read_remote_file(process_info_dir + '/' + str(pid) + '/start_time.txt')
         info['start_time'] = int(start_time)
