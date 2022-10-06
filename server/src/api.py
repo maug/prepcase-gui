@@ -128,6 +128,7 @@ def quote(s):
     # TODO: make sure 's are quoted, etc.
     return '"' + s + '"'
 
+
 SCRIPT_TO_START_SCRIPT="""
 PROCESS_INFO_DIR={suite_path}/.running_scripts/
 mkdir -p $PROCESS_INFO_DIR
@@ -136,15 +137,25 @@ cd {suite_path}
 PROCESS_DIR=$(mktemp -d)
 OUTPUT_FILE=$PROCESS_DIR/output.txt
 
-nohup {suite_path}/{script_path} > $OUTPUT_FILE 2>&1 &
+cd $PROCESS_DIR
+
+echo {suite_path}/{script_path} >wrapper.sh
+echo 'echo $? > exit_code.txt'       >>wrapper.sh
+chmod +x wrapper.sh
+
+nohup ./wrapper.sh > $OUTPUT_FILE 2>&1 &
 PROCESS_PID=$!
-echo PROCESS_PID=$PROCESS_PID
 
 mv $PROCESS_DIR $PROCESS_INFO_DIR/$PROCESS_PID
+echo PROCESS_PID=$PROCESS_PID
+cd $PROCESS_INFO_DIR/$PROCESS_PID
+
+stat -c'%Z' . >start_time.txt
 """
 
+
 def script_to_start_script(suite_path, script_path, parameters):
-    env = '\n'.join('export ' + e['name']  + '=' + quote(e['value']) for e in parameters)
+    env = '\n'.join('export ' + e['name']  + '=' + quote(e['value']) for e in parameters['environment_parameters'])
     return '\n'.join((env, SCRIPT_TO_START_SCRIPT.format(suite_path=suite_path, script_path=script_path)))
 
 
@@ -177,7 +188,7 @@ def read_remote_file(remote_path):
 def run_script_in_suite_with_environment_parameters(suite_path, script_path, parameters):
     """
     Run script in case directory.
-    Parameters are accepted as array of objects with props "name" and "value".
+    Parameters should have property environment_parameters which is an array of objects with props "name" and "value".
 
     Returns PID
     """
@@ -185,11 +196,14 @@ def run_script_in_suite_with_environment_parameters(suite_path, script_path, par
     target_starter_path = "/tmp/prepcase_starter.sh"
     save_to_remote_file(starter_script, target_starter_path)
     result = globals.ssh.ssh_execute('sh ' + target_starter_path)
-    pid = int(result['stdout'].split('=')[1])
-    process_info_path = '{suite_path}/.running_scripts/{pid}/process.json'.format(suite_path=suite_path, pid=pid)
-    process_info = dict(script_path=script_path, pid=pid, parameters=parameters)
-    save_to_remote_file(json.dumps(process_info), process_info_path)
-    return pid
+    try:
+        pid = int(result['stdout'].split('=')[1])
+        process_info_path = '{suite_path}/.running_scripts/{pid}/process.json'.format(suite_path=suite_path, pid=pid)
+        process_info = dict(script_path=script_path, pid=pid, parameters=parameters)
+        save_to_remote_file(json.dumps(process_info), process_info_path)
+        return pid
+    except IndexError:
+        raise Exception('Unexpected output of prepcase_starter.sh: ' + result['stdout'])
 
 
 def is_int(s):
@@ -215,12 +229,21 @@ def process_info(process_info_dir, pid):
         s = read_remote_file(process_info_path)
         info = json.loads(s)
         info['pid'] = pid
-        info['exit_code'] = 0  # TODO
-        info['start_time'] = 0  # TODO
-        info['current_time'] = 0  # TODO
+        info['exit_code'] = ''
         info['status'] = process_status(pid)
-    except RemoteIOError:
-        pass
+        if info['status'] == 'COMPLETE':
+            info['exit_code'] = int(read_remote_file(process_info_dir + '/' + str(pid) + '/exit_code.txt'))
+
+
+        start_time = read_remote_file(process_info_dir + '/' + str(pid) + '/start_time.txt')
+        info['start_time'] = int(start_time)
+
+        result = globals.ssh.ssh_execute("date +%s")
+
+        current_time = int(result['stdout'])
+        info['current_time'] = current_time
+    except RemoteIOError as e:
+        raise e
     return info
 
 
@@ -254,9 +277,9 @@ def show_script_execution_details_for_suite(suite_path, pid, output_start_line, 
         exit code,
         output_lines
     """
-    process_info_dir = '{suite_path}/.running_scripts/{pid}/'.format(suite_path=suite_path, pid=pid)
+    process_info_dir = '{suite_path}/.running_scripts'.format(suite_path=suite_path)
     pi = process_info(process_info_dir, int(pid))
-    output = read_remote_file(process_info_dir + '/output.txt')
+    output = read_remote_file(process_info_dir + '/' + str(pid) + '/output.txt')
     output_chunk = '\n'.join(output.split('\n')[output_start_line: output_start_line + max_lines])
     pi['output_lines'] = output_chunk
     return pi
