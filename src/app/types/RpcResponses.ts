@@ -1,5 +1,5 @@
 import { NamelistsByComponent } from './namelists'
-import { SuiteConfiguration } from './suites'
+import { SuiteConfiguration, SuiteProcessDetails, SuiteProcessDetailsWithOutput } from './suites'
 
 export interface RpcExecuteCommandResponse {
   command: string
@@ -37,3 +37,9 @@ export interface RpcGetSuiteResponse {
   path: string
   configuration: SuiteConfiguration
 }
+
+export type RpcSuiteRunScriptResponse = number
+
+export type RpcSuiteProcessesResponse = Array<SuiteProcessDetails>
+
+export type RpcSuiteProcessesDetailsResponse = SuiteProcessDetailsWithOutput

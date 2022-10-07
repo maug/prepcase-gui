@@ -21,6 +21,46 @@
       ]
     },
     {
+      "path": "./main_scripts/_dev_test_2_long.sh",
+      "environment_parameters": [
+        {
+          "name": "PARAM1",
+          "label": "Param 1",
+          "description": "",
+          "type": "string",
+          "default": "---test value---"
+        },
+        {
+          "name": "PARAM2",
+          "label": "Param 2",
+          "description": "",
+          "type": "select",
+          "options": ["TRUE", "FALSE"],
+          "required": true
+        }
+      ]
+    },
+    {
+      "path": "./main_scripts/_dev_test_3_infinite.sh",
+      "environment_parameters": [
+        {
+          "name": "PARAM1",
+          "label": "Param 1",
+          "description": "",
+          "type": "string",
+          "default": "---test value---"
+        },
+        {
+          "name": "PARAM2",
+          "label": "Param 2",
+          "description": "",
+          "type": "select",
+          "options": ["TRUE", "FALSE"],
+          "required": true
+        }
+      ]
+    },
+    {
       "path": "./main_scripts/cases_create.sh",
       "environment_parameters": [
         {
