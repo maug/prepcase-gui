@@ -164,6 +164,7 @@ def save_to_remote_file(s, remote_path):
         fd, temp_path = tempfile.mkstemp()
         with os.fdopen(fd, 'w') as f:
             f.write(s)
+            f.close()
         result = globals.ssh.scp_to_remote(temp_path, remote_path)
         if result['return_code']:
             raise RemoteIOError(result)
@@ -196,9 +197,11 @@ def run_script_in_suite_with_environment_parameters(suite_path, script_path, par
     target_starter_path = "/tmp/prepcase_starter.sh"
     save_to_remote_file(starter_script, target_starter_path)
     result = globals.ssh.ssh_execute('sh ' + target_starter_path)
+
     try:
+        # {'command': u'ssh piotr@localhost sh /tmp/prepcase_starter.sh', 'return_code': 0, 'stderr': '', 'stdout': 'PROCESS_PID=190981\n'}
         pid = int(result['stdout'].split('=')[1])
-        process_info_path = '{suite_path}/.running_scripts/{pid}/process.json'.format(suite_path=suite_path, pid=pid)
+        process_info_path = process_path(suite_path, pid, "process.json")
         process_info = dict(script_path=script_path, pid=pid, parameters=parameters)
         save_to_remote_file(json.dumps(process_info), process_info_path)
         return pid
@@ -222,20 +225,37 @@ def process_status(pid):
         return result['stdout'].split('\n')[1].split()[2]
 
 
-def process_info(process_info_dir, pid):
-    process_info_path = process_info_dir + '/' + str(pid) + '/process.json'
+def running_scripts_path(suite_path):
+    return os.path.join(suite_path, ".running_scripts")
+
+
+def process_info_dir(suite_path, pid):
+    return os.path.join(running_scripts_path(suite_path), str(pid))
+
+
+def process_path(suite_path, pid, path_name):
+    return os.path.join(process_info_dir(suite_path, pid), path_name)
+
+
+def exit_code(suite_path, pid):
+    return int(read_remote_file(process_path(suite_path, pid, 'exit_code.txt')))
+
+
+def process_info(suite_path, pid):
     info = {'pid': pid}
     try:
-        s = read_remote_file(process_info_path)
+        s = read_remote_file(process_path(suite_path, pid, 'process.json'))
         info = json.loads(s)
         info['pid'] = pid
-        info['exit_code'] = ''
+        info['exit_code'] = 'unknown'
         info['status'] = process_status(pid)
         if info['status'] == 'COMPLETE':
-            info['exit_code'] = int(read_remote_file(process_info_dir + '/' + str(pid) + '/exit_code.txt'))
+            try:
+                info['exit_code'] = exit_code(suite_path, pid)
+            except RemoteIOError:
+                pass
 
-
-        start_time = read_remote_file(process_info_dir + '/' + str(pid) + '/start_time.txt')
+        start_time = read_remote_file(process_path(suite_path, pid, 'start_time.txt'))
         info['start_time'] = int(start_time)
 
         result = globals.ssh.ssh_execute("date +%s")
@@ -247,8 +267,8 @@ def process_info(process_info_dir, pid):
     return info
 
 
-def suite_processes(process_info_dir):
-    result = globals.ssh.ssh_execute('ls', [process_info_dir])
+def suite_processes(suite_path):
+    result = globals.ssh.ssh_execute('ls', [running_scripts_path(suite_path)])
     if result['return_code']:
         raise Exception(result)
     output = result['stdout']
@@ -261,8 +281,7 @@ def show_script_executions_for_suite(suite_path):
     """
     Returns, for each process, PID, script, start date, current date, status (running or not), exit code
     """
-    process_info_dir = '{suite_path}/.running_scripts/'.format(suite_path=suite_path)
-    return [process_info(process_info_dir, int(d)) for d in suite_processes(process_info_dir)]
+    return [process_info(suite_path, d) for d in suite_processes(suite_path)]
 
 
 @jsonrpc.method('App.show_script_execution_details_for_suite')
@@ -277,9 +296,8 @@ def show_script_execution_details_for_suite(suite_path, pid, output_start_line, 
         exit code,
         output_lines
     """
-    process_info_dir = '{suite_path}/.running_scripts'.format(suite_path=suite_path)
-    pi = process_info(process_info_dir, int(pid))
-    output = read_remote_file(process_info_dir + '/' + str(pid) + '/output.txt')
+    pi = process_info(suite_path, pid)
+    output = read_remote_file(process_path(suite_path, pid, 'output.txt'))
     output_chunk = '\n'.join(output.split('\n')[output_start_line: output_start_line + max_lines])
     pi['output_lines'] = output_chunk
     return pi
