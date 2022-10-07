@@ -24,4 +24,25 @@ interface OptionClass {
   label: string
 }
 
-export { EnvironmentParameter, SuiteConfiguration, SuiteScriptConfiguration, SuiteScriptParams }
+interface SuiteProcessDetails {
+  current_time: number
+  exit_code: number | string
+  parameters: SuiteScriptParams
+  pid: number
+  script_path: string
+  start_time: 0
+  status: string
+}
+
+interface SuiteProcessDetailsWithOutput extends SuiteProcessDetails {
+  output_lines: any
+}
+
+export {
+  EnvironmentParameter,
+  SuiteConfiguration,
+  SuiteScriptConfiguration,
+  SuiteScriptParams,
+  SuiteProcessDetails,
+  SuiteProcessDetailsWithOutput,
+}

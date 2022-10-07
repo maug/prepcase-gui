@@ -31,7 +31,9 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 import { SuitesComponent } from './suites/suites.component'
 import { ErrorDialogService } from './errors/error-dialog.service'
 import { ErrorDialogComponent } from './errors/error-dialog/error-dialog.component';
-import { SuiteComponent } from './suite/suite.component'
+import { SuiteComponent } from './suite/suite.component';
+import { ProcessesComponent } from './suite/processes/processes.component';
+import { ProcessComponent } from './suite/process/process.component'
 
 @NgModule({
   declarations: [
@@ -53,6 +55,8 @@ import { SuiteComponent } from './suite/suite.component'
     ConfirmDialogComponent,
     SuitesComponent,
     SuiteComponent,
+    ProcessesComponent,
+    ProcessComponent,
   ],
   imports: [
     AppMaterialModule,
