@@ -130,33 +130,29 @@ def quote(s):
 
 
 SCRIPT_TO_START_SCRIPT="""
-PROCESS_INFO_DIR={suite_path}/.running_scripts/
+PROCESS_PID=$$
+echo $PROCESS_PID >{pid_path}
+
+echo ===== PROCESS_PID=$PROCESS_PID
+
+PROCESS_INFO_DIR={suite_path}/.running_scripts/$PROCESS_PID
 mkdir -p $PROCESS_INFO_DIR
 
+ln -s {output_path} $PROCESS_INFO_DIR/output.txt
+stat -c'%Z' .    >$PROCESS_INFO_DIR/start_time.txt
+
 cd {suite_path}
-PROCESS_DIR=$(mktemp -d)
-OUTPUT_FILE=$PROCESS_DIR/output.txt
+{suite_path}/{script_path}
 
-cd $PROCESS_DIR
-
-echo {suite_path}/{script_path} >wrapper.sh
-echo 'echo $? > exit_code.txt'       >>wrapper.sh
-chmod +x wrapper.sh
-
-nohup ./wrapper.sh > $OUTPUT_FILE 2>&1 &
-PROCESS_PID=$!
-
-mv $PROCESS_DIR $PROCESS_INFO_DIR/$PROCESS_PID
-echo PROCESS_PID=$PROCESS_PID
-cd $PROCESS_INFO_DIR/$PROCESS_PID
-
-stat -c'%Z' . >start_time.txt
+echo $?          >$PROCESS_INFO_DIR/exit_code.txt
+mv {output_path} $PROCESS_INFO_DIR/output.txt
 """
 
 
-def script_to_start_script(suite_path, script_path, parameters):
+def script_to_start_script(suite_path, script_path, parameters, output_path, pid_path):
     env = '\n'.join('export ' + e['name']  + '=' + quote(e['value']) for e in parameters['environment_parameters'])
-    return '\n'.join((env, SCRIPT_TO_START_SCRIPT.format(suite_path=suite_path, script_path=script_path)))
+    script = SCRIPT_TO_START_SCRIPT.format(suite_path=suite_path, script_path=script_path, output_path=output_path, pid_path=pid_path)
+    return '\n'.join((env, script))
 
 
 def save_to_remote_file(s, remote_path):
@@ -184,6 +180,12 @@ def read_remote_file(remote_path):
         os.remove(temp_path)
 
 
+def remote_mktemp():
+    result = globals.ssh.ssh_execute('mktemp')
+    pid_path = result['stdout'].strip()
+    return pid_path
+
+
 
 @jsonrpc.method('App.run_script_in_suite_with_environment_parameters')
 def run_script_in_suite_with_environment_parameters(suite_path, script_path, parameters):
@@ -193,14 +195,18 @@ def run_script_in_suite_with_environment_parameters(suite_path, script_path, par
 
     Returns PID
     """
-    starter_script = script_to_start_script(suite_path, script_path, parameters)
+
+    pid_path = remote_mktemp()
+    output_path = remote_mktemp()
+
+    starter_script = script_to_start_script(suite_path, script_path, parameters, output_path, pid_path)
+
     target_starter_path = "/tmp/prepcase_starter.sh"
     save_to_remote_file(starter_script, target_starter_path)
-    result = globals.ssh.ssh_execute('sh ' + target_starter_path)
+    result = globals.ssh.ssh_execute('nohup sh ' + target_starter_path + ' >' + output_path + ' 2>&1 </dev/null &')
 
     try:
-        # {'command': u'ssh piotr@localhost sh /tmp/prepcase_starter.sh', 'return_code': 0, 'stderr': '', 'stdout': 'PROCESS_PID=190981\n'}
-        pid = int(result['stdout'].split('=')[1])
+        pid = read_remote_file(pid_path).strip()
         process_info_path = process_path(suite_path, pid, "process.json")
         process_info = dict(script_path=script_path, pid=pid, parameters=parameters)
         save_to_remote_file(json.dumps(process_info), process_info_path)
