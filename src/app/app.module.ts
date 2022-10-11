@@ -30,10 +30,11 @@ import { ScriptsComponent } from './scripts/scripts.component'
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component'
 import { SuitesComponent } from './suites/suites.component'
 import { ErrorDialogService } from './errors/error-dialog.service'
-import { ErrorDialogComponent } from './errors/error-dialog/error-dialog.component';
-import { SuiteComponent } from './suite/suite.component';
-import { ProcessesComponent } from './suite/processes/processes.component';
+import { ErrorDialogComponent } from './errors/error-dialog/error-dialog.component'
+import { SuiteComponent } from './suite/suite.component'
+import { ProcessesComponent } from './suite/processes/processes.component'
 import { ProcessComponent } from './suite/process/process.component'
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { ProcessComponent } from './suite/process/process.component'
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(appRoutes, { enableTracing: false, relativeLinkResolution: 'legacy' }),
+    MatProgressSpinnerModule,
   ],
   providers: [
     { provide: ErrorHandler, useClass: GlobalErrorHandler },

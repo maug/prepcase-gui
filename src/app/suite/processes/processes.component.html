@@ -35,14 +35,8 @@
           {{ element.pid }}
         </td>
       </ng-container>
-      <ng-container matColumnDef="show_details">
-        <th mat-header-cell *matHeaderCellDef style="white-space: nowrap; padding-right: 1rem; width: 10%"></th>
-        <td mat-cell *matCellDef="let element" style="white-space: nowrap; font-family: monospace">
-          <button mat-raised-button (click)="showDetails(element)">Show output</button>
-        </td>
-      </ng-container>
       <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-      <tr mat-row *matRowDef="let row; columns: columnsToDisplay" (click)="(null)"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnsToDisplay" (click)="showDetails(row)"></tr>
     </table>
   </div>
 </div>

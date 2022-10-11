@@ -1,11 +1,10 @@
 <h1 mat-dialog-title>Process details</h1>
 
 <div mat-dialog-content>
-    <div>
-        dupa
-    </div>
-
-    <div style='white-space: pre-wrap;'>{{scriptOutput}}</div>
+  <div>todo: process details</div>
+  <div class="script-output">{{ scriptOutput }}</div>
+  <div *ngIf="isPollingOutput" class="script-loading"><mat-spinner [diameter]='16'></mat-spinner><div>Loading output...</div></div>
+  <div *ngIf="!isPollingOutput" class="script-loading"><div>Script ended</div></div>
 </div>
 
 <div mat-dialog-actions>

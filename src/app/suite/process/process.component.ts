@@ -20,16 +20,40 @@ export class ProcessComponent implements OnInit {
     private dataService: SuiteService
   ) {}
 
+  process: SuiteProcessDetails = null
   scriptOutput: string = ''
+  isPollingOutput = true
+  private timerRef = null
 
   ngOnInit() {
-    this.dataService.getProcessDetails(this.data.suiteRoot, this.data.process.pid).subscribe((res) => {
-      console.log('process details', res)
-      this.scriptOutput = res.output_lines
-    })
+    this.getOutput(true)
   }
 
   onCancel() {
+    window.clearTimeout(this.timerRef)
+    this.timerRef = null
     this.selfRef.close(false)
+  }
+
+  getOutput(isFirstCall: boolean) {
+    this.timerRef = window.setTimeout(
+      () => {
+        const linesLoaded = this.scriptOutput.split('\n').length - 1
+        this.dataService
+          .getProcessDetails(this.data.suiteRoot, this.data.process.pid, linesLoaded, 10)
+          .subscribe((res) => {
+            console.log('process details', res)
+            this.scriptOutput += res.output_lines + '\n'
+            if (res.status === 'COMPLETE') {
+              this.isPollingOutput = false
+            } else {
+              if (this.timerRef) {
+                this.getOutput(false)
+              }
+            }
+          })
+      },
+      isFirstCall ? 0 : 1000
+    )
   }
 }
