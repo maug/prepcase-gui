@@ -35,7 +35,7 @@ interface SuiteProcessDetails {
 }
 
 interface SuiteProcessDetailsWithOutput extends SuiteProcessDetails {
-  output_lines: any
+  output_lines: string[]
 }
 
 export {

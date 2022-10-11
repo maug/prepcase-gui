@@ -304,8 +304,7 @@ def show_script_execution_details_for_suite(suite_path, pid, output_start_line, 
     """
     pi = process_info(suite_path, pid)
     output = read_remote_file(process_path(suite_path, pid, 'output.txt'))
-    output_chunk = '\n'.join(output.split('\n')[output_start_line: output_start_line + max_lines])
-    pi['output_lines'] = output_chunk
+    pi['output_lines'] = output.splitlines()[output_start_line: output_start_line + max_lines]
     return pi
 
 
