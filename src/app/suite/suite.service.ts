@@ -43,9 +43,12 @@ export class SuiteService {
     return this.jsonRpcService.rpc(environment.jsonRpcUrl, 'App.show_script_executions_for_suite', [suiteRoot])
   }
 
-  getProcessDetails(suiteRoot: string, pid: number): Observable<RpcSuiteProcessesDetailsResponse> {
-    const startLine = 0
-    const maxLines = 10
+  getProcessDetails(
+    suiteRoot: string,
+    pid: number,
+    startLine: number,
+    maxLines: number
+  ): Observable<RpcSuiteProcessesDetailsResponse> {
     return this.jsonRpcService.rpc(environment.jsonRpcUrl, 'App.show_script_execution_details_for_suite', [
       suiteRoot,
       pid,

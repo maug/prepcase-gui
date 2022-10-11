@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core'
 import { SuiteService } from '../suite.service'
 import { SuiteProcessDetails } from '../../types/suites'
 import { formatISO9075 } from 'date-fns'
-import { SubmitWithCylcDialogComponent } from '../../submit-with-cylc-dialog/submit-with-cylc-dialog.component'
 import { MatDialog } from '@angular/material/dialog'
 import { ProcessComponent } from '../process/process.component'
 
@@ -16,7 +15,7 @@ export class ProcessesComponent implements OnInit {
 
   isLoaded = false
   processes: SuiteProcessDetails[] = []
-  columnsToDisplay = ['start_time', 'script_path', 'status', 'exit_code', 'pid', 'show_details']
+  columnsToDisplay = ['start_time', 'script_path', 'status', 'exit_code', 'pid']
 
   constructor(private dataService: SuiteService, private dialog: MatDialog) {}
 
@@ -60,3 +59,12 @@ export class ProcessesComponent implements OnInit {
 // W    paging (not valid since the 2.6.xx kernel)
 // X    dead (should never be seen)
 // Z    defunct ("zombie") process, terminated but not reaped by its parent
+//
+// For BSD formats and when the stat keyword is used, additional characters may be displayed:
+//
+// <	high-priority (not nice to other users)
+// N	low-priority (nice to other users)
+// L	has pages locked into memory (for real-time and custom IO)
+// s	is a session leader
+// l	is multi-threaded (using CLONE_THREAD, like NPTL pthreads do)
+// +	is in the foreground process group

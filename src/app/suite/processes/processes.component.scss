@@ -1,0 +1,11 @@
+.mat-row:hover {
+  background-color: #33333310;
+  cursor: pointer;
+}
+
+.mat-cell {
+  white-space: nowrap;
+  width: 10%;
+  padding-right: 1rem;
+  font-family: monospace;
+}

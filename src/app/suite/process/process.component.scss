@@ -1,0 +1,15 @@
+.script-output {
+  font-family: monospace;
+  white-space: pre-wrap;
+  background-color: #eeeeee;
+  padding: 10px;
+  height: 30em;
+  overflow: auto;
+}
+
+.script-loading {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
