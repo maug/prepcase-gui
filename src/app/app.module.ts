@@ -34,7 +34,8 @@ import { ErrorDialogComponent } from './errors/error-dialog/error-dialog.compone
 import { SuiteComponent } from './suite/suite.component'
 import { ProcessesComponent } from './suite/processes/processes.component'
 import { ProcessComponent } from './suite/process/process.component'
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component'
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
     SuiteComponent,
     ProcessesComponent,
     ProcessComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     AppMaterialModule,
