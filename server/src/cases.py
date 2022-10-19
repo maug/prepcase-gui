@@ -5,14 +5,11 @@ import globals
 
 def list_cases(case_dirs):
     """
-    Scan case_dirs (and home dir) and return case dirs grouped by case_dirs
+    Scan case_dirs and return case dirs grouped by case_dirs
     :param case_dirs:
     :return:
     """
 
-    case_dirs = case_dirs[:]
-    # append home dir
-    case_dirs.append('~')
     real_dirs = get_real_case_dirs(case_dirs)
     grouped_dirs = {}
     for directory in real_dirs:
