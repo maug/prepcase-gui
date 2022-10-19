@@ -16,6 +16,7 @@ export const appRoutes: Routes = [
   { path: 'create-newcase', component: CreateNewcaseComponent, canActivate: [AuthGuard] },
   { path: 'case/:caseRoot', component: CaseComponent, canActivate: [AuthGuard] },
   { path: 'namelists/:caseRoot', component: NamelistsComponent, canActivate: [AuthGuard] },
+  { path: 'namelists-multi/:multiRoot', component: NamelistsComponent, canActivate: [AuthGuard] },
   { path: 'suites', component: SuitesComponent, canActivate: [AuthGuard] },
   { path: 'suite/:suiteRoot', component: SuiteComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/login', pathMatch: 'full' },

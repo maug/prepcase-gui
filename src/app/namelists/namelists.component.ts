@@ -8,8 +8,8 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms'
 import { CdkTextareaAutosize } from '@angular/cdk/text-field'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { PleaseWaitOverlayService } from '../please-wait-overlay/please-wait-overlay.service'
-import { catchError } from 'rxjs/operators'
-import { of } from 'rxjs'
+import { forkJoin, Observable, of } from 'rxjs'
+import { RpcNamelistsResponse } from '../types/RpcResponses'
 
 interface Var {
   key: string
@@ -23,9 +23,10 @@ interface Var {
 })
 export class NamelistsComponent implements OnInit {
   isLoaded = false
-  caseRoot: string
+  caseRoot: string // case dir or if isMultiCase=true the root of cases dirs
+  isMultiCase: boolean = false
   defs: { [component: string]: any } = {}
-  namelists: NamelistsByComponent
+  namelists: NamelistsByComponent = {}
   areNamelistsChanged = false
   forms: { [component: string]: UntypedFormGroup } = {}
   isFormValid: { [component: string]: boolean } = {}
@@ -49,31 +50,30 @@ export class NamelistsComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(async (paramMap) => {
-      this.caseRoot = paramMap.get('caseRoot')
-      this.namelistsService
-        .getNamelists(this.caseRoot)
-        .pipe(catchError((error) => of({ error, namelists: {} })))
-        .subscribe((data) => {
-          if (data.error) {
-            this.displayError(data.error)
-            return
-          }
+      this.caseRoot = paramMap.get('caseRoot') ?? paramMap.get('multiRoot')
+      this.isMultiCase = !!paramMap.get('multiRoot')
 
+      if (this.isMultiCase) {
+        this.namelistsService.getCaseList(this.caseRoot).subscribe((data) => {
+          const caseRoots: string[] = Object.values(data).flatMap((x) => x)
+          const forkObject: { [caseRoot: string]: Observable<RpcNamelistsResponse> } = Object.fromEntries(
+            caseRoots.map((dir) => [dir, this.namelistsService.getNamelists(dir)])
+          )
+          forkJoin<typeof forkObject, keyof typeof forkJoin>(forkObject).subscribe((forkData) => {
+            Object.entries(forkData).forEach(([dir, res]) => this.mergeNamelists(res.namelists, dir))
+
+            this.initForms()
+            this.isLoaded = true
+          })
+        })
+      } else {
+        this.namelistsService.getNamelists(this.caseRoot).subscribe((data) => {
           this.namelists = data.namelists
 
-          for (const [component, entries] of Object.entries(this.namelists)) {
-            const inputs = {
-              [this.varInputKey]: '',
-              [this.valueInputKey]: '',
-            }
-            entries.forEach((namelist) => (inputs[namelist.filename] = false))
-            this.forms[component] = this.formBuilder.group(inputs)
-          }
-
-          this.onChanges()
-
+          this.initForms()
           this.isLoaded = true
         })
+      }
     })
   }
 
@@ -133,18 +133,39 @@ export class NamelistsComponent implements OnInit {
   }
 
   saveNamelists() {
+    const onSuccess = () => {
+      this.snackBar.open(`Namelists saved`, '', { duration: 2000 })
+      this.pleaseWaitService.hide()
+    }
+
     this.pleaseWaitService.show()
-    this.namelistsService
-      .updateNamelists(this.caseRoot, this.namelists)
-      .pipe(catchError((error) => of({ error })))
-      .subscribe((data) => {
-        if (data.error) {
-          this.displayError(data.error)
-        } else {
-          this.snackBar.open(`Namelists updated`, '', { duration: 2000 })
-        }
-        this.pleaseWaitService.hide()
+
+    if (this.isMultiCase) {
+      const flatList: Array<Namelist & { component: string }> = Object.entries(this.namelists).flatMap(
+        ([component, namelists]) => namelists.map((namelist) => ({ component, ...namelist }))
+      )
+
+      const groupedByCaseRoot: { [caseRoot: string]: NamelistsByComponent } = {}
+      flatList.forEach((item) => {
+        groupedByCaseRoot[item.caseRoot] ??= {}
+        groupedByCaseRoot[item.caseRoot][item.component] ??= []
+        groupedByCaseRoot[item.caseRoot][item.component].push({
+          ...item,
+          filename: this.splitCaseRootAndFilename(item.filename),
+        })
       })
+
+      const forkObject: { [caseRoot: string]: Observable<RpcNamelistsResponse> } = Object.fromEntries(
+        Object.entries(groupedByCaseRoot).map(([caseRoot, namelists]) => [
+          caseRoot,
+          this.namelistsService.updateNamelists(caseRoot, namelists),
+        ])
+      )
+
+      forkJoin(forkObject).subscribe(onSuccess)
+    } else {
+      this.namelistsService.updateNamelists(this.caseRoot, this.namelists)
+    }
   }
 
   sortByFilename(a: Namelist, b: Namelist): number {
@@ -153,6 +174,19 @@ export class NamelistsComponent implements OnInit {
 
   getComponentHelp(component: string) {
     return this.namelistsService.getNamelistDefinitionLink(component)
+  }
+
+  private initForms(): void {
+    for (const [component, entries] of Object.entries(this.namelists)) {
+      const inputs = {
+        [this.varInputKey]: '',
+        [this.valueInputKey]: '',
+      }
+      entries.forEach((namelist) => (inputs[namelist.filename] = false))
+      this.forms[component] = this.formBuilder.group(inputs)
+    }
+
+    this.onChanges()
   }
 
   private getKeysForComponent(component: string): string[] {
@@ -167,5 +201,30 @@ export class NamelistsComponent implements OnInit {
     this.dialog.open(HelpDialogComponent, {
       data: { header: 'ERROR', texts: [{ text: err, classes: 'pre-wrap monospace error' }] },
     })
+  }
+
+  private mergeNamelists(namelistsByComponent: NamelistsByComponent, caseRoot: string) {
+    Object.entries(namelistsByComponent).forEach(([component, namelists]) => {
+      if (!this.namelists.hasOwnProperty(component)) {
+        this.namelists[component] = []
+      }
+      this.namelists[component].push(
+        ...namelists.map((entry) => ({
+          ...entry,
+          caseRoot,
+          filename: this.joinCaseRootAndFilename(caseRoot, entry.filename),
+        }))
+      )
+    })
+  }
+
+  private joinCaseRootAndFilename(caseRoot: string, filename: string): string {
+    const segments = caseRoot.split('/')
+    return `${segments[segments.length - 1]}/${filename}`
+  }
+
+  private splitCaseRootAndFilename(filenameWithPath: string): string {
+    const segments = filenameWithPath.split('/')
+    return segments[segments.length - 1]
   }
 }
