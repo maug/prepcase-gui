@@ -317,7 +317,7 @@ def list_cases(case_dirs):
 
 
 @jsonrpc.method('App.add_new_case_path')
-def list_cases(new_path):
+def add_new_case_path(new_path):
     """
     Adds new path to user case paths
     """
