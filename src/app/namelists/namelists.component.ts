@@ -164,7 +164,7 @@ export class NamelistsComponent implements OnInit {
 
       forkJoin(forkObject).subscribe(onSuccess)
     } else {
-      this.namelistsService.updateNamelists(this.caseRoot, this.namelists)
+      this.namelistsService.updateNamelists(this.caseRoot, this.namelists).subscribe(onSuccess)
     }
   }
 
