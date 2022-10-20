@@ -33,11 +33,7 @@ def components(namelists_directory):
 
 
 def read_namelists(namelists_directory):
-    try:
-        return {'error': '', 'namelists': components(namelists_directory)}
-    except Exception as e:
-        tb = traceback.format_exc()
-        return {'error': str(e) + '\n' + tb, 'namelists': {}}
+    return {'namelists': components(namelists_directory)}
 
 
 def serialize_proper_list(l):
@@ -93,7 +89,7 @@ def remote_update_namelists(path, namelists_):
     for file_name in file_names:
         res = utils.execute(['scp', temp_nl_dir + '/' + file_name, globals.ssh.username + '@' + globals.ssh.hostname + ':' + path + '/'])
     #shutil.rmtree(temp_nl_dir)
-    res = { 'error': '', 'namelists': namelists_ }
+    res = { 'namelists': namelists_ }
     with open('/tmp/remote_update_namelists.json', 'w') as f:
         f.write(json.dumps(res, indent=4, sort_keys=True))
     return res

@@ -6,6 +6,10 @@ if os.path.exists(os.path.join(os.path.dirname(__file__), '.development')):
             'host': 'prepcase.test',  # Host to execute ssh commands
             'options': ''  # Options for ssh
         },
+        {
+            'host': 'zeus.cmcc.scc',
+            'options': ''
+        },
     ]
 
     CYLC_HOST = 'prepcase.test'

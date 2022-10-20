@@ -8,6 +8,7 @@ import { NamelistsComponent } from './namelists/namelists.component'
 import { SuitesComponent } from './suites/suites.component'
 import { SuiteComponent } from './suite/suite.component'
 import { AuthGuard } from './auth/auth.guard'
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component'
 
 export const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -16,7 +17,9 @@ export const appRoutes: Routes = [
   { path: 'create-newcase', component: CreateNewcaseComponent, canActivate: [AuthGuard] },
   { path: 'case/:caseRoot', component: CaseComponent, canActivate: [AuthGuard] },
   { path: 'namelists/:caseRoot', component: NamelistsComponent, canActivate: [AuthGuard] },
+  { path: 'namelists-multi/:multiRoot', component: NamelistsComponent, canActivate: [AuthGuard] },
   { path: 'suites', component: SuitesComponent, canActivate: [AuthGuard] },
   { path: 'suite/:suiteRoot', component: SuiteComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '**', component: PageNotFoundComponent },
 ]

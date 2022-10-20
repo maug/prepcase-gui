@@ -25,7 +25,6 @@ export interface RpcAddNewCasePathResponse {
 }
 
 export interface RpcNamelistsResponse {
-  error: string
   namelists: NamelistsByComponent
 }
 

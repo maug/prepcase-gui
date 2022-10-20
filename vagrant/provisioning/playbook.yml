@@ -90,6 +90,8 @@
 
     - name: Install chrony (datetime synchronization)
       yum: name=chrony state=present
+    - name: Modify chrony config to work with vagrant
+      lineinfile: dest=/etc/chrony.conf regexp="^makestep " line="makestep 1.0 -1"
     - name: Chrony service state
       service: name=chronyd state=started enabled=yes
 

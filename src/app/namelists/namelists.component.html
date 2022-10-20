@@ -1,8 +1,13 @@
 <div *ngIf="!isLoaded">Loading...</div>
 <div *ngIf="isLoaded">
   <mat-toolbar>
-    Namelists for case&nbsp;&nbsp;
-    <button mat-button color="primary" [routerLink]="['/case', caseRoot]" title="Go to case">{{ caseRoot }}</button>
+    <div *ngIf="!isMultiCase">
+      Namelists for case&nbsp;
+      <button mat-button color="primary" [routerLink]="['/case', caseRoot]" title="Go to case">{{ caseRoot }}</button>
+    </div>
+    <div *ngIf="isMultiCase">
+      Namelists for cases in {{caseRoot}}
+    </div>
     <span class="spacer-max"></span>
     <button mat-flat-button color="primary" [disabled]="!areNamelistsChanged" (click)="saveNamelists()">
       Save namelists

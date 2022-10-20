@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
-import { RpcNamelistsResponse } from '../types/RpcResponses'
+import { RpcCaseListResponse, RpcNamelistsResponse } from '../types/RpcResponses'
 import { JsonRpcService } from '../json-rpc.service'
 import { environment } from '../../environments/environment'
 import { NamelistsByComponent } from '../types/namelists'
@@ -10,6 +10,10 @@ import { NamelistsByComponent } from '../types/namelists'
 })
 export class NamelistsService {
   constructor(private jsonRpc: JsonRpcService) {}
+
+  getCaseList(casesRoot: string): Observable<RpcCaseListResponse> {
+    return this.jsonRpc.rpc(environment.jsonRpcUrl, 'App.list_cases', [[casesRoot]])
+  }
 
   getNamelists(caseRoot: string): Observable<RpcNamelistsResponse> {
     return this.jsonRpc.rpc(environment.jsonRpcUrl, 'App.get_namelists', [caseRoot])
@@ -76,7 +80,6 @@ export class NamelistsService {
 }
 
 const staticNamelistResponse: RpcNamelistsResponse = {
-  error: '',
   namelists: {
     cam: [
       {
