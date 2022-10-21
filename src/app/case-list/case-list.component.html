@@ -17,7 +17,12 @@
 
   <!-- list of cases per dir -->
   <div *ngFor="let group of userCases | keyvalue">
-    <h2 class="case-dir">{{ group.key }}</h2>
+    <h2 class="case-dir">
+      <div>{{ group.key }}</div>
+      <button *ngIf="group.value.length" mat-raised-button [routerLink]="['/namelists-multi', group.key]">
+        Edit namelists
+      </button>
+    </h2>
     <div class="cases">
       <div *ngIf="!group.value.length">No cases</div>
       <div class="mat-body-strong" *ngFor="let dir of group.value">
