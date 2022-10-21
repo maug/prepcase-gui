@@ -20,9 +20,7 @@ export interface RpcCaseListResponse {
   [parentDir: string]: string[]
 }
 
-export interface RpcAddNewCasePathResponse {
-  caseDirs: string[]
-}
+export type RpcAddNewCasePathResponse = string[]
 
 export interface RpcNamelistsResponse {
   namelists: NamelistsByComponent
