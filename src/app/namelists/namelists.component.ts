@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { MatDialog } from '@angular/material/dialog'
 import { NamelistsService } from './namelists.service'
 import { Namelist, NamelistsByComponent, NamelistVarValue } from '../types/namelists'
@@ -39,6 +39,7 @@ export class NamelistsComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private dialog: MatDialog,
     private namelistsService: NamelistsService,
     private pleaseWaitService: PleaseWaitOverlayService,
@@ -56,6 +57,11 @@ export class NamelistsComponent implements OnInit {
       if (this.isMultiCase) {
         this.namelistsService.getCaseList(this.caseRoot).subscribe((data) => {
           const caseRoots: string[] = Object.values(data).flatMap((x) => x)
+          if (caseRoots.length === 0) {
+            this.displayError('No cases found')
+            this.router.navigate(['case-list'])
+            return
+          }
           const forkObject: { [caseRoot: string]: Observable<RpcNamelistsResponse> } = Object.fromEntries(
             caseRoots.map((dir) => [dir, this.namelistsService.getNamelists(dir)])
           )
