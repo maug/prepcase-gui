@@ -46,7 +46,7 @@ export class ProcessComponent implements OnInit {
             console.log('process details', res)
             this.process = res
             this.outputLines.push(...res.output_lines)
-            if (res.status === 'COMPLETE') {
+            if (res.status === 'COMPLETE' && res.output_lines.length === 0) {
               this.isPollingOutput = false
             } else {
               if (this.timerRef) {

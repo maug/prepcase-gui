@@ -20,8 +20,14 @@ export class ProcessesComponent implements OnInit {
   constructor(private dataService: SuiteService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
+    this.loadProcesses()
+  }
+
+  loadProcesses() {
+    this.isLoaded = false
     this.dataService.listProcesses(this.suiteRoot).subscribe((res) => {
       console.log('processesData', res)
+      res.sort((a, b) => b.start_time - a.start_time)
       this.processes = res
       this.isLoaded = true
     })

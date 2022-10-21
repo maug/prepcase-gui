@@ -37,7 +37,7 @@ export class CaseListComponent implements OnInit {
       this.isLoaded = false
       this.newPathInputActive = false
       this.caseListService.addNewCasePath(this.newPath).subscribe((res) => {
-        this.userService.setCaseDirs(res.caseDirs)
+        this.userService.setCaseDirs(res)
         this.newPath = ''
         this.loadCases()
       })

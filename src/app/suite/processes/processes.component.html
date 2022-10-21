@@ -8,9 +8,7 @@
         </td>
       </ng-container>
       <ng-container matColumnDef="script_path">
-        <th mat-header-cell *matHeaderCellDef>
-          Script path
-        </th>
+        <th mat-header-cell *matHeaderCellDef>Script path</th>
         <td mat-cell *matCellDef="let element">
           {{ element.script_path }}
         </td>
@@ -22,9 +20,7 @@
         </td>
       </ng-container>
       <ng-container matColumnDef="exit_code">
-        <th mat-header-cell *matHeaderCellDef>
-          Exit code
-        </th>
+        <th mat-header-cell *matHeaderCellDef>Exit code</th>
         <td mat-cell *matCellDef="let element">
           {{ element.exit_code }}
         </td>
@@ -41,5 +37,10 @@
   </div>
 </div>
 
-<ng-template #loading>Loading processes...</ng-template>
+<ng-template #loading>
+  <div class="loading-wrapper">
+    <mat-spinner [diameter]="16"></mat-spinner>
+    <div>Loading processes...</div>
+  </div></ng-template
+>
 <ng-template #noProcesses>No processes in the suite</ng-template>

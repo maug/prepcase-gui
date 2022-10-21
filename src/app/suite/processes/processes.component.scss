@@ -9,3 +9,10 @@
   padding-right: 1rem;
   font-family: monospace;
 }
+
+.loading-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
