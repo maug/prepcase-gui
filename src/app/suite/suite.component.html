@@ -1,6 +1,7 @@
 <div *ngIf="isLoaded; else loading">
   <mat-toolbar>Suite "{{ suiteRoot }}"</mat-toolbar>
   <div class="suites">
+    <h2>Scripts</h2>
     <div *ngIf="config.scripts.length > 0; else noScripts">
       <div class="mat-body-strong" *ngFor="let script of config.scripts">
         <button mat-button color="primary" (click)="runScript(script)" title="Run script">
@@ -10,7 +11,13 @@
     </div>
   </div>
   <div>
-    <app-processes [suiteRoot]="suiteRoot"></app-processes>
+    <h2 style="display: flex; align-items: center">
+      <div>Processes</div>
+      <button mat-button color="primary" (click)="processes.loadProcesses()" [disabled]='!processes.isLoaded' title="Refresh processes">
+        <i class="material-icons md-18">refresh</i>
+      </button>
+    </h2>
+    <app-processes #processes [suiteRoot]="suiteRoot"></app-processes>
   </div>
 </div>
 
