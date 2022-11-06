@@ -5,10 +5,10 @@
 #
 #
 #===================================================
-NCYCLES=100
+NCYCLES=${NCYCLES:-100}
 
 # After the first cylce CONT_RUN must be TRUE. (Use FALSE only if it is the start.)
-CONT_RUN="TRUE"
+CONT_RUN=${CONT_RUN:-TRUE}
 
 # Activate assimilation or do just a forecast
 ACTIVATE_ASSI="TRUE"

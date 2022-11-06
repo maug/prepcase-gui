@@ -136,8 +136,76 @@
       "environment_parameters": []
     },
     {
-      "path": "./main_scripts/cases_assimilate.csh",
-      "environment_parameters": []
+      "path": "./main_scripts/cases_cycles.csh",
+      "environment_parameters": [
+        {
+          "name": "NCYCLES",
+          "label": "Number of cycles to run",
+          "type": "string",
+          "default": "100"
+        },
+        {
+          "name": "CONT_RUN",
+          "label": "After the first cylce CONT_RUN must be TRUE. (Use FALSE only if it is the start.)",
+          "type": "select",
+          "options": [
+            { "value": "TRUE", "label": "True" },
+            { "value": "FALSE", "label": "False" }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "./main_scripts/cases_restart_management.sh",
+      "environment_parameters": [
+        {
+          "name": "CASESCONTAINER",
+          "label": "Container directory",
+          "type": "string",
+          "default": "/work/csp/${USER}/CESM2"
+        },
+        {
+          "name": "EXPNAME",
+          "label": "Experiment name",
+          "type": "string"
+        },
+	{
+          "name": "NENS",
+          "label": "Number of instances",
+          "type": "string"
+        },
+	{
+          "name": "FLAG",
+          "label": "FLAG",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "./main_scripts/cases_check.sh",
+      "environment_parameters": [
+        {
+          "name": "CASESCONTAINER",
+          "label": "Container directory",
+          "type": "string",
+          "default": "/work/csp/${USER}/CESM2"
+        },
+        {
+          "name": "EXPNAME",
+          "label": "Experiment name",
+          "type": "string"
+        },
+	{
+          "name": "NENS",
+          "label": "Number of instances",
+          "type": "string"
+        },
+	{
+          "name": "FLAG",
+          "label": "FLAG",
+          "type": "string"
+        }
+      ]
     }
   ]
 }
