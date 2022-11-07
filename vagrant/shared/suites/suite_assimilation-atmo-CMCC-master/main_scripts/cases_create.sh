@@ -49,7 +49,7 @@ rttovdir={rttovdir=:-"/users_home/csp/${USER}/rttov123"}
 
 
 # Save cases_create.sh parameters for cases_check.sh
-SCRIPT_DIR=${pwd}
+SCRIPT_DIR=$(pwd)
 CASES_PARAMETERS_FILE=$SCRIPT_DIR/cases_create_params.sh
 echo "# Automatically generated on " ${date}  >$CASES_PARAMETERS_FILE
 echo clonesroot=$clonesroot                   >>$CASES_PARAMETERS_FILE
