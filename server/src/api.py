@@ -42,7 +42,7 @@ def launch_app():
     '%(asctime)s %(levelname)s: %(message)s '
     '[in %(pathname)s:%(lineno)d]'
     ))
-    app.logger.addHandler(handler)
+    #app.logger.addHandler(handler)
     app.logger.addHandler(file_handler)
     app.logger.setLevel(logging.INFO)
     app.logger.info('Starting PrepCASE')
