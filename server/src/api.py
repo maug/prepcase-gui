@@ -326,7 +326,8 @@ def process_info(suite_path, pid):
 
 
 def suite_processes(suite_path):
-    result = globals.ssh.ssh_execute('ls', [running_scripts_path(suite_path)])
+    running_scripts = running_scripts_path(suite_path)
+    result = globals.ssh.ssh_execute('mkdir -p ' + str(running_scripts) + ' && ls', [running_scripts])
     if result['return_code']:
         raise Exception(result)
     output = result['stdout']
