@@ -4,12 +4,14 @@ from flask_jsonrpc import JSONRPC
 from flask_jsonrpc.helpers import make_response
 from flask_cors import CORS, cross_origin
 from flask_session import Session
+import logging
+from logging import Formatter, FileHandler
 import glob
 import os
 import json
 import tempfile
 import logging
-logger = logging.getLogger(__name__)
+import time
 
 import globals
 import env
@@ -19,13 +21,44 @@ import cylc
 import namelists
 import scripts
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = os.urandom(64)
-app.config['SESSION_TYPE'] = 'filesystem'
-Session(app)
-# Server and client code are served on different ports, CORS is needed to allow setting cookies in browser
-CORS(app, supports_credentials=True, origins=env.CORS_ORIGIN) # CORS on different ports
-jsonrpc = JSONRPC(app, '/', enable_web_browsable_api=True)
+
+
+def launch_app():
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = os.urandom(64)
+    app.config['SESSION_TYPE'] = 'filesystem'
+
+
+    # file_handler = FileHandler('/var/log/prepcase.log')
+    file_handler = FileHandler('prepcase.log')
+    handler = logging.StreamHandler()
+    file_handler.setLevel(logging.DEBUG)
+    handler.setLevel(logging.DEBUG)
+    file_handler.setFormatter(Formatter(
+    '%(asctime)s %(levelname)s: %(message)s '
+    '[in %(pathname)s:%(lineno)d]'
+    ))
+    handler.setFormatter(Formatter(
+    '%(asctime)s %(levelname)s: %(message)s '
+    '[in %(pathname)s:%(lineno)d]'
+    ))
+    #app.logger.addHandler(handler)
+    app.logger.addHandler(file_handler)
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('Starting PrepCASE')
+
+    Session(app)
+    # Server and client code are served on different ports, CORS is needed to allow setting cookies in browser
+    CORS(app, supports_credentials=True, origins=env.CORS_ORIGIN) # CORS on different ports
+    jsonrpc = JSONRPC(app, '/', enable_web_browsable_api=True)
+    return app, jsonrpc
+
+
+app, jsonrpc = launch_app()
+globals.app = app
+globals.jsonrpc = jsonrpc
+globals.logger = app.logger
+logger = app.logger
 
 
 class RemoteIOError(Exception):
@@ -145,7 +178,7 @@ cd {suite_path}
 {suite_path}/{script_path}
 
 echo $?          >$PROCESS_INFO_DIR/exit_code.txt
-mv {output_path} $PROCESS_INFO_DIR/output.txt
+mv -f {output_path} $PROCESS_INFO_DIR/output.txt
 """
 
 
@@ -163,6 +196,7 @@ def save_to_remote_file(s, remote_path):
             f.close()
         result = globals.ssh.scp_to_remote(temp_path, remote_path)
         if result['return_code']:
+            logger.error('save_to_remote_file: ' + str(esult['return_code']))
             raise RemoteIOError(result)
     finally:
         os.remove(temp_path)
@@ -180,10 +214,10 @@ def read_remote_file(remote_path):
         os.remove(temp_path)
 
 
-def remote_mktemp():
-    result = globals.ssh.ssh_execute('mktemp')
-    pid_path = result['stdout'].strip()
-    return pid_path
+def remote_mktemp(template, tmpdir='/tmp'):
+    result = globals.ssh.ssh_execute('mkdir -p ' + tmpdir + ' && mktemp -p ' + tmpdir + ' ' + template)
+    temp_file_path = result['stdout'].strip()
+    return temp_file_path
 
 
 
@@ -194,18 +228,36 @@ def run_script_in_suite_with_environment_parameters(suite_path, script_path, par
     Parameters should have property environment_parameters which is an array of objects with props "name" and "value".
 
     Returns PID
+    import pdb; pdb.set_trace()
     """
+    app.logger.info('=== Executing script ' + script_path + ' in suite ' + suite_path)
 
-    pid_path = remote_mktemp()
-    output_path = remote_mktemp()
+    suite_temp_path = safe_join(suite_path, '.tmp')
+
+    pid_path = remote_mktemp('pid_path.XXXX', suite_temp_path)
+    app.logger.info('=== pid_path: ' + pid_path)
+
+    output_path = remote_mktemp('process_output.XXXX', suite_temp_path)
+    app.logger.info('=== output_path: ' + output_path)
 
     starter_script = script_to_start_script(suite_path, script_path, parameters, output_path, pid_path)
+    app.logger.info('=== starter_script: ' + starter_script)
 
     target_starter_path = "/tmp/prepcase_starter.sh"
     save_to_remote_file(starter_script, target_starter_path)
     result = globals.ssh.ssh_execute('nohup sh ' + target_starter_path + ' >' + output_path + ' 2>&1 </dev/null &')
 
     try:
+        """
+        pid = None
+        while not pid:
+            try:
+                pid = read_remote_file(pid_path).strip()
+                if not pid:
+                    time.sleep(1)
+            except RemoteIOError as e:
+                time.sleep(1)
+        """
         pid = read_remote_file(pid_path).strip()
         process_info_path = process_path(suite_path, pid, "process.json")
         process_info = dict(script_path=script_path, pid=pid, parameters=parameters)
@@ -274,7 +326,8 @@ def process_info(suite_path, pid):
 
 
 def suite_processes(suite_path):
-    result = globals.ssh.ssh_execute('ls', [running_scripts_path(suite_path)])
+    running_scripts = running_scripts_path(suite_path)
+    result = globals.ssh.ssh_execute('mkdir -p ' + str(running_scripts) + ' && ls', [running_scripts])
     if result['return_code']:
         raise Exception(result)
     output = result['stdout']

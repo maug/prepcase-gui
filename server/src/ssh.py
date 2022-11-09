@@ -1,12 +1,11 @@
 import subprocess
-import logging
 
 import env
-
 import utils
+import globals
+
 
 class Ssh:
-
     def __init__(self):
         self.hostname = ''
         self.options = ''
@@ -38,7 +37,7 @@ class Ssh:
         ssh_command = ["ssh", self.options, self.username + "@" + self.hostname, cmd]
         print ssh_command
 
-        logging.info("EXECUTE {}".format(ssh_command))
+        globals.logger.info("EXECUTE {}".format(ssh_command))
         return utils.execute(ssh_command)
 
     def scp_to_remote(self, local_file, remote_file):
@@ -48,7 +47,7 @@ class Ssh:
         if not self.username:
             raise Exception('Username not set')
         scp_command = ["scp", self.options, local_file, self.username + "@" + self.hostname + ':' + remote_file]
-        logging.info("EXECUTE {}".format(scp_command))
+        globals.logger.info("EXECUTE {}".format(scp_command))
         return utils.execute(scp_command)
 
     def scp_from_remote(self, remote_file, local_file):
@@ -58,6 +57,6 @@ class Ssh:
         if not self.username:
             raise Exception('Username not set')
         scp_command = ["scp", self.options, self.username + "@" + self.hostname + ':' + remote_file, local_file]
-        logging.info("EXECUTE {}".format(scp_command))
+        globals.logger.info("EXECUTE {}".format(scp_command))
         return utils.execute(scp_command)
 

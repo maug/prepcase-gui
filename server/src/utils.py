@@ -1,4 +1,5 @@
 import subprocess
+import globals
 
 
 def execute(command):
@@ -18,5 +19,6 @@ def execute(command):
                   stderr=stderr,
                   command=" ".join(command))
 
-    print result  # log into /var/log/httpd/prepcase-error.log
+    # print result  # log into /var/log/httpd/prepcase-error.log
+    globals.logger.info("Executed: " + str(result))
     return result

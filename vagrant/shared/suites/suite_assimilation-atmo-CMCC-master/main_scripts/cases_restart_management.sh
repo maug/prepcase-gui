@@ -5,10 +5,10 @@
 #========================================================
 
 
-CASESCONTAINER=/work/csp/${USER}/CESM2
-EXPNAME=$1
-NENS=$2
-FLAG=$3
+CASESCONTAINER=${CASESCONTAINER:-/work/csp/${USER}/CESM2}
+EXPNAME=${EXPNAME:-$1}
+NENS=${NENS:-$2}
+FLAG=${FLAG:-$3}
 
 
 echo -e "\n START RESTART PROCEDURE \n"
@@ -16,7 +16,7 @@ echo -e "\n START RESTART PROCEDURE \n"
 
 echo " Container dir = $CASESCONTAINER"
 echo " Experiment name = $EXPNAME"
-echo " Numeber of instances = $NENS"
+echo " Number of instances = $NENS"
 echo " FLAG = $FLAG"
 
 # Enter in the CASESCONTAINER dir
