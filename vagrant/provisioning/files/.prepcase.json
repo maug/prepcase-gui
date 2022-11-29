@@ -3,6 +3,6 @@
   "cesm_path": "~/cesm",
   "cesm_env_script": "",
   "user_scripts_dir": "",
-  "case_dirs": ["~/shared"],
+  "case_dirs": ["~/shared/cases"],
   "suites_roots": ["~/shared/suites"]
 }

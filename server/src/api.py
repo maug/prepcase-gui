@@ -29,8 +29,7 @@ def launch_app():
     app.config['SESSION_TYPE'] = 'filesystem'
 
 
-    # file_handler = FileHandler('/var/log/prepcase.log')
-    file_handler = FileHandler('prepcase.log')
+    file_handler = FileHandler('/tmp/prepcase.log')
     handler = logging.StreamHandler()
     file_handler.setLevel(logging.DEBUG)
     handler.setLevel(logging.DEBUG)
@@ -427,7 +426,7 @@ def list_suites():
     Returns list of suites read from $HOME/.prepcase.json ("suites_roots"])
     """
     r = {}
-    cfg = json.loads(read_remote_file('$HOME/.prepcase.json'))
+    cfg = json.loads(read_remote_file('.prepcase.json'))
     for suites_root in cfg["suites_roots"]:
         result = globals.ssh.ssh_execute('find ' + suites_root + ' -maxdepth 2 -name .prepcase_suite.json')
         suites_paths = [p[:-len('/.prepcase_suite.json')] for p in result['stdout'].split()]

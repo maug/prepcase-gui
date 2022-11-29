@@ -29,13 +29,13 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 # Python backend
 
-Python backend lives in directory `prepcase-gui/server`.
+Python backend lives in directory `server`.
 
 Dependencies of the project are managed by [Pipenv](https://github.com/pypa/pipenv).
 To start Python environment loaded with project's dependencies:
 
 ```
-$ cd prepcase-gui/server      
+$ cd server      
 $ pipenv install
 $ pipenv shell
 ```
