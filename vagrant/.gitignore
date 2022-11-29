@@ -1,3 +1,4 @@
 .vagrant
 /shared/cases/*
 /shared/suites/**/.running_scripts
+.tmp/
