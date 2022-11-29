@@ -1,7 +1,7 @@
 {
   "scripts": [
     {
-      "path": "./main_scripts/_dev_test_1.sh",
+      "path": "main_scripts/_dev_test_1.sh",
       "environment_parameters": [
         {
           "name": "PARAM1",
@@ -21,7 +21,7 @@
       ]
     },
     {
-      "path": "./main_scripts/_dev_test_2_long.sh",
+      "path": "main_scripts/_dev_test_2_long.sh",
       "environment_parameters": [
         {
           "name": "PARAM1",
@@ -41,7 +41,7 @@
       ]
     },
     {
-      "path": "./main_scripts/_dev_test_3_infinite.sh",
+      "path": "main_scripts/_dev_test_3_infinite.sh",
       "environment_parameters": [
         {
           "name": "PARAM1",
@@ -61,7 +61,7 @@
       ]
     },
     {
-      "path": "./main_scripts/cases_create.sh",
+      "path": "main_scripts/cases_create.sh",
       "environment_parameters": [
         {
           "name": "case_name",
@@ -132,11 +132,11 @@
       ]
     },
     {
-      "path": "./main_scripts/cases_assimilate.csh",
+      "path": "main_scripts/cases_assimilate.csh",
       "environment_parameters": []
     },
     {
-      "path": "./main_scripts/cases_cycles.csh",
+      "path": "main_scripts/cases_cycles.csh",
       "environment_parameters": [
         {
           "name": "NCYCLES",
@@ -156,7 +156,7 @@
       ]
     },
     {
-      "path": "./main_scripts/cases_restart_management.sh",
+      "path": "main_scripts/cases_restart_management.sh",
       "environment_parameters": [
         {
           "name": "CASESCONTAINER",
@@ -182,7 +182,7 @@
       ]
     },
     {
-      "path": "./main_scripts/cases_check.sh",
+      "path": "main_scripts/cases_check.sh",
       "environment_parameters": [
         {
           "name": "CASESCONTAINER",
