@@ -15,8 +15,7 @@
           "label": "Param 2",
           "description": "",
           "type": "select",
-          "options": ["TRUE", "FALSE"],
-          "required": true
+          "options": ["TRUE", "FALSE"]
         }
       ]
     },
