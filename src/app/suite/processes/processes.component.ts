@@ -4,6 +4,7 @@ import { SuiteProcessDetails } from '../../types/suites'
 import { formatISO9075 } from 'date-fns'
 import { MatDialog } from '@angular/material/dialog'
 import { ProcessComponent } from '../process/process.component'
+import { Subscription } from 'rxjs'
 
 @Component({
   selector: 'app-processes',
@@ -17,6 +18,8 @@ export class ProcessesComponent implements OnInit {
   processes: SuiteProcessDetails[] = []
   columnsToDisplay = ['start_time', 'script_path', 'status', 'exit_code', 'pid']
 
+  private loadProcessesSubscription: Subscription
+
   constructor(private dataService: SuiteService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
@@ -25,7 +28,8 @@ export class ProcessesComponent implements OnInit {
 
   loadProcesses() {
     this.isLoaded = false
-    this.dataService.listProcesses(this.suiteRoot).subscribe((res) => {
+    this.loadProcessesSubscription?.unsubscribe()
+    this.loadProcessesSubscription = this.dataService.listProcesses(this.suiteRoot).subscribe((res) => {
       console.log('processesData', res)
       res.sort((a, b) => b.start_time - a.start_time)
       this.processes = res

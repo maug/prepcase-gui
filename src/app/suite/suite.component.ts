@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { SuiteService } from './suite.service'
 import { SuiteConfiguration, SuiteScriptConfiguration } from '../types/suites'
 import { ScriptParametersDialogComponent } from '../script-parameters-dialog/script-parameters-dialog.component'
 import { ToolParametersService } from '../tool-parameters.service'
 import { MatDialog } from '@angular/material/dialog'
+import { ProcessesComponent } from './processes/processes.component'
 
 @Component({
   selector: 'app-suite',
@@ -12,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog'
   styleUrls: ['./suite.component.scss'],
 })
 export class SuiteComponent implements OnInit {
+  @ViewChild(ProcessesComponent) processesComponent: ProcessesComponent
   isLoaded = false
   suiteRoot: string
   config: SuiteConfiguration
@@ -37,26 +39,40 @@ export class SuiteComponent implements OnInit {
     const scriptParams = this.toolParametersService.convertEnvironmentParametersToToolParameters(
       script.environment_parameters
     )
+    const customEmitter: EventEmitter<string[] | false> = new EventEmitter()
     const dialogRef = this.dialog.open(ScriptParametersDialogComponent, {
       disableClose: true,
       minWidth: 600,
       data: {
         header: script.path,
         scriptParams,
+        customEmitter,
       },
     })
-    dialogRef.afterClosed().subscribe((result: string[] | false) => {
+    customEmitter.subscribe((result: string[] | false) => {
       if (result === false) {
+        dialogRef.close()
         return
       }
+      dialogRef.componentInstance.setExecutingOptions({ isEnabled: true, message: 'Starting script...' })
       const params = result.map((str) => {
         const [name, ...value] = str.split(' ')
         return { name, value: value.join(' ') }
       })
-      console.log('dialog closed', script, params)
+      console.log('result from dialog', script, params)
       this.dataService.runScript(this.suiteRoot, script.path, params).subscribe((res) => {
         console.log('script run response', res)
-        // mytodo: go to process details or display error
+        if (res === 0) {
+          console.log('setting error message')
+          dialogRef.componentInstance.setExecutingOptions({
+            isEnabled: true,
+            showSpinner: false,
+            message: 'Failed to run script',
+          })
+        } else {
+          this.processesComponent.loadProcesses()
+          dialogRef.close()
+        }
       })
     })
   }
