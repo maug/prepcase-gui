@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core'
+import { Component, EventEmitter, Inject, OnInit } from '@angular/core'
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog'
 import { ToolParameter } from '../types/ToolsParameters'
 import { FormItemBase } from '../dynamic-form/FormItemBase'
@@ -9,6 +9,13 @@ import { HelpDialogComponent } from '../help-dialog/help-dialog.component'
 interface DialogData {
   header: string
   scriptParams: ToolParameter[]
+  customEmitter?: EventEmitter<string[] | false>
+}
+
+interface ExecutingOptions {
+  isEnabled: boolean
+  showSpinner?: boolean
+  message?: string
 }
 
 @Component({
@@ -19,6 +26,11 @@ interface DialogData {
 export class ScriptParametersDialogComponent implements OnInit {
   mainForm: UntypedFormGroup
   dynamicInputs: FormItemBase<any>[] = []
+  executingOptions: ExecutingOptions = {
+    isEnabled: false,
+    showSpinner: true,
+    message: 'Executing script...',
+  }
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -32,13 +44,30 @@ export class ScriptParametersDialogComponent implements OnInit {
     this.dynamicInputs = this.dynamicFormService.createInputs(this.data.scriptParams, [], this.mainForm)
   }
 
+  setExecutingOptions(options: ExecutingOptions) {
+    this.executingOptions = { ...this.executingOptions, ...options }
+    if (this.executingOptions.isEnabled) {
+      this.mainForm.disable()
+    } else {
+      this.mainForm.enable()
+    }
+  }
+
   onRun() {
     const params = this.dynamicFormService.readInputs(this.data.scriptParams, this.mainForm)
-    this.selfRef.close(params)
+    if (this.data.customEmitter) {
+      this.data.customEmitter.emit(params)
+    } else {
+      this.selfRef.close(params)
+    }
   }
 
   onCancel() {
-    this.selfRef.close(false)
+    if (this.data.customEmitter) {
+      this.data.customEmitter.emit(false)
+    } else {
+      this.selfRef.close(false)
+    }
   }
 
   openHelp(item: FormItemBase<any>) {
