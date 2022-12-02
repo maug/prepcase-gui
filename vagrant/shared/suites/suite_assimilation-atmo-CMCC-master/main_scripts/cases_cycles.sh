@@ -5,16 +5,27 @@
 #
 #
 #===================================================
-NCYCLES=${NCYCLES:-100}
+NCYCLES=${NCYCLES:-20}
 
 # After the first cylce CONT_RUN must be TRUE. (Use FALSE only if it is the start.)
-CONT_RUN=${CONT_RUN:-TRUE}
+CONT_RUN=${CONT_RUN:-"TRUE"}
 
 # Activate assimilation or do just a forecast
-ACTIVATE_ASSI="TRUE"
+ACTIVATE_ASSI=${ACTIVATE_ASSI:-"TRUE"}
 
 # Max number of time you try to launch assimilation after failure
-MAXTRY=2
+MAXTRY=${MAXTRY:-10}
+
+# Activate forecast at 00Z and 12Z
+FORECAST=${FORECAST:-"FALSE"}
+
+# Number of forecast members
+FENS=${FENS:-2}
+
+# Cleaning procedure 
+CLEANA=${CLEANA:-"TRUE"}
+
+
 
 
 echo -e "\n START CYCLES \n"
@@ -34,24 +45,9 @@ fi
 SCRIPTDIR=`pwd`
 echo " SCRIPTDIR= $SCRIPTDIR"
 
-CLONESROOT=`grep "clonesroot=" $SCRIPTDIR/cases_create.sh | \
-            sed -e "s/\\\${USER}/$USER/g;  \
-                    s/\\\${CESMEXP}/$CESMEXP/g; \
-                    s/[\",=]/ /g"`
-CLONESROOT=`echo $CLONESROOT | cut -d' ' -f3`
-echo " CLONESROOT=  $CLONESROOT"
+cat $SCRIPT_DIR/cases_create_params.sh
+source $SCRIPT_DIR/cases_create_params.sh
 
-case_name=`grep "case_name=" $SCRIPTDIR/cases_create.sh | sed -e "s/=/ /g; s/\"//g"`
-case_name=`echo $case_name | cut -d' ' -f2 `
-echo " case_name= $case_name"
-
-nens=`grep "nens=" $SCRIPTDIR/cases_create.sh | sed -e "s/=/ /"`
-nens=`echo $nens | cut -d' ' -f2 `
-echo " nens= $nens"
-
-radmode=`grep "RAD=" $SCRIPTDIR/cases_create.sh | sed -e "s/=/ /g; s/\"//g"`
-radmode=`echo $radmode | cut -d' ' -f2 `
-echo " radmode= $radmode"
 
 echo ""
 
@@ -81,8 +77,8 @@ while (( $ncyc <= NCYCLES ))
  do
 
    echo -e " cycle number $ncyc"
-
-   if [ $ACTIVATE_ASSI = FALSE ]
+   
+   if [ $ACTIVATE_ASSI = FALSE ] 
     then
       echo " No assimilation required, proceed with forecast!"
    else
@@ -106,33 +102,46 @@ while (( $ncyc <= NCYCLES ))
             echo -e "\n NEW ASSIMILATION ATTEMPT: $c of $MAXTRY\n"
             # Restore hidden files!
             #sh cases_restart_management.sh ${case_name} ${nens} "retrieve"
-            bsub < cases_assimilate.csh
+            # bsub < cases_assimilate.csh
+            ./cases_assimilate.csh
             grep "1" check_assi.flag
             statA=$?
             if [ $statA -eq 0 ]
               then
                 #sh cases_restart_management.sh ${case_name} ${nens} "hide"
-                break
-            fi
+                break 
+            fi  
          done
-
+      
          grep "0" check_assi.flag
          statA=$?
          if [ $statA -eq 0 ]
           then
            echo -e "\n No assimilation attempt worked!\n"
            exit 130
-         fi
+         else
+           # Forecast phase
+           if [ $FORECAST = "TRUE" ]
+             then
+               sh cases_forecast.sh ${case_name} ${nens} ${FENS}
+           fi
 
+           # Cleanining phase
+           if [ ${CLEANA} = "TRUE" ]
+             then
+               sh cases_clean_archive.sh ${case_name} ${nens} ${FORECAST}
+           fi
+         fi        
+ 
       fi
    fi
 
+   
 
-
-
+    
    # Before the case.submit we could need to restore the restart files
    #sh cases_restart_management.sh ${case_name} ${nens} "retrieve"
-
+   
    string_id=""
    inst=1
    while (( $inst <= $nens ))
@@ -144,27 +153,29 @@ while (( $ncyc <= NCYCLES ))
 
        # Clean
        rm cesm.std*
-
+       rm ./logs/run_environment.txt.*
+       rm ./timing/cesm_timing* 
+ 
        if [ $CONT_RUN = "FALSE" ]
           then
-           ./xmlchange CONTINUE_RUN=FALSE
+           ./xmlchange CONTINUE_RUN=FALSE 
        else
-           ./xmlchange CONTINUE_RUN=TRUE
+           ./xmlchange CONTINUE_RUN=TRUE  
        fi
 
 
        if [ $ACTIVATE_ASSI = TRUE ]
          then
            echo " Activate assimilation for member ${inst}"
-           ./xmlchange DATA_ASSIMILATION_ATM=TRUE
+           ./xmlchange DATA_ASSIMILATION_ATM=TRUE 
        else
-           echo " Deactivate assimilation for member ${inst}"
+           echo " Deactivate assimilation for member ${inst}" 
            ./xmlchange DATA_ASSIMILATION_ATM=FALSE
        fi
 
        jobid=$(take_id ./case.submit)
        echo " Started with $jobid"
-
+  
        if [ $inst -eq 1 ]
          then
           string_id=$string_id" done($jobid)"
@@ -181,13 +192,38 @@ while (( $ncyc <= NCYCLES ))
    echo " string_id = $string_id"
    if [ $ACTIVATE_ASSI = FALSE ]
     then
-      bsub -w "$string_id" < cases_no_assimilate.sh
+      bsub -w "$string_id" < cases_no_assimilate.sh 
    else
-      bsub -w "$string_id" < cases_assimilate.csh
+      bsub -w "$string_id" < cases_bogus_assim.csh
+#      bsub -w "$string_id" < cases_assimilate.csh 
+      ./cases_assimilate.csh 
    fi
-
+   
    # Manage the restart files
    #sh cases_restart_management.sh ${case_name} ${nens} "hide"
+
+
+   # If the first guess has been computed and the assimilation finished correctly
+   # then start the forecast and cleaning procedure
+   grep "1" check_assi.flag
+   status=$?
+   if [ $status -eq 0 ]
+     then
+        # Forecast phase
+        if [ $FORECAST = "TRUE" ]
+         then
+           sh cases_forecast.sh ${case_name} ${nens} ${FENS}
+        fi   
+
+        # Cleanining phase
+        if [ ${CLEANA} = "TRUE" ]
+         then
+           sh cases_clean_archive.sh ${case_name} ${nens} ${FORECAST} ${FENS}
+        fi
+   else
+      echo " assimilation did not work properly, forecast and cleaning procedures are skipped"
+   fi 
+
 
   ((ncyc++))
 done
