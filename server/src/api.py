@@ -171,9 +171,9 @@ PROCESS_INFO_DIR={suite_path}/.running_scripts/$PROCESS_PID
 mkdir -p $PROCESS_INFO_DIR
 
 ln -s {output_path} $PROCESS_INFO_DIR/output.txt
-stat -c'%Z' .    >$PROCESS_INFO_DIR/start_time.txt
+date +%s >$PROCESS_INFO_DIR/start_time.txt
 
-cd {suite_path}
+cd $(dirname "{suite_path}/{script_path}")
 {suite_path}/{script_path}
 
 echo $?          >$PROCESS_INFO_DIR/exit_code.txt
