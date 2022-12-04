@@ -242,7 +242,7 @@ def run_script_in_suite_with_environment_parameters(suite_path, script_path, par
     starter_script = script_to_start_script(suite_path, script_path, parameters, output_path, pid_path)
     app.logger.info('=== starter_script: ' + starter_script)
 
-    target_starter_path = "/tmp/prepcase_starter.sh"
+    target_starter_path = remote_mktemp("prepcase_starter.XXXX")
     save_to_remote_file(starter_script, target_starter_path)
     result = globals.ssh.ssh_execute('nohup sh ' + target_starter_path + ' >' + output_path + ' 2>&1 </dev/null &')
 
